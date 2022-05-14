@@ -1,5 +1,13 @@
 
 def generate_screenplay(my_scene: str) -> dict:
+    """
+    > GIVEN <Actor> who can <Ability…>
+    > WHEN <Actor> does <Task(Parameters)>
+    > THEN <Actor> checks <Question> is <Assertion… on Answer>
+    > THANKS TO <element> FOUND ON <screen>
+    :param my_scene:
+    :return:
+    """
     screen_play_generated_parts = {
             "actors": [],
             "facts": [],
@@ -10,30 +18,42 @@ def generate_screenplay(my_scene: str) -> dict:
             "abilities": [],
             "actions": []
         }
-    return screen_play_generated_parts
+    if my_scene is None:
+        return screen_play_generated_parts
 
-
-def generate_screenplay2(my_scene: str) -> dict:
-    """
-
-> GIVEN <Actor> who can <Ability…>
-> WHEN <Actor> does <Task(Parameters)>
-> THEN <Actor> checks <Question> is <Assertion… on Answer>
-> THANKS TO <element> FOUND ON <screen>
-    :param my_scene:
-    :return:
-    """
-    screen_play_generated_parts = {}
     screen_play_parts = my_scene.split("WHEN")
     given_part = screen_play_parts[0]
     when_part = screen_play_parts[1]
-    print(given_part)
+
     given_parts = given_part.split("who can")
-    actors = given_parts[0]
+    screen_play_generated_parts["actors"].append(given_parts[0])
+    screen_play_generated_parts["abilities"].append(given_parts[0])
     facts = given_parts[1]
     print(when_part)
-    screen_play_generated_parts[actors]
     return screen_play_generated_parts
+
+#
+# def generate_screenplay2(my_scene: str) -> dict:
+#     """
+#
+# > GIVEN <Actor> who can <Ability…>
+# > WHEN <Actor> does <Task(Parameters)>
+# > THEN <Actor> checks <Question> is <Assertion… on Answer>
+# > THANKS TO <element> FOUND ON <screen>
+#     :param my_scene:
+#     :return:
+#     """
+#     screen_play_generated_parts = {}
+#     screen_play_parts = my_scene.split("WHEN")
+#     given_part = screen_play_parts[0]
+#     when_part = screen_play_parts[1]
+#     print(given_part)
+#     given_parts = given_part.split("who can")
+#     actors = given_parts[0]
+#     facts = given_parts[1]
+#     print(when_part)
+#     screen_play_generated_parts[actors]
+#     return screen_play_generated_parts
 
 
 if __name__ == '__main__':
