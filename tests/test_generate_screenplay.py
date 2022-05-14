@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from generate_screenplay import extract_screenplay_objects
+from extract_objects import extract_screenplay_objects
 
 
 class Test(TestCase):
