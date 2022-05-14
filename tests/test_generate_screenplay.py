@@ -16,7 +16,7 @@ class Test(TestCase):
             "abilities": [],
             "actions": []
         }
-        screen_play_generated_parts = generate_screenplay(my_scene, "shakespeare")
+        screen_play_generated_parts = generate_screenplay(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
 
     def test_generate_screenplay_with_jack(self):
@@ -40,5 +40,5 @@ class Test(TestCase):
                 {"do": "order", "direct object": "999 beers"}
             ]
         }
-        screen_play_generated_parts = generate_screenplay(my_scene, "shakespeare")
+        screen_play_generated_parts = generate_screenplay(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)

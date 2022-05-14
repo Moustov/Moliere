@@ -1,10 +1,19 @@
 
-def generate_screenplay(my_scene: str, target_path):
-    screen_play_generated_parts = None
+def generate_screenplay(my_scene: str) -> dict:
+    screen_play_generated_parts = {
+            "actors": [],
+            "facts": [],
+            "tasks": [],
+            "questions": [],
+            "elements": [],
+            "screens": [],
+            "abilities": [],
+            "actions": []
+        }
     return screen_play_generated_parts
 
 
-def generate_screenplay2(my_scene: str, target_path) -> dict:
+def generate_screenplay2(my_scene: str) -> dict:
     """
 
 > GIVEN <Actor> who can <Ability…>
@@ -12,7 +21,6 @@ def generate_screenplay2(my_scene: str, target_path) -> dict:
 > THEN <Actor> checks <Question> is <Assertion… on Answer>
 > THANKS TO <element> FOUND ON <screen>
     :param my_scene:
-    :param target_path:
     :return:
     """
     screen_play_generated_parts = {}
@@ -35,4 +43,4 @@ WHEN <Jack> does <walk into> <The Sheep's Head Pub>
     AND does <order> <999 beers>
     THEN <Jack> checks <the bill's total amount> <is 999 × 2.59 EUR>
 """
-    generate_screenplay(my_scene, "shakespeare")
+    generate_screenplay(my_scene)
