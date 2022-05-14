@@ -23,14 +23,14 @@ class Test(TestCase):
         my_scene = """
                     > GIVEN <Actor> who can <Ability>
                     > WHEN <Actor> does <Task> <Parameters>
-                    > THEN <Actor> checks <Question> is <Assertion… on Answer>
+                    > THEN <Actor> checks <Question> is <Assertion>
                     > THANKS TO <element> FOUND ON <screen>
                     """
         expected_screen_play_generated_parts = {
             "actors": ["Actor"],
             "facts": [],
             "tasks": ["Task"],
-            "questions": [],
+            "questions": [{"check": "Question", "is": "Assertion"}],
             "elements": [],
             "screens": [],
             "abilities": ["Ability"],
