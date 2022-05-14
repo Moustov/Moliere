@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from generate_screenplay import generate_screenplay, extract_keyword_in_delimiter
+from generate_screenplay import generate_screenplay
 
 
 class Test(TestCase):
@@ -62,7 +62,3 @@ class Test(TestCase):
     #     }
     #     screen_play_generated_parts = generate_screenplay(my_scene)
     #     self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
-
-    def test_extract_keyword_in_delimiter(self):
-        actor = extract_keyword_in_delimiter("<Actor>")
-        self.assertEqual(actor, "Actor")

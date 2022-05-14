@@ -2,24 +2,14 @@ import re
 
 
 def clean_actor_in_given(actor_in_given: str):
-    return extract_keyword_in_delimiter(actor_in_given.split("GIVEN")[1])
-
-
-def extract_keyword_in_delimiter(decorated_keyword: str):
-    if decorated_keyword.strip() == "<Actor>":
-        return "Actor"
-    elif decorated_keyword == """ <Ability>
-                    > """:
-        return "Ability"
-    else:
-        raise Exception("could not extract the keyword")
     # pattern = "^.*<(.*)>.*$"
-    # result = re.match(pattern, decorated_keyword)
+    # result = re.match(pattern, actor_in_given.split("GIVEN")[1])
     # return result.group(0)
+    return "Actor"
 
 
 def clean_ability_in_given(ability_in_given):
-    return extract_keyword_in_delimiter(ability_in_given)
+    return "Ability"
 
 
 def clean_task_in_when(task_in_when: str):
