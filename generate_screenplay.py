@@ -2,14 +2,16 @@ import re
 
 
 def clean_actor_in_given(actor_in_given: str):
-    # pattern = "^.*<(.*)>.*$"
-    # result = re.match(pattern, actor_in_given.split("GIVEN")[1])
-    # return result.group(0)
-    return "Actor"
+    raw_actor = actor_in_given.split("GIVEN")[1]
+    left_right = raw_actor.split("<")
+    actor = left_right[1].split(">")[0]
+    return actor
 
 
 def clean_ability_in_given(ability_in_given):
-    return "Ability"
+    left_right = ability_in_given.split("<")
+    ability = left_right[1].split(">")[0]
+    return ability
 
 
 def clean_task_in_when(task_in_when: str):
