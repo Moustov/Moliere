@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from generate_screenplay import generate_screenplay
+from generate_screenplay import generate_screenplay, extract_keyword_in_delimiter
 
 
 class Test(TestCase):
-    def test_generate_screenplay_basic(self):
+    def test_generate_screenplay_empty(self):
         my_scene = ""
         expected_screen_play_generated_parts = {
             "actors": [],
@@ -19,7 +19,7 @@ class Test(TestCase):
         screen_play_generated_parts = generate_screenplay(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
 
-    def test_generate_screenplay_actor(self):
+    def test_generate_screenplay_basic(self):
         my_scene = """
                     > GIVEN <Actor> who can <Ability>
                     > WHEN <Actor> does <Task> <Parameters>
@@ -62,3 +62,7 @@ class Test(TestCase):
     #     }
     #     screen_play_generated_parts = generate_screenplay(my_scene)
     #     self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
+
+    def test_extract_keyword_in_delimiter(self):
+        actor = extract_keyword_in_delimiter("<Actor>")
+        self.assertEqual(actor, "Actor")
