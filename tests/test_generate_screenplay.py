@@ -29,7 +29,7 @@ class Test(TestCase):
         expected_screen_play_generated_parts = {
             "actors": ["Actor"],
             "facts": [],
-            "tasks": [],
+            "tasks": ["Task"],
             "questions": [],
             "elements": [],
             "screens": [],
