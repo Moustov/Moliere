@@ -56,6 +56,7 @@ def extract_screenplay_objects(a_scene: str) -> dict:
         {"do": extract_task_in_when(task[1]), "direct object": extract_parameter_in_when(task[2])}
     )
     screen_play_generated_parts["tasks"].append(extract_task_in_when(task[1]))
+    screen_play_generated_parts["questions"].append({"check": "Question", "is": "Assertion"})
     return screen_play_generated_parts
 
 
