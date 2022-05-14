@@ -1,5 +1,7 @@
 import re
 
+from skeleton_generator import generate_skeleton
+
 
 def clean_actor_in_given(actor_in_given: str):
     raw_actor = actor_in_given.split("GIVEN")[1]
@@ -22,13 +24,9 @@ def clean_parameter_in_when(param_in_when: str):
     return "Parameters"
 
 
-def generate_skeleton(screenplay_objects: dict):
-    pass
-
-
 def generate_screenplay(a_scene: str):
-    screenplay_objects = extract_screenplay_objects(a_scene)
-    generate_skeleton(screenplay_objects)
+    my_screenplay_objects = extract_screenplay_objects(a_scene)
+    generate_skeleton(my_screenplay_objects)
 
 
 def extract_screenplay_objects(my_scene: str) -> dict:
