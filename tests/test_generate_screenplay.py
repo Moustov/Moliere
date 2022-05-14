@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from generate_screenplay import generate_screenplay
+from generate_screenplay import extract_screenplay_objects
 
 
 class Test(TestCase):
@@ -16,7 +16,7 @@ class Test(TestCase):
             "abilities": [],
             "actions": []
         }
-        screen_play_generated_parts = generate_screenplay(my_scene)
+        screen_play_generated_parts = extract_screenplay_objects(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
 
     def test_generate_screenplay_basic(self):
@@ -36,7 +36,7 @@ class Test(TestCase):
             "abilities": ["Ability"],
             "actions": [{"do": "Task", "direct object": "Parameters"}]
         }
-        screen_play_generated_parts = generate_screenplay(my_scene)
+        screen_play_generated_parts = extract_screenplay_objects(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
 
     # def test_generate_screenplay_with_jack(self):

@@ -22,7 +22,16 @@ def clean_parameter_in_when(param_in_when: str):
     return "Parameters"
 
 
-def generate_screenplay(my_scene: str) -> dict:
+def generate_skeleton(screenplay_objects: dict):
+    pass
+
+
+def generate_screenplay(a_scene: str):
+    screenplay_objects = extract_screenplay_objects(a_scene)
+    generate_skeleton(screenplay_objects)
+
+
+def extract_screenplay_objects(my_scene: str) -> dict:
     """
     > GIVEN <Actor> who can <Ability…>
     > WHEN <Actor> does <Task(Parameters)>
@@ -93,4 +102,4 @@ WHEN <Jack> does <walk into> <The Sheep's Head Pub>
     AND does <order> <999 beers>
     THEN <Jack> checks <the bill's total amount> <is 999 × 2.59 EUR>
 """
-    generate_screenplay(my_scene)
+    extract_screenplay_objects(my_scene)
