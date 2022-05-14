@@ -58,6 +58,7 @@ def generate_screenplay(my_scene: str) -> dict:
     screen_play_generated_parts["actions"].append(
         {"do": clean_task_in_when(task[1]), "direct object": clean_parameter_in_when(task[2])}
     )
+    screen_play_generated_parts["tasks"].append(clean_task_in_when(task[1]))
     return screen_play_generated_parts
 
 
