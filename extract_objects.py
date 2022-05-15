@@ -33,10 +33,10 @@ def extract_screenplay_objects(a_scene: str) -> dict:
                  }
     screen_play_generated_parts["actions"].append(an_action)
     screen_play_generated_parts["tasks"].append(screen_play_generated_parts["actions"][0]["do"])
-    a_question = {"check": extract_question_in_then(extract_value_between(a_scene, "checks <", ">")),
-                  "is": extract_assertion_in_then(extract_value_between(a_scene, "is <", ">"))}
+    a_question = {"check": extract_value_between(a_scene, "checks <", ">"),
+                  "is": extract_value_between(a_scene, "is <", ">")}
     screen_play_generated_parts["questions"].append(a_question)
-
+    screen_play_generated_parts["screens"].append(extract_value_between(a_scene, "FOUND ON <", ">"))
     return screen_play_generated_parts
 
 

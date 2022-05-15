@@ -31,8 +31,8 @@ class Test(TestCase):
             "facts": [],
             "tasks": ["Task"],
             "questions": [{"check": "Question", "is": "Assertion"}],
-            "elements": [],
-            "screens": [],
+            "elements": [{"item": "element", "screen": "screen"}],
+            "screens": ["screen"],
             "abilities": ["Ability"],
             "actions": [{"do": "Task", "direct object": "Parameters"}]
         }
@@ -52,7 +52,10 @@ class Test(TestCase):
     #         "facts": [],
     #         "tasks": ["go to the pub", "order"],
     #         "questions": [{"check": "the bill's total amount", "is": "is 999 × 2.59 EUR"}],
-    #         "elements": ["The Sheep's Head Pub", "999 beers", "the bill's total amount"],
+    #         "elements": [{"item": "The Sheep's Head Pub", "screen": None},
+    #                      {"item": "999 beers", "screen": None},
+    #                      {"item": "the bill's total amount", "screen": receipt}
+    #                     ],
     #         "screens": ["receipt"],
     #         "abilities": ["browse the web", "call HTTP APIs", "go to the pub"],
     #         "actions": [
