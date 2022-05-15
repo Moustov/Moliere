@@ -1,17 +1,40 @@
+import os
 import shutil
 
 
+# OS = platform.system()
+# if OS == "Windows":
+#     PATH_SEPARATOR = "\\"
+# elif OS == "Darwin":
+#     PATH_SEPARATOR = ":"
+# elif OS == "Linux":
+#     PATH_SEPARATOR = "/"
+
+
+def change_to_camel_case(class_name: str):
+    words = class_name.split(" ")
+    res = ""
+    for word in words:
+        res += word[0].upper() + word[1:]
+    return res
+
+
 def generate_skeleton_part(part: dict, part_type: str, regenerate_project: bool):
-    shutil.copyfile("canvas\\actor.py", "output\\actor.py")
+    shutil.copyfile(os.path.normcase(f"canvas/{part_type.lower()}.py"), os.path.normcase(f"output/{part_type.lower()}.py"))
     for class_name in part:
         class_canvas = ""
-        with open("canvas\\class_canvas.py", "r") as class_canvas_file:
+        class_name = change_to_camel_case(class_name)
+        with open(os.path.normcase("canvas/class_canvas.py"), "r") as class_canvas_file:
             class_canvas = class_canvas_file.read()
         class_canvas = class_canvas.replace("TheClassType", part_type)
         class_canvas = class_canvas.replace("TheClass", class_name)
         class_canvas = class_canvas.replace("#YOUR IMPORTS", f"from output.{class_name} import {part_type}")
-        with open(f"output\\{class_name}.py", "w") as class_file:
+        with open(os.path.normcase(f"output/{class_name}.py"), "w") as class_file:
             class_file.write(class_canvas)
+
+
+def generate_skeleton_complex_part(param, param1, regenerate_project):
+    pass
 
 
 def generate_skeleton_parts(screenplay_objects: dict, regenerate_project: bool = False):
@@ -23,13 +46,14 @@ def generate_skeleton_parts(screenplay_objects: dict, regenerate_project: bool =
     :param screenplay_objects:
     :return:
     """
-    generate_skeleton_part(screenplay_objects["actors"], "Actors", regenerate_project)
-    generate_skeleton_part(screenplay_objects["facts"], "Facts", regenerate_project)
-    generate_skeleton_part(screenplay_objects["tasks"], "Tasks", regenerate_project)
-    generate_skeleton_part(screenplay_objects["questions"], "Questions", regenerate_project)
-    generate_skeleton_part(screenplay_objects["elements"], "Elements", regenerate_project)
-    generate_skeleton_part(screenplay_objects["screens"], "Screens", regenerate_project)
-    generate_skeleton_part(screenplay_objects["actions"], "Actions", regenerate_project)
+    generate_skeleton_part(screenplay_objects["actors"], "Actor", regenerate_project)
+    generate_skeleton_part(screenplay_objects["facts"], "Fact", regenerate_project)
+    generate_skeleton_part(screenplay_objects["tasks"], "Task", regenerate_project)
+    generate_skeleton_complex_part(screenplay_objects["questions"], "Question", regenerate_project)
+    generate_skeleton_complex_part(screenplay_objects["elements"], "Element", regenerate_project)
+    generate_skeleton_complex_part(screenplay_objects["abilities"], "Ability", regenerate_project)
+    generate_skeleton_part(screenplay_objects["screens"], "Screen", regenerate_project)
+    generate_skeleton_complex_part(screenplay_objects["actions"], "Action", regenerate_project)
 
 
 if __name__ == '__main__':
