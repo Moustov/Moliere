@@ -11,8 +11,10 @@ def extract_ability_in_given(ability_in_given):
     return ability
 
 
-def extract_task_in_when(task_in_when: str):
-    return "Task"
+def extract_task_in_when(raw_task_in_when: str):
+    left_right = raw_task_in_when.split(">")
+    task = left_right[0]
+    return task
 
 
 def extract_parameter_in_when(param_in_when: str):
