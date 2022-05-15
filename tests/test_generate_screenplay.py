@@ -75,3 +75,39 @@ class Test(TestCase):
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
         diff = DeepDiff(screen_play_generated_parts, expected_screen_play_generated_parts, ignore_order=True)
         self.assertEqual(diff, {})
+
+    def test_generate_screenplay_with_jack_and_multiple_checks(self):
+        my_scene = """
+        GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
+        WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>
+            AND <order> with <999 beers>
+            THEN <Jack> checks
+                    <the total amount> is <999 × 2.59 EUR> THANKS TO <the total amount> FOUND ON <the bill>
+                    AND <the table> is <the good one> THANKS TO <the table number> FOUND ON <the bill>
+        """
+        expected_screen_play_generated_parts = {
+            "actors": ["Jack"],
+            "facts": [],
+            "tasks": ["go to the pub", "order"],
+            "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"},
+                          {"check": "the table", "is": "the good one"}
+                          ],
+            "elements": [{"item": "The Sheep's Head Pub", "screen": None},
+                         {"item": "browse the web", "screen": None},
+                         {"item": "call HTTP APIs", "screen": None},
+                         {"item": "go to the pub", "screen": None},
+                         {"item": "order", "screen": None},
+                         {"item": "999 beers", "screen": None},
+                         {"item": "the total amount", "screen": "the bill"},
+                         {"item": "the table number", "screen": "the bill"}
+                         ],
+            "screens": ["the bill"],
+            "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order"],
+            "actions": [
+                {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
+                {"do": "order", "direct object": "999 beers"}
+            ]
+        }
+        screen_play_generated_parts = extract_screenplay_objects(my_scene)
+        diff = DeepDiff(screen_play_generated_parts, expected_screen_play_generated_parts, ignore_order=True)
+        self.assertEqual(diff, {})
