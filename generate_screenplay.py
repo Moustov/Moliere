@@ -7,35 +7,12 @@ def generate_screenplay(a_scene: str):
     generate_skeleton(my_screenplay_objects)
 
 
-#
-# def generate_screenplay2(my_scene: str) -> dict:
-#     """
-#
-# > GIVEN <Actor> who can <Ability…>
-# > WHEN <Actor> does <Task(Parameters)>
-# > THEN <Actor> checks <Question> is <Assertion… on Answer>
-# > THANKS TO <element> FOUND ON <screen>
-#     :param my_scene:
-#     :return:
-#     """
-#     screen_play_generated_parts = {}
-#     screen_play_parts = my_scene.split("WHEN")
-#     given_part = screen_play_parts[0]
-#     when_part = screen_play_parts[1]
-#     print(given_part)
-#     given_parts = given_part.split("who can")
-#     actors = given_parts[0]
-#     facts = given_parts[1]
-#     print(when_part)
-#     screen_play_generated_parts[actors]
-#     return screen_play_generated_parts
-
-
 if __name__ == '__main__':
     my_scene = """
-GIVEN <Jack> who can <browse the web> and <call HTTP APIs>
-WHEN <Jack> does <walk into> <The Sheep's Head Pub>
-    AND does <order> <999 beers>
-    THEN <Jack> checks <the bill's total amount> <is 999 × 2.59 EUR>
-"""
+            GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
+            WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
     generate_screenplay(my_scene)

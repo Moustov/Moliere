@@ -4,7 +4,7 @@ from extract_objects import extract_screenplay_objects
 
 
 class Test(TestCase):
-    def test_generate_screenplay_empty(self):
+    def test_extract_objects_empty(self):
         my_scene = ""
         expected_screenplay_generated_parts = {
             "actors": [],
@@ -19,7 +19,7 @@ class Test(TestCase):
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screenplay_generated_parts)
 
-    def test_generate_screenplay_basic(self):
+    def test_extract_objects_screenplay_basic(self):
         my_scene = """
                     > GIVEN <Actor> who can <Ability>
                     > WHEN <Actor> does <Task> at <Parameters>
@@ -44,7 +44,7 @@ class Test(TestCase):
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
         self.assertDictEqual(screen_play_generated_parts, expected_screenplay_generated_parts)
 
-    def test_generate_screenplay_with_jack(self):
+    def test_extract_objects_screenplay_with_jack(self):
         my_scene = """
         GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
         WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>
@@ -76,7 +76,7 @@ class Test(TestCase):
         diff = DeepDiff(screen_play_generated_parts, expected_screenplay_generated_parts, ignore_order=True)
         self.assertEqual(diff, {})
 
-    def test_generate_screenplay_with_jack_and_multiple_checks(self):
+    def test_extract_objects_screenplay_with_jack_and_multiple_checks(self):
         my_scene = """
         GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
         WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>
