@@ -1,52 +1,35 @@
-def generate_actors_skeleton(param, regenerate_project):
-    pass
+import shutil
 
 
-def generate_facts_skeleton(param, regenerate_project):
-    pass
+def generate_skeleton_part(part: dict, part_type: str, regenerate_project: bool):
+    shutil.copyfile("canvas\\actor.py", "output\\actor.py")
+    for class_name in part:
+        class_canvas = ""
+        with open("canvas\\class_canvas.py", "r") as class_canvas_file:
+            class_canvas = class_canvas_file.read()
+        class_canvas = class_canvas.replace("TheClassType", part_type)
+        class_canvas = class_canvas.replace("TheClass", class_name)
+        class_canvas = class_canvas.replace("#YOUR IMPORTS", f"from output.{class_name} import {part_type}")
+        with open(f"output\\{class_name}.py", "w") as class_file:
+            class_file.write(class_canvas)
 
 
-def generate_tasks_skeleton(param, regenerate_project):
-    pass
-
-
-def generate_actions_skeleton(param, regenerate_project):
-    pass
-
-
-def generate_abilities_skeleton(param, regenerate_project):
-    pass
-
-
-def generate_screens_skeleton(param, regenerate_project):
-    pass
-
-
-def generate_elements_skeleton(param, regenerate_project):
-    pass
-
-
-def generate_questions_skeleton(param, regenerate_project):
-    pass
-
-
-def generate_skeleton(screenplay_objects: dict, regenerate_project: bool = False):
+def generate_skeleton_parts(screenplay_objects: dict, regenerate_project: bool = False):
     """
-    generates files that implement the classes from the screenplay Design Pattern (DP)
+    generates files that implement the classes from the output Design Pattern (DP)
     - if project is empty => generates root classes from the DP
     - if project is not empty and not regenerate_project => adds objects to the existing project
     :param regenerate_project: forces project generation only from screenplay_objects
     :param screenplay_objects:
     :return:
     """
-    generate_actors_skeleton(screenplay_objects["actors"], regenerate_project)
-    generate_facts_skeleton(screenplay_objects["facts"], regenerate_project)
-    generate_tasks_skeleton(screenplay_objects["tasks"], regenerate_project)
-    generate_questions_skeleton(screenplay_objects["questions"], regenerate_project)
-    generate_elements_skeleton(screenplay_objects["elements"], regenerate_project)
-    generate_screens_skeleton(screenplay_objects["screens"], regenerate_project)
-    generate_abilities_skeleton(screenplay_objects["abilities"], regenerate_project)
-    generate_actions_skeleton(screenplay_objects["actions"], regenerate_project)
+    generate_skeleton_part(screenplay_objects["actors"], "Actors", regenerate_project)
+    generate_skeleton_part(screenplay_objects["facts"], "Facts", regenerate_project)
+    generate_skeleton_part(screenplay_objects["tasks"], "Tasks", regenerate_project)
+    generate_skeleton_part(screenplay_objects["questions"], "Questions", regenerate_project)
+    generate_skeleton_part(screenplay_objects["elements"], "Elements", regenerate_project)
+    generate_skeleton_part(screenplay_objects["screens"], "Screens", regenerate_project)
+    generate_skeleton_part(screenplay_objects["actions"], "Actions", regenerate_project)
 
 
 if __name__ == '__main__':
@@ -75,4 +58,4 @@ if __name__ == '__main__':
         ]
     }
 
-    generate_skeleton(screenplay_generated_parts)
+    generate_skeleton_parts(screenplay_generated_parts)
