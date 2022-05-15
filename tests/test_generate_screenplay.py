@@ -41,7 +41,7 @@ class Test(TestCase):
     def test_generate_screenplay_with_jack(self):
         my_scene = """
         GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
-        WHEN <Jack> does <go to the pub> with <The Sheep's Head Pub>
+        WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>    # todo enrich the language with "with"/"in"
             AND does <order> <999 beers>
             THEN <Jack> checks <the bill's total amount> <is 999 × 2.59 EUR>
                       THANKS TO <the bill's total amount> FOUND ON <receipt>

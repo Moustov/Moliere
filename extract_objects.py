@@ -28,9 +28,8 @@ def extract_screenplay_objects(a_scene: str) -> dict:
 
     screen_play_generated_parts["actors"].append(extract_value_between(a_scene, "GIVEN <", "> who"))
     screen_play_generated_parts["abilities"].append(extract_value_between(a_scene, "who can <", ">"))
-    # todo enrich the language with "at"/"in"
     an_action = {"do": extract_value_between(a_scene, "does <", ">"),
-                 "direct object": extract_value_between(a_scene, "with <", ">")
+                 "direct object": extract_value_between(a_scene, "at <", ">")
                  }
     screen_play_generated_parts["actions"].append(an_action)
     screen_play_generated_parts["tasks"].append(screen_play_generated_parts["actions"][0]["do"])
