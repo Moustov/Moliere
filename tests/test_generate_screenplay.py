@@ -24,7 +24,7 @@ class Test(TestCase):
                     > GIVEN <Actor> who can <Ability>
                     > WHEN <Actor> does <Task> <Parameters>
                     > THEN <Actor> checks <Question> is <Assertion>
-                    > THANKS TO <element> FOUND ON <screen>
+                    >       THANKS TO <element> FOUND ON <screen>
                     """
         expected_screen_play_generated_parts = {
             "actors": ["Actor"],
@@ -45,7 +45,7 @@ class Test(TestCase):
     #     WHEN <Jack> does <go to the pub> <The Sheep's Head Pub>
     #         AND does <order> <999 beers>
     #         THEN <Jack> checks <the bill's total amount> <is 999 × 2.59 EUR>
-    #         THANKS TO <the bill's total amount> FOUND ON <receipt>
+    #                   THANKS TO <the bill's total amount> FOUND ON <receipt>
     #     """
     #     expected_screen_play_generated_parts = {
     #         "actors": ["Jack"],

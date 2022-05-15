@@ -19,6 +19,19 @@ def extract_parameter_in_when(param_in_when: str):
     return "Parameters"
 
 
+def extract_question_in_then(raw_question: str):
+    """
+
+    :param raw_question:
+    :return:
+    """
+    return "Question"
+
+
+def extract_assertion_in_then(raw_assertion):
+    return "Assertion"
+
+
 def extract_screenplay_objects(a_scene: str) -> dict:
     """
     > GIVEN <Actor> who can <Ability…>
@@ -56,7 +69,10 @@ def extract_screenplay_objects(a_scene: str) -> dict:
         {"do": extract_task_in_when(task[1]), "direct object": extract_parameter_in_when(task[2])}
     )
     screen_play_generated_parts["tasks"].append(extract_task_in_when(task[1]))
-    screen_play_generated_parts["questions"].append({"check": "Question", "is": "Assertion"})
+
+    question_part = then_part.split("<")
+    a_question = {"check": extract_question_in_then(question_part[2]), "is": extract_assertion_in_then(question_part[3])}
+    screen_play_generated_parts["questions"].append(a_question)
     return screen_play_generated_parts
 
 
