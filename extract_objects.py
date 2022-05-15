@@ -24,12 +24,9 @@ def extract_parameter_in_when(raw_param_in_when: str):
 
 
 def extract_question_in_then(raw_question: str):
-    """
-
-    :param raw_question:
-    :return:
-    """
-    return "Question"
+    left_right = raw_question.split(">")
+    question = left_right[0]
+    return question
 
 
 def extract_assertion_in_then(raw_assertion):
