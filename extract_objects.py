@@ -17,8 +17,10 @@ def extract_task_in_when(raw_task_in_when: str):
     return task
 
 
-def extract_parameter_in_when(param_in_when: str):
-    return "Parameters"
+def extract_parameter_in_when(raw_param_in_when: str):
+    left_right = raw_param_in_when.split(">")
+    param = left_right[0]
+    return param
 
 
 def extract_question_in_then(raw_question: str):
