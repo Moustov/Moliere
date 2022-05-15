@@ -30,7 +30,9 @@ def extract_question_in_then(raw_question: str):
 
 
 def extract_assertion_in_then(raw_assertion):
-    return "Assertion"
+    left_right = raw_assertion.split(">")
+    assertion = left_right[0]
+    return assertion
 
 
 def extract_screenplay_objects(a_scene: str) -> dict:
