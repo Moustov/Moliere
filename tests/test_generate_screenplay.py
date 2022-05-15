@@ -6,7 +6,7 @@ from extract_objects import extract_screenplay_objects
 class Test(TestCase):
     def test_generate_screenplay_empty(self):
         my_scene = ""
-        expected_screen_play_generated_parts = {
+        expected_screenplay_generated_parts = {
             "actors": [],
             "facts": [],
             "tasks": [],
@@ -17,7 +17,7 @@ class Test(TestCase):
             "actions": []
         }
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
-        self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
+        self.assertDictEqual(screen_play_generated_parts, expected_screenplay_generated_parts)
 
     def test_generate_screenplay_basic(self):
         my_scene = """
@@ -26,7 +26,7 @@ class Test(TestCase):
                     > THEN <Actor> checks <Question> is <Assertion>
                     >       THANKS TO <element> FOUND ON <screen>
                     """
-        expected_screen_play_generated_parts = {
+        expected_screenplay_generated_parts = {
             "actors": ["Actor"],
             "facts": [],
             "tasks": ["Task"],
@@ -42,7 +42,7 @@ class Test(TestCase):
             "actions": [{"do": "Task", "direct object": "Parameters"}]
         }
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
-        self.assertDictEqual(screen_play_generated_parts, expected_screen_play_generated_parts)
+        self.assertDictEqual(screen_play_generated_parts, expected_screenplay_generated_parts)
 
     def test_generate_screenplay_with_jack(self):
         my_scene = """
@@ -52,7 +52,7 @@ class Test(TestCase):
             THEN <Jack> checks <the total amount> is <999 × 2.59 EUR>
                       THANKS TO <the total amount> FOUND ON <the bill>
         """
-        expected_screen_play_generated_parts = {
+        expected_screenplay_generated_parts = {
             "actors": ["Jack"],
             "facts": [],
             "tasks": ["go to the pub", "order"],
@@ -73,7 +73,7 @@ class Test(TestCase):
             ]
         }
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
-        diff = DeepDiff(screen_play_generated_parts, expected_screen_play_generated_parts, ignore_order=True)
+        diff = DeepDiff(screen_play_generated_parts, expected_screenplay_generated_parts, ignore_order=True)
         self.assertEqual(diff, {})
 
     def test_generate_screenplay_with_jack_and_multiple_checks(self):
@@ -83,14 +83,14 @@ class Test(TestCase):
             AND <order> with <999 beers>
             THEN <Jack> checks
                     <the total amount> is <999 × 2.59 EUR> THANKS TO <the total amount> FOUND ON <the bill>
-                    AND <the table> is <the good one> THANKS TO <the table number> FOUND ON <the bill>
+                    AND <the table number> is <the good one> THANKS TO <the table number> FOUND ON <the bill>
         """
         expected_screen_play_generated_parts = {
             "actors": ["Jack"],
             "facts": [],
             "tasks": ["go to the pub", "order"],
             "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"},
-                          {"check": "the table", "is": "the good one"}
+                          {"check": "the table number", "is": "the good one"}
                           ],
             "elements": [{"item": "The Sheep's Head Pub", "screen": None},
                          {"item": "browse the web", "screen": None},

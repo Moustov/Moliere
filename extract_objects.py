@@ -29,7 +29,7 @@ def extract_abilities(a_scene: str):
     return res
 
 
-def extract_elements(a_scene, abilities: [], screens: [], actions: [], questions: []):
+def extract_elements(a_scene, abilities: [], screens: [], actions: []):
     res = []
     for an_ability in abilities:
         an_element = {"item": an_ability, "screen": None}
@@ -39,10 +39,14 @@ def extract_elements(a_scene, abilities: [], screens: [], actions: [], questions
         res.append(an_element)
         an_element = {"item": an_action["direct object"], "screen": None}
         res.append(an_element)
-    elements_on_screen = a_scene.split("THANKS TO")[1].split("FOUND ON")
-    an_element = {"item": extract_value_between(elements_on_screen[0], "<", ">"),
-                  "screen": extract_value_between(elements_on_screen[1], "<", ">")}
-    res.append(an_element)
+    questions_part = a_scene.split("checks")
+    questions = questions_part[1].split("AND")
+    for question in questions:
+        element_on_screen = extract_value_between(question, "THANKS TO", "FOUND ON")
+        screen = question.split("FOUND ON")
+        an_element = {"item": extract_value_between(element_on_screen, "<", ">"),
+                      "screen": extract_value_between(screen[1], "<", ">")}
+        res.append(an_element)
     return res
 
 
@@ -57,6 +61,18 @@ def remove_dupes_in_elements(list_elements: [dict]):
         if element["item"] not in elements:
             elements.append(element["item"])
             res.append(element)
+    return res
+
+
+def extract_questions(a_scene):
+    res = []
+    questions_string = a_scene.split("checks")
+    raw_questions = questions_string[1].split("AND")
+    for raw_question in raw_questions:
+        # res.append(extract_value_between(raw_question, "<", ">"))
+        a_question = {"check": extract_value_between(raw_question, "<", ">"),
+                      "is": extract_value_between(raw_question, "is <", ">")}
+        res.append(a_question)
     return res
 
 
@@ -91,14 +107,11 @@ def extract_screenplay_objects(a_scene: str) -> dict:
         screen_play_generated_parts["abilities"] += [action["do"]]
         screen_play_generated_parts["tasks"].append(action["do"])
     screen_play_generated_parts["abilities"] = remove_dupes(screen_play_generated_parts["abilities"])
-    a_question = {"check": extract_value_between(a_scene, "checks <", ">"),
-                  "is": extract_value_between(a_scene, "is <", ">")}
-    screen_play_generated_parts["questions"].append(a_question)
+    screen_play_generated_parts["questions"] = extract_questions(a_scene)
     screen_play_generated_parts["screens"].append(extract_value_between(a_scene, "FOUND ON <", ">"))
     screen_play_generated_parts["elements"] += extract_elements(a_scene, screen_play_generated_parts["abilities"],
                                                                 screen_play_generated_parts["screens"],
-                                                                screen_play_generated_parts["actions"],
-                                                                screen_play_generated_parts["questions"])
+                                                                screen_play_generated_parts["actions"])
     screen_play_generated_parts["elements"] = remove_dupes_in_elements(screen_play_generated_parts["elements"])
     return screen_play_generated_parts
 
