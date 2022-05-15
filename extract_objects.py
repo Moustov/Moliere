@@ -37,6 +37,9 @@ def extract_screenplay_objects(a_scene: str) -> dict:
                   "is": extract_value_between(a_scene, "is <", ">")}
     screen_play_generated_parts["questions"].append(a_question)
     screen_play_generated_parts["screens"].append(extract_value_between(a_scene, "FOUND ON <", ">"))
+    an_element = {"item": extract_value_between(a_scene, "THANKS TO <", ">"),
+                  "screen": screen_play_generated_parts["screens"][0]}
+    screen_play_generated_parts["elements"].append(an_element)
     return screen_play_generated_parts
 
 
