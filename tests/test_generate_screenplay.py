@@ -22,7 +22,7 @@ class Test(TestCase):
     def test_generate_screenplay_basic(self):
         my_scene = """
                     > GIVEN <Actor> who can <Ability>
-                    > WHEN <Actor> does <Task> <Parameters>
+                    > WHEN <Actor> does <Task> with <Parameters>
                     > THEN <Actor> checks <Question> is <Assertion>
                     >       THANKS TO <element> FOUND ON <screen>
                     """
@@ -42,7 +42,7 @@ class Test(TestCase):
     # def test_generate_screenplay_with_jack(self):
     #     my_scene = """
     #     GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
-    #     WHEN <Jack> does <go to the pub> <The Sheep's Head Pub>
+    #     WHEN <Jack> does <go to the pub> with <The Sheep's Head Pub>
     #         AND does <order> <999 beers>
     #         THEN <Jack> checks <the bill's total amount> <is 999 × 2.59 EUR>
     #                   THANKS TO <the bill's total amount> FOUND ON <receipt>
