@@ -1,5 +1,5 @@
-from canvas.screen import Screen
-from canvas.screenplay import ScreenPlay
+from output_reference.screens.screen import Screen
+from output_reference.screenplay import ScreenPlay
 
 
 class Element (ScreenPlay):

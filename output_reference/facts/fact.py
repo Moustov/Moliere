@@ -1,5 +1,5 @@
-from canvas.question import Question
-from canvas.screenplay import ScreenPlay
+from output_reference.questions.question import Question
+from output_reference.screenplay import ScreenPlay
 
 
 class Fact (ScreenPlay):

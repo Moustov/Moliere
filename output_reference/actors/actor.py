@@ -1,8 +1,8 @@
-from canvas.ability import Ability
-from canvas.fact import Fact
-from canvas.question import Question
-from canvas.screenplay import ScreenPlay
-from canvas.task import Task
+from output_reference.abilities.ability import Ability
+from output_reference.facts.fact import Fact
+from output_reference.questions.question import Question
+from output_reference.screenplay import ScreenPlay
+from output_reference.tasks.task import Task
 
 
 class Actor (ScreenPlay):

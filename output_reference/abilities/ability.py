@@ -1,5 +1,5 @@
-from canvas.action import Action
-from canvas.screenplay import ScreenPlay
+from output_reference.actions.action import Action
+from output_reference.screenplay import ScreenPlay
 
 
 class Ability (ScreenPlay):

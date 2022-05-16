@@ -1,6 +1,6 @@
-from canvas.action import Action
-from canvas.actor import Actor
-from canvas.screenplay import ScreenPlay
+from output_reference.actions.action import Action
+from output_reference.actors.actor import Actor
+from output_reference.screenplay import ScreenPlay
 
 
 class Task (ScreenPlay):

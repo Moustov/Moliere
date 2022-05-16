@@ -1,4 +1,4 @@
-from canvas.screenplay import ScreenPlay
+from output_reference.screenplay import ScreenPlay
 
 
 class Screen (ScreenPlay):

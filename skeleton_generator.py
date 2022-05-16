@@ -14,15 +14,34 @@ class SkeletonGenerator:
             res += word[0].upper() + word[1:]
         return res
 
+    def generate_skeleton(self):
+        self.generate_skeleton_with_base_class("actor")
+        self.generate_skeleton_with_base_class("ability")
+        self.generate_skeleton_with_base_class("action")
+        self.generate_skeleton_with_base_class("element")
+        self.generate_skeleton_with_base_class("fact")
+        self.generate_skeleton_with_base_class("question")
+        self.generate_skeleton_with_base_class("screen")
+        self.generate_skeleton_with_base_class("task")
+        shutil.copyfile(os.path.normcase(f"canvas/screenplay.py"),
+                        os.path.normcase(f"{self.output_directory}/screenplay.py"))
 
-    def generate_skeleton_part(self, part: dict, part_type: str, regenerate_project: bool):
-        part_type_folder_name = f"{part_type.lower()}s"
+    def generate_skeleton_with_base_class(self, base_class:str):
+        part_type_folder_name = f"{base_class}s"
         if not os.path.exists(self.output_directory + f"/{part_type_folder_name}"):
             os.mkdir(self.output_directory + f"/{part_type_folder_name}")
             print("Directory ", self.output_directory + f"/{part_type_folder_name}", " Created ")
 
         shutil.copyfile(os.path.normcase(f"canvas/__init__.py"),
                         os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/__init__.py"))
+        shutil.copyfile(os.path.normcase(f"canvas/{base_class.lower()}.py"),
+                        os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class.lower()}.py"))
+
+    def generate_skeleton_part(self, part: dict, part_type: str, regenerate_project: bool):
+        part_type_folder_name = f"{part_type.lower()}s"
+        if not os.path.exists(self.output_directory + f"/{part_type_folder_name}"):
+            os.mkdir(self.output_directory + f"/{part_type_folder_name}")
+            print("Directory ", self.output_directory + f"/{part_type_folder_name}", " Created ")
         shutil.copyfile(os.path.normcase(f"canvas/{part_type.lower()}.py"),
                         os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{part_type.lower()}.py"))
 
@@ -58,7 +77,7 @@ class SkeletonGenerator:
             if not os.path.exists(self.output_directory):
                 os.mkdir(self.output_directory)
                 print("Directory ", self.output_directory, " Created ")
-
+        self.generate_skeleton()
         self.generate_skeleton_part(screenplay_objects["actors"], "Actor", regenerate_project)
         self.generate_skeleton_part(screenplay_objects["facts"], "Fact", regenerate_project)
         self.generate_skeleton_part(screenplay_objects["tasks"], "Task", regenerate_project)
