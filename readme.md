@@ -15,7 +15,7 @@ THEN <Actor> checks <Question> is <Assertion> THANKS TO <element> FOUND ON <scre
 See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Shakespeare/blob/master/tests/test_generate_screenplay.py)
 
 ## Screenplay Overview
-
+```
     @startuml
     ScreenPlay <|-- Actor
     ScreenPlay <|-- Fact
@@ -35,6 +35,7 @@ See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Sh
     Ability "1" o-- "n" Action : enables
     Action "1" o-- "n" Element : interacts with
     @enduml
+```
 
 Example:\
 generated from an SPDP scenario with `extract_questions(scenario)`
