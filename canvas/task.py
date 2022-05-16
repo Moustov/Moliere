@@ -1,15 +1,9 @@
-class Actor:
+from canvas.action import Action
+
+
+class Task:
     def __init__(self):
-        pass
+        self.made_of = []
 
-    def learns(self):
-        pass
-
-    def asks(self):
-        pass
-
-    def has(self):
-        pass
-
-    def performs(self):
+    def performs_as(self):
         pass
