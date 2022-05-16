@@ -45,21 +45,19 @@ generated from an SPDP scenario with `extract_questions(scenario)`
     element_2.can_be_found_on(page_1)
     element_3.can_be_found_on(page_2)
     element_4.can_be_found_on(page_1)
-    element_5.can_be_found_on(page_3)
-    action_1.add_interaction(1, element_1)
-    action_1.add_interaction(2, element_2)
-    action_2.add_interaction(1, element_3)
-    action_2.add_interaction(2, element_4)
+    element_5.can_be_found_on(the_mailbox)
+    action_1.add_interaction(element_1)
+    action_2.add_interaction(element_3)
     a_task.set_sequence([{"task": "sequence #1", 
-                        "actions": [{"sequence": 1, "action": action_1}, 
-                                    {"sequence": 2, "action": action_2}])
+                        "actions": [{"sequence": 1, "action": action_1, "param": 123}, 
+                                    {"sequence": 2, "action": action_2, "param": click}])
     an_actor.accomplishes(a_task)
 
     another_actor.name = "a Tester"
-    action_3.add_interaction(1, element_4)
-    action_4.add_feedback(2, element_5)
+    action_3.add_interaction(element_4)
+    action_4.add_feedback(element_5)
     checks_1 = [{"task": "sequence of checks #1", 
-                "actions": [{"action": action_3, "sequence": 1},
+                "actions": [{"action": action_3, "sequence": 1, "param": 456},
                             {"check": action_4, "sequence": 2}]
     a_test.set_actions(checks_1)
     feedback = another_actor.accomplishes(checks_1)
@@ -68,12 +66,18 @@ generated from an SPDP scenario with `extract_questions(scenario)`
 output:
 ```
 John does the sequence #1
-   <action_1.name>\
-   and <action_2.name>\
+    -> <action_1.name> with 123 on element_1 in page 1
+    -> and <action_2.name> with a click on element_3 in page 2
 Then a Tester sequence of checks #1
-    <action_3.name> 
-    and sees 32 EUR on page 5 (element_5)
+    -> <action_3.name> with 456
+    <- and sees 32 EUR from element_5 in the_mailbox
 ```
+As per ["doc as a test"](https://github.com/sfauvel/doc_as_test_pytest)
+and ["Documentation Testing"](https://github.com/sfauvel/documentationtesting),
+the output can simply be compared with previous outputs to check regression.
+
+
+
 ## How to reach the example?
 1. ideate SPDP gherkin-like scenarios
 2. digest the scenario to generate SPDP classes & tests
