@@ -12,13 +12,14 @@ def change_to_camel_case(class_name: str):
         res += word[0].upper() + word[1:]
     return res
 
-
 class SkeletonGenerator:
     def __init__(self, output_dir: str):
         self.output_directory = output_dir
+        self.packages = []
 
     def generate_skeleton(self):
         """Copy base classes to self.output_directory"""
+        self.packages = []
         self.generate_skeleton_with_base_class("actor")
         self.generate_skeleton_with_base_class("ability", "abilities")
         self.generate_skeleton_with_base_class("action")
@@ -30,11 +31,20 @@ class SkeletonGenerator:
         shutil.copyfile(os.path.normcase(f"canvas/screenplay.py"),
                         os.path.normcase(f"{self.output_directory}/screenplay.py"))
 
+    def update_imports(self, part_type_folder_name: str, base_class: str):
+        with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class}.py"), "r") as class_file:
+            the_class = class_file.read()
+            the_class = self.refactor_packages(the_class)
+        with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class}.py"),
+                  "w") as class_file:
+            class_file.write(the_class)
+
     def generate_skeleton_with_base_class(self, base_class: str, folder_name: str = None):
         """Copy a base class
         :param base_class: one of the SPDP base class
         :param folder_name: this string is to be used as the destination folder
         """
+        self.packages.append({"base_class": base_class, "folder_name": folder_name})
         part_type_folder_name = ""
         if folder_name is not None:
             part_type_folder_name = folder_name
@@ -48,6 +58,7 @@ class SkeletonGenerator:
                         os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/__init__.py"))
         shutil.copyfile(os.path.normcase(f"canvas/{base_class.lower()}.py"),
                         os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class.lower()}.py"))
+        self.update_imports(part_type_folder_name, base_class)
 
     def generate_skeleton_part(self, the_part: dict, part_type: str, regenerate_project: bool):
         """Generate the classes from the_part
@@ -108,6 +119,9 @@ class SkeletonGenerator:
         self.generate_skeleton_complex_part(screenplay_objects["abilities"], "Ability", regenerate_project)
         self.generate_skeleton_part(screenplay_objects["screens"], "Screen", regenerate_project)
         self.generate_skeleton_complex_part(screenplay_objects["actions"], "Action", regenerate_project)
+
+    def refactor_packages(self, the_class: str) -> str:
+        return the_class
 
 
 if __name__ == '__main__':
