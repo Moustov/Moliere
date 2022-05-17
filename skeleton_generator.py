@@ -121,7 +121,14 @@ class SkeletonGenerator:
         self.generate_skeleton_complex_part(screenplay_objects["actions"], "Action", regenerate_project)
 
     def refactor_packages(self, the_class: str) -> str:
-        return the_class
+        imports = """
+        from canvas.action import Action
+        """
+        expected_imports = """
+        from output.actions.action import Action
+        """
+
+        return expected_imports
 
 
 if __name__ == '__main__':
