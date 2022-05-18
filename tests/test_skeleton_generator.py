@@ -57,13 +57,90 @@ class Test(TestCase):
         generator.generate_skeleton_part(screenplay_generated_parts["actors"], "Actor", True)
         self.assertTrue(os.path.isfile(os.path.normcase(f"{output_dir}/actors/actor.py")))
 
-    def test_refactor_packages_action_simple(self):
+    def test_refactor_packages_abilities_simple(self):
         generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
-from canvas.action import Action
+from canvas.ability import Ability
 """
         expected_imports = """
-from output.actions.action import Action
+from output.abilities.ability import Ability
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_actor_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.actor import Actor
+"""
+        expected_imports = """
+from output.actors.actor import Actor
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_element_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.element import Element
+"""
+        expected_imports = """
+from output.elements.element import Element
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_fact_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.fact import Fact
+"""
+        expected_imports = """
+from output.facts.fact import Fact
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_question_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.question import Question
+"""
+        expected_imports = """
+from output.questions.question import Question
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_screen_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.screen import Screen
+"""
+        expected_imports = """
+from output.screens.screen import Screen
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_task_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.task import Task
+"""
+        expected_imports = """
+from output.tasks.task import Task
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
+    def test_refactor_packages_screenplay_simple(self):
+        generator = SkeletonGenerator("output", regenerate_project=True)
+        imports = """
+from canvas.screenplay import ScreenPlay
+"""
+        expected_imports = """
+from output.screenplay import ScreenPlay
 """
         refactored_imports = generator.refactor_packages(imports, "output")
         self.assertEqual(refactored_imports, expected_imports)
