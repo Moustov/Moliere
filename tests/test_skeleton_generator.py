@@ -58,14 +58,14 @@ class Test(TestCase):
         self.assertTrue(os.path.isfile(os.path.normcase(f"{output_dir}/actors/actor.py")))
 
     def test_refactor_packages_action_simple(self):
-        generator = SkeletonGenerator("output")
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.action import Action
 """
         expected_imports = """
 from output.actions.action import Action
 """
-        refactored_imports = generator.refactor_packages(imports)
+        refactored_imports = generator.refactor_packages(imports, "output")
         self.assertEqual(refactored_imports, expected_imports)
 
 #     def test_refactor_packages_action_all_imports(self):

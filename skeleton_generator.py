@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from extract_objects import extract_value_between
+
 
 def change_to_camel_case(class_name: str):
     """Turns a class name into PEP8 standard (ie. with CamelCase)
@@ -13,52 +15,64 @@ def change_to_camel_case(class_name: str):
     return res
 
 class SkeletonGenerator:
-    def __init__(self, output_dir: str):
+    def __init__(self, output_dir: str, regenerate_project: bool=False):
         self.output_directory = output_dir
         self.packages = []
+        self.initiate_skeleton(regenerate_project)
 
-    def generate_skeleton(self):
+    def initiate_skeleton(self, regenerate_project: bool=False):
         """Copy base classes to self.output_directory"""
         self.packages = []
-        self.generate_skeleton_with_base_class("actor")
+        if regenerate_project:
+            shutil.rmtree(self.output_directory)
+            if not os.path.exists(self.output_directory):
+                os.mkdir(self.output_directory)
+                print("Directory ", self.output_directory, " Created ")
+
+        self.packages.append({"base_class": "Actor", "folder_name": "actors", "file_name": "actor.py"})
+        self.packages.append({"base_class": "Fact", "folder_name": "facts", "file_name": "fact.py"})
+        self.packages.append({"base_class": "Task", "folder_name": "tasks", "file_name": "task.py"})
+        self.packages.append({"base_class": "Question", "folder_name": "questions", "file_name": "question.py"})
+        self.packages.append({"base_class": "Element", "folder_name": "elements", "file_name": "element.py"})
+        self.packages.append({"base_class": "Ability", "folder_name": "abilities", "file_name": "ability.py"})
+        self.packages.append({"base_class": "Screen", "folder_name": "screens", "file_name": "screen.py"})
+        self.packages.append({"base_class": "Action", "folder_name": "actions", "file_name": "action.py"})
+        self.packages.append({"base_class": "ScreenPlay", "folder_name": "", "file_name": "screenplay.py"})
+
+        self.generate_skeleton_with_base_class("actor", "actors")
         self.generate_skeleton_with_base_class("ability", "abilities")
-        self.generate_skeleton_with_base_class("action")
-        self.generate_skeleton_with_base_class("element")
-        self.generate_skeleton_with_base_class("fact")
-        self.generate_skeleton_with_base_class("question")
-        self.generate_skeleton_with_base_class("screen")
-        self.generate_skeleton_with_base_class("task")
+        self.generate_skeleton_with_base_class("action", "actions")
+        self.generate_skeleton_with_base_class("element", "elements")
+        self.generate_skeleton_with_base_class("fact", "facts")
+        self.generate_skeleton_with_base_class("question", "questions")
+        self.generate_skeleton_with_base_class("screen", "screens")
+        self.generate_skeleton_with_base_class("task", "tasks")
         shutil.copyfile(os.path.normcase(f"canvas/screenplay.py"),
                         os.path.normcase(f"{self.output_directory}/screenplay.py"))
 
     def update_imports(self, part_type_folder_name: str, base_class: str):
+        the_class = ""
         with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class}.py"), "r") as class_file:
             the_class = class_file.read()
-            the_class = self.refactor_packages(the_class)
+            the_class = self.refactor_packages(the_class, self.output_directory)
+            class_file.close()
         with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class}.py"),
                   "w") as class_file:
             class_file.write(the_class)
+            class_file.close()
 
     def generate_skeleton_with_base_class(self, base_class: str, folder_name: str = None):
         """Copy a base class
         :param base_class: one of the SPDP base class
         :param folder_name: this string is to be used as the destination folder
         """
-        self.packages.append({"base_class": base_class, "folder_name": folder_name})
-        part_type_folder_name = ""
-        if folder_name is not None:
-            part_type_folder_name = folder_name
-        else:
-            part_type_folder_name = f"{base_class}s"
-        if not os.path.exists(self.output_directory + f"/{part_type_folder_name}"):
-            os.mkdir(self.output_directory + f"/{part_type_folder_name}")
-            print("Directory ", self.output_directory + f"/{part_type_folder_name}", " Created ")
+        os.makedirs(self.output_directory + f"/{folder_name}", exist_ok=True)
 
         shutil.copyfile(os.path.normcase(f"canvas/__init__.py"),
-                        os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/__init__.py"))
+                        os.path.normcase(f"{self.output_directory}/{folder_name}/__init__.py"))
         shutil.copyfile(os.path.normcase(f"canvas/{base_class.lower()}.py"),
-                        os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class.lower()}.py"))
-        self.update_imports(part_type_folder_name, base_class)
+                        os.path.normcase(f"{self.output_directory}/{folder_name}/{base_class.lower()}.py"))
+        self.update_imports(folder_name, base_class)
 
     def generate_skeleton_part(self, the_part: dict, part_type: str, regenerate_project: bool):
         """Generate the classes from the_part
@@ -66,10 +80,9 @@ class SkeletonGenerator:
         :param part_type:
         :param the_part:
         """
-        part_type_folder_name = f"{part_type.lower()}s"
-        if not os.path.exists(self.output_directory + f"/{part_type_folder_name}"):
-            os.mkdir(self.output_directory + f"/{part_type_folder_name}")
-            print("Directory ", self.output_directory + f"/{part_type_folder_name}", " Created ")
+        part_type_folder_name = self.get_folder_name_from_file_name(the_part)
+        os.makedirs(self.output_directory + f"/{part_type_folder_name}", exist_ok=True)
+        print("Directory ", self.output_directory + f"/{part_type_folder_name}", " Created ")
         shutil.copyfile(os.path.normcase(f"canvas/{part_type.lower()}.py"),
                         os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{part_type.lower()}.py"))
         for class_name in the_part:
@@ -105,12 +118,6 @@ class SkeletonGenerator:
         :param screenplay_objects:
         :return:
         """
-        if regenerate_project:
-            shutil.rmtree(self.output_directory)
-            if not os.path.exists(self.output_directory):
-                os.mkdir(self.output_directory)
-                print("Directory ", self.output_directory, " Created ")
-        self.generate_skeleton()
         self.generate_skeleton_part(screenplay_objects["actors"], "Actor", regenerate_project)
         self.generate_skeleton_part(screenplay_objects["facts"], "Fact", regenerate_project)
         self.generate_skeleton_part(screenplay_objects["tasks"], "Task", regenerate_project)
@@ -120,15 +127,50 @@ class SkeletonGenerator:
         self.generate_skeleton_part(screenplay_objects["screens"], "Screen", regenerate_project)
         self.generate_skeleton_complex_part(screenplay_objects["actions"], "Action", regenerate_project)
 
-    def refactor_packages(self, the_class: str) -> str:
-        imports = """
-        from canvas.action import Action
+    def refactor_packages(self, the_class: str, dest_folder: str) -> str:
         """
-        expected_imports = """
-        from output.actions.action import Action
+        turns "from canvas.action import Action" into "from output.actions.action import Action"
+        :param the_class:
+        :param dest_folder:
+        :return:
         """
+        final_code = ""
+        code_lines = the_class.split("\n")
+        for line in code_lines:
+            import_clauses = line.split("from")
+            the_line = ""
+            is_processed = False
+            for import_clause in import_clauses:
+                if import_clause.find("canvas.") > -1 and import_clause.find("import") > -1:
+                    is_processed = True
+                    class_name = extract_value_between(import_clause, "canvas.", " import")
+                    package_folder = self.get_folder_name_from_file_name(class_name)
+                    if package_folder is not None:
+                        if package_folder == "":
+                            the_line = line.replace("canvas.", f"canvas.{package_folder}")
+                        else:
+                            the_line = line.replace("canvas.", f"canvas.{package_folder}.")
+                    else:
+                        raise Exception(f"Package for {class_name} not found")
+                if not is_processed:
+                    the_line = line
+            final_code += the_line.replace("canvas", dest_folder) + "\n"
+        final_code = final_code[:-1]
+        return final_code
 
-        return expected_imports
+    def get_folder_name_from_file_name(self, file_name_extensionless: str) -> str:
+        """
+        return the folder name associated with the class
+        :param file_name_extensionless:
+        :return: None if not found
+        """
+        for package in self.packages:
+            try:
+                if package["base_class"].lower() == file_name_extensionless.lower():
+                    return package["folder_name"]
+            except:
+                    print(file_name_extensionless)
+        return None
 
 
 if __name__ == '__main__':

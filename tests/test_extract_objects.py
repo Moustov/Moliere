@@ -1,6 +1,6 @@
 from unittest import TestCase
 from deepdiff import DeepDiff
-from extract_objects import extract_screenplay_objects
+from extract_objects import extract_screenplay_objects, extract_value_between
 
 
 class Test(TestCase):
@@ -111,3 +111,14 @@ class Test(TestCase):
         screen_play_generated_parts = extract_screenplay_objects(my_scene)
         diff = DeepDiff(screen_play_generated_parts, expected_screen_play_generated_parts, ignore_order=True)
         self.assertEqual(diff, {})
+
+    def test_extract_value_between(self):
+        res = extract_value_between("<HTML>", "<", ">")
+        self.assertEqual(res, "HTML")
+
+    def test_extract_value_between(self):
+        try:
+            res = extract_value_between("HTML>", "<", ">")
+            self.assertEqual(res, "HTML")
+        except:
+            self.assertTrue(True)
