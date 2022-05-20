@@ -28,7 +28,7 @@ class Test(TestCase):
         }
         output_dir = "output"
         generator = SkeletonGenerator(output_dir)
-        generator.generate_skeleton_part("actors", "Actor", screenplay_generated_parts["actors"], True)
+        new_class = generator.generate_skeleton_part("actors", "Actor", screenplay_generated_parts["actors"], True)
         self.assertTrue(os.path.isfile(os.path.normcase(f"{output_dir}/actors/actor.py")))
 
     def test_generate_actors_skeleton_jack2(self):
@@ -145,15 +145,16 @@ from output.screenplay import ScreenPlay
         refactored_imports = generator.refactor_packages(imports, "output")
         self.assertEqual(refactored_imports, expected_imports)
 
-#     def test_refactor_packages_action_all_imports(self):
-#         generator = SkeletonGenerator("output")
-#         imports = """
-# from canvas.action import Action
-# from canvas.screenplay import ScreenPlay
-# """
-#         expected_imports = """
-# from output.actions.action import Action
-# from output.screenplay import ScreenPlay
-# """
-#         refactored_imports = generator.refactor_packages(imports)
-#         self.assertEqual(refactored_imports, expected_imports)
+    def test_refactor_packages_action_all_imports(self):
+        generator = SkeletonGenerator("output")
+        imports = """
+from canvas.action import Action
+from canvas.screenplay import ScreenPlay
+"""
+        expected_imports = """
+from output.actions.action import Action
+from output.screenplay import ScreenPlay
+"""
+        refactored_imports = generator.refactor_packages(imports, "output")
+        self.assertEqual(refactored_imports, expected_imports)
+
