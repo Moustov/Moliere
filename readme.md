@@ -36,6 +36,7 @@ See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Sh
     Action "1" o-- "n" Element : interacts with
     @enduml
 ```
+#_**todo:** update readme with full example from an SPDP scenario to the generated scenario + test output_
 
 Example:\
 generated from an SPDP scenario with `extract_questions(scenario)`
