@@ -2,10 +2,10 @@ from extract_objects import extract_screenplay_objects
 from skeleton_generator import SkeletonGenerator
 
 
-def generate_screenplay(a_scene: str):
+def generate_screenplay(a_scene: str, regenerate_project: bool = False):
     my_screenplay_objects = extract_screenplay_objects(a_scene)
     generator = SkeletonGenerator("output")
-    generator.generate_skeleton_parts(my_screenplay_objects, True)
+    generator.generate_skeleton_parts(my_screenplay_objects, regenerate_project)
 
 
 if __name__ == '__main__':
@@ -16,4 +16,4 @@ if __name__ == '__main__':
                 THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
                           THANKS TO <the total amount> FOUND ON <the bill>
             """
-    generate_screenplay(my_scene)
+    generate_screenplay(my_scene, True)

@@ -28,7 +28,7 @@ class Test(TestCase):
         }
         output_dir = "output"
         generator = SkeletonGenerator(output_dir)
-        generator.generate_skeleton_part(screenplay_generated_parts["actors"], "Actor", True)
+        generator.generate_skeleton_part("actors", "Actor", screenplay_generated_parts["actors"], True)
         self.assertTrue(os.path.isfile(os.path.normcase(f"{output_dir}/actors/actor.py")))
 
     def test_generate_actors_skeleton_jack2(self):
@@ -54,7 +54,7 @@ class Test(TestCase):
         }
         output_dir = "output"
         generator = SkeletonGenerator(output_dir)
-        generator.generate_skeleton_part(screenplay_generated_parts["actors"], "Actor", True)
+        generator.generate_skeleton_part("actors", "Actor", screenplay_generated_parts["actors"], True)
         self.assertTrue(os.path.isfile(os.path.normcase(f"{output_dir}/actors/actor.py")))
 
     def test_refactor_packages_abilities_simple(self):

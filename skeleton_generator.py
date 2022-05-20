@@ -38,7 +38,6 @@ class SkeletonGenerator:
         self.packages.append({"base_class": "Screen", "folder_name": "screens", "file_name": "screen.py"})
         self.packages.append({"base_class": "Action", "folder_name": "actions", "file_name": "action.py"})
         self.packages.append({"base_class": "ScreenPlay", "folder_name": "", "file_name": "screenplay.py"})
-
         self.generate_skeleton_with_base_class("actor", "actors")
         self.generate_skeleton_with_base_class("ability", "abilities")
         self.generate_skeleton_with_base_class("action", "actions")
@@ -52,7 +51,8 @@ class SkeletonGenerator:
 
     def update_imports(self, part_type_folder_name: str, base_class: str):
         the_class = ""
-        with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class}.py"), "r") as class_file:
+        with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}"
+                                   f"/{base_class}.py"), "r") as class_file:
             the_class = class_file.read()
             the_class = self.refactor_packages(the_class, self.output_directory)
             class_file.close()
@@ -61,46 +61,52 @@ class SkeletonGenerator:
             class_file.write(the_class)
             class_file.close()
 
-    def generate_skeleton_with_base_class(self, base_class: str, folder_name: str = None):
+    def generate_skeleton_with_base_class(self, base_class: str, folder_name: str = None,
+                                          regenerate_project: bool = False):
         """Copy a base class
+        :param regenerate_project:
         :param base_class: one of the SPDP base class
         :param folder_name: this string is to be used as the destination folder
         """
         os.makedirs(self.output_directory + f"/{folder_name}", exist_ok=True)
-
+        print("Directory ", self.output_directory + f"/{folder_name}", " Created ")
         shutil.copyfile(os.path.normcase(f"canvas/__init__.py"),
                         os.path.normcase(f"{self.output_directory}/{folder_name}/__init__.py"))
         shutil.copyfile(os.path.normcase(f"canvas/{base_class.lower()}.py"),
                         os.path.normcase(f"{self.output_directory}/{folder_name}/{base_class.lower()}.py"))
         self.update_imports(folder_name, base_class)
 
-    def generate_skeleton_part(self, the_part: dict, part_type: str, regenerate_project: bool):
+    def generate_skeleton_part(self, screenplay_package_name: str, screenplay_superclass_name: str, classes: dict,
+                               regenerate_project: bool):
         """Generate the classes from the_part
+        :param classes:
         :param regenerate_project:
-        :param part_type:
-        :param the_part:
+        :param screenplay_superclass_name:
+        :param screenplay_package_name:
         """
-        part_type_folder_name = self.get_folder_name_from_file_name(the_part)
-        os.makedirs(self.output_directory + f"/{part_type_folder_name}", exist_ok=True)
-        print("Directory ", self.output_directory + f"/{part_type_folder_name}", " Created ")
-        shutil.copyfile(os.path.normcase(f"canvas/{part_type.lower()}.py"),
-                        os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{part_type.lower()}.py"))
-        for class_name in the_part:
+        shutil.copyfile(os.path.normcase(f"canvas/{screenplay_superclass_name.lower()}.py"),
+                        os.path.normcase(f"{self.output_directory}/{screenplay_package_name}"
+                                         f"/{screenplay_superclass_name.lower()}.py"))
+        for class_name in classes:
             class_canvas = ""
             class_name = change_to_camel_case(class_name)
             with open(os.path.normcase("canvas/class_canvas.py"), "r") as class_canvas_file:
                 class_canvas = class_canvas_file.read()
-            class_canvas = class_canvas.replace("TheClassType", part_type)
+            class_canvas = class_canvas.replace("TheClassType", screenplay_superclass_name)
             class_canvas = class_canvas.replace("TheClass", class_name)
             class_canvas = class_canvas.replace("#YOUR IMPORTS",
-                                                f"from {self.output_directory}.{part_type_folder_name}.{part_type.lower()} import {part_type}")
-            with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{class_name}.py"),
+                                                f"from {self.output_directory}.{screenplay_package_name}"
+                                                f".{screenplay_superclass_name.lower()} "
+                                                f"import {screenplay_superclass_name}")
+            with open(os.path.normcase(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py"),
                       "w") as class_file:
                 class_file.write(class_canvas)
 
-    def generate_skeleton_complex_part(self, the_part: dict , part_type: str, regenerate_project: bool):
+    def generate_skeleton_complex_part(self, package_name, part_type: str, the_part: dict, regenerate_project: bool):
         """
-        same as generate_skeleton_part except it handles objects with parameters such as questions, elements, abilities and actoins
+        same as generate_skeleton_part except it handles objects with parameters
+        such as questions, elements, abilities and actoins
+        :param package_name:
         :param the_part:
         :param part_type:
         :param regenerate_project:
@@ -118,14 +124,14 @@ class SkeletonGenerator:
         :param screenplay_objects:
         :return:
         """
-        self.generate_skeleton_part(screenplay_objects["actors"], "Actor", regenerate_project)
-        self.generate_skeleton_part(screenplay_objects["facts"], "Fact", regenerate_project)
-        self.generate_skeleton_part(screenplay_objects["tasks"], "Task", regenerate_project)
-        self.generate_skeleton_complex_part(screenplay_objects["questions"], "Question", regenerate_project)
-        self.generate_skeleton_complex_part(screenplay_objects["elements"], "Element", regenerate_project)
-        self.generate_skeleton_complex_part(screenplay_objects["abilities"], "Ability", regenerate_project)
-        self.generate_skeleton_part(screenplay_objects["screens"], "Screen", regenerate_project)
-        self.generate_skeleton_complex_part(screenplay_objects["actions"], "Action", regenerate_project)
+        self.generate_skeleton_part("actors", "Actor", screenplay_objects["actors"], regenerate_project)
+        self.generate_skeleton_part("facts", "Fact", screenplay_objects["facts"], regenerate_project)
+        self.generate_skeleton_part("tasks", "Task", screenplay_objects["tasks"], regenerate_project)
+        self.generate_skeleton_complex_part("questions", "Question", screenplay_objects["questions"], regenerate_project)
+        self.generate_skeleton_complex_part("elements", "Element", screenplay_objects["elements"], regenerate_project)
+        self.generate_skeleton_complex_part("abilities", "Ability", screenplay_objects["abilities"], regenerate_project)
+        self.generate_skeleton_part("screens", "Screen", screenplay_objects["screens"], regenerate_project)
+        self.generate_skeleton_complex_part("actions", "Action", screenplay_objects["actions"], regenerate_project)
 
     def refactor_packages(self, the_class: str, dest_folder: str) -> str:
         """
