@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from target_languages.python_translator import generate_constructor
+from target_languages.python_translator import ClassGenerator
 
 
 class Test(TestCase):
@@ -18,10 +18,11 @@ class Test(TestCase):
                 {"name": "m2", "parameters": ["p1"], "code": "print(p1)"}
             ]
         }
-        init_code = generate_constructor(json_class_example["properties"])
-        expected_value = """def __init__(self, prop1="v1", prop2="v2"):
-    self.prop1 = prop1
-    self.prop2 = prop2
+        cg = ClassGenerator(".")
+        init_code = cg.generate_constructor(json_class_example["properties"])
+        expected_value = """    def __init__(self, prop1="v1", prop2="v2"):
+        self.prop1 = prop1
+        self.prop2 = prop2
 """
         self.assertEqual(init_code, expected_value)
 
@@ -39,9 +40,10 @@ class Test(TestCase):
                 {"name": "m2", "parameters": ["p1"], "code": "print(p1)"}
             ]
         }
-        init_code = generate_constructor(json_class_example["properties"])
-        expected_value = """def __init__(self, prop1, prop2):
-    self.prop1 = prop1
-    self.prop2 = prop2
+        cg = ClassGenerator(".")
+        init_code = cg.generate_constructor(json_class_example["properties"])
+        expected_value = """    def __init__(self, prop1, prop2):
+        self.prop1 = prop1
+        self.prop2 = prop2
 """
         self.assertEqual(init_code, expected_value)
