@@ -47,3 +47,31 @@ def generate_valid_method_name(method_name: str) -> str:
         else:
             res += "_"
     return res
+
+
+def generate_constructor(properties: [dict]) -> str:
+    """
+    :param properties:
+    :return:
+    """
+    parameters = ""
+    initialize_code = ""
+    for a_property in properties:
+        if "default value" in a_property.keys() and a_property["default value"] is not None:
+            parameters += f", {a_property['name']}=\"{a_property['default value']}\""
+        else:
+            parameters += ", " + a_property["name"]
+        initialize_code += f"\n    self.{a_property['name']} = {a_property['name']}"
+    code = f"def __init__(self{parameters}):{initialize_code}\n"
+    return code
+
+
+def serialize_class_definition(json_class: dict):
+    class_file_path : json_class["package"]
+    with open(class_file_path, "w") as class_file:
+        ancestors_string = ""
+        if len(json_class["inherits from"]) > 0:
+            ancestors_string = "(" + ", ".join(json_class["inherits from"]) + ")"
+        class_file.write(f"class {json_class['class_name']} {ancestors_string}:")
+        init_method = generate_constructor(json_class["properties"])
+        class_file.write(init_method)
