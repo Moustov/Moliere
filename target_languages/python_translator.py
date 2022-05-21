@@ -2,6 +2,8 @@ from os import makedirs
 
 import unicodedata
 
+from extract_objects import extract_value_between
+
 
 def translate_to_python_names(a_name) -> str:
     """
@@ -58,6 +60,7 @@ class ClassGenerator:
 
     def generate_constructor(self, properties: [dict]) -> str:
         """
+        todo add "super.__init__(self)" for each ancestor
         :param tab_size:
         :param properties:
         :return:
@@ -119,6 +122,54 @@ class ClassGenerator:
             class_file.write(init_method)
             class_file.write(methods_code)
 
+    def deserialize(self, class_path: str) -> dict:
+        class_content = []
+        with open(class_path, "r") as class_file:
+            class_content = class_file.readlines()
+            class_file.close()
+        return self.deserialize(class_path, class_content)
+
+    def deserializes(self, class_path: str, class_content: [str]) -> dict:
+        current_line = 0
+        json_class = {}
+        json_class["package"] = ".".join(class_path.split("/")[:1])
+        line = class_content[current_line]
+        current_line += 1
+        imports = []
+        while not line.startswith("class"):
+            if line.startswith("from") or line.startswith("import"):
+                imports.append(line)
+            line = class_content[current_line]
+            current_line += 1
+        json_class["imports"] = imports
+        class_definition = line
+        words = class_definition.split(" ")
+        json_class["class_name"] = words[1]
+        super_classes = extract_value_between(line, "(", ")")
+        json_class["inherits from"] = super_classes.split(",")
+        while not line.startswith(f"{self.tabs}def"):
+            line = class_content[current_line]
+            current_line += 1
+        json_class["methods"] = []
+        while current_line < len(class_content):
+            method_parameters = extract_value_between(line, "(", ")")
+            method_name = extract_value_between(line, "def", "(")
+            line = class_content[current_line]
+            current_line += 1
+            method_code = ""
+            while current_line < len(class_content) and not line.startswith(f"{self.tabs}def"):
+                method_code += line + "\n"
+                line = class_content[current_line]
+                current_line += 1
+            if line == "\n":
+                method_code = method_code[:-1]
+            params = []
+            for param in method_parameters.split(","):
+                params.append(param.strip())
+            json_class["methods"].append({"name": method_name.strip(),
+                                          "parameters": params,
+                                          "code": method_code})
+        return json_class
 
 if __name__ == '__main__':
     json_class_example = {
