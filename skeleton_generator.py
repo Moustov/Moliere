@@ -75,9 +75,6 @@ class SkeletonGenerator:
         :param screenplay_superclass_name:
         :param screenplay_package_name:
         """
-        # shutil.copyfile(os.path.normcase(f"canvas/{screenplay_superclass_name.lower()}.py"),
-        #                 os.path.normcase(f"{self.output_directory}/{screenplay_package_name}"
-        #                                  f"/{screenplay_superclass_name.lower()}.py"))
         for class_name in classes:
             class_canvas = ""
             class_name = generate_valid_class_name(class_name)
