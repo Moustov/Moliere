@@ -4,14 +4,17 @@ import shutil
 from extract_objects import extract_value_between
 
 
-def change_to_camel_case(class_name: str):
+def generate_valid_class_name(class_name: str):
     """Turns a class name into PEP8 standard (ie. with CamelCase)
     :param class_name: a class name
     """
     words = class_name.split(" ")
     res = ""
     for word in words:
-        res += word[0].upper() + word[1:]
+        if word[0].isdigit():
+            res += "Some" + word
+        else:
+            res += word[0].upper() + word[1:]
     return res
 
 class SkeletonGenerator:
@@ -89,7 +92,7 @@ class SkeletonGenerator:
                                          f"/{screenplay_superclass_name.lower()}.py"))
         for class_name in classes:
             class_canvas = ""
-            class_name = change_to_camel_case(class_name)
+            class_name = generate_valid_class_name(class_name)
             with open(os.path.normcase("canvas/class_canvas.py"), "r") as class_canvas_file:
                 class_canvas = class_canvas_file.read()
             class_canvas = class_canvas.replace("TheClassType", screenplay_superclass_name)
