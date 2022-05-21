@@ -1,29 +1,64 @@
 import os
 import shutil
-
+import unicodedata
 from extract_objects import extract_value_between
 
 
-def generate_valid_class_name(class_name: str):
+def translate_to_python_names(a_name) -> str:
+    """
+    translates a string into something compatible with python
+    see https://stackoverflow.com/questions/2365411/convert-unicode-to-ascii-without-errors-in-python
+    todo: use phonetic eg. if japanese "あ" could be translated to "a"
+    (see eg https://programminghistorian.org/en/lessons/transliterating)
+    :param a_name:
+    :return:
+    """
+    return unicodedata.normalize('NFKD', a_name).encode('ascii', 'ignore').decode()
+
+
+def generate_valid_class_name(class_name: str) -> str:
     """Turns a class name into PEP8 standard (ie. with CamelCase)
     :param class_name: a class name
     """
+    class_name = translate_to_python_names(class_name)
     words = class_name.split(" ")
     res = ""
     for word in words:
+        word = word.replace("'", "")
         if word[0].isdigit():
             res += "Some" + word
         else:
             res += word[0].upper() + word[1:]
     return res
 
+
+def generate_valid_method_name(method_name: str) -> str:
+    """
+    Turns a method_name name into PEP8 standard (ie. with '_')
+    :param method_name:
+    :return:
+    """
+    method_name = translate_to_python_names(method_name)
+    res = ""
+    for c in method_name:
+        if ord('0') <= ord(c) <= ord('9') \
+                or ord('a') <= ord(c) <= ord('z') \
+                or ord('A') <= ord(c) <= ord('Z'):
+            res += c
+        elif ord(c) == ord("*") or ord(c) == ord("×"):
+            res += "x"
+        else:
+            res += "_"
+    return res
+
+
 class SkeletonGenerator:
-    def __init__(self, output_dir: str, regenerate_project: bool=False):
+    def __init__(self, output_dir: str, regenerate_project: bool = False):
         self.output_directory = output_dir
         self.packages = []
         self.initiate_skeleton(regenerate_project)
 
-    def initiate_skeleton(self, regenerate_project: bool=False):
+    def initiate_skeleton(self, regenerate_project: bool = False):
         """Copy base classes to self.output_directory"""
         self.packages = []
         if regenerate_project:
@@ -79,17 +114,17 @@ class SkeletonGenerator:
                         os.path.normcase(f"{self.output_directory}/{folder_name}/{base_class.lower()}.py"))
         self.update_imports(folder_name, base_class)
 
-    def generate_skeleton_part(self, screenplay_package_name: str, screenplay_superclass_name: str, classes: dict,
-                               regenerate_project: bool):
+    def generate_skeleton_parts_from_items(self, screenplay_package_name: str, screenplay_superclass_name: str, classes: dict,
+                                           regenerate_project: bool):
         """Generate the classes from the_part
         :param classes:
         :param regenerate_project:
         :param screenplay_superclass_name:
         :param screenplay_package_name:
         """
-        shutil.copyfile(os.path.normcase(f"canvas/{screenplay_superclass_name.lower()}.py"),
-                        os.path.normcase(f"{self.output_directory}/{screenplay_package_name}"
-                                         f"/{screenplay_superclass_name.lower()}.py"))
+        # shutil.copyfile(os.path.normcase(f"canvas/{screenplay_superclass_name.lower()}.py"),
+        #                 os.path.normcase(f"{self.output_directory}/{screenplay_package_name}"
+        #                                  f"/{screenplay_superclass_name.lower()}.py"))
         for class_name in classes:
             class_canvas = ""
             class_name = generate_valid_class_name(class_name)
@@ -105,17 +140,22 @@ class SkeletonGenerator:
                       "w") as class_file:
                 class_file.write(class_canvas)
 
-    def generate_skeleton_complex_part(self, package_name, part_type: str, the_part: dict, regenerate_project: bool):
+    def generate_skeleton_questions(self, question_parts: dict, regenerate_project: bool):
         """
         same as generate_skeleton_part except it handles objects with parameters
         such as questions, elements, abilities and actoins
-        :param package_name:
-        :param the_part:
         :param part_type:
         :param regenerate_project:
         :return:
         """
-        pass
+        screenplay_objects = []
+        for part in question_parts:
+            screenplay_objects.append(part["check"])
+        self.generate_skeleton_parts_from_items("elements", "Element", screenplay_objects, regenerate_project)
+        # todo generate function from "is"
+        for part in question_parts:
+            print(
+                f"add method 'check_{generate_valid_method_name(part['is'])} in class '{generate_valid_class_name(part['check'])}'")
 
     def generate_skeleton_parts(self, screenplay_objects: dict, regenerate_project: bool = False):
         """
@@ -127,14 +167,18 @@ class SkeletonGenerator:
         :param screenplay_objects:
         :return:
         """
-        self.generate_skeleton_part("actors", "Actor", screenplay_objects["actors"], regenerate_project)
-        self.generate_skeleton_part("facts", "Fact", screenplay_objects["facts"], regenerate_project)
-        self.generate_skeleton_part("tasks", "Task", screenplay_objects["tasks"], regenerate_project)
-        self.generate_skeleton_complex_part("questions", "Question", screenplay_objects["questions"], regenerate_project)
-        self.generate_skeleton_complex_part("elements", "Element", screenplay_objects["elements"], regenerate_project)
-        self.generate_skeleton_complex_part("abilities", "Ability", screenplay_objects["abilities"], regenerate_project)
-        self.generate_skeleton_part("screens", "Screen", screenplay_objects["screens"], regenerate_project)
-        self.generate_skeleton_complex_part("actions", "Action", screenplay_objects["actions"], regenerate_project)
+        self.generate_skeleton_parts_from_items("actors", "Actor", screenplay_objects["actors"], regenerate_project)
+        self.generate_skeleton_parts_from_items("facts", "Fact", screenplay_objects["facts"], regenerate_project)
+        self.generate_skeleton_parts_from_items("tasks", "Task", screenplay_objects["tasks"], regenerate_project)
+        self.generate_skeleton_questions(screenplay_objects["questions"], regenerate_project)
+        self.generate_skeleton_elements(screenplay_objects["elements"], regenerate_project)
+        # todo handle several actors
+        self.generate_skeleton_abilities(screenplay_objects["actors"][0], screenplay_objects["abilities"],
+                                         regenerate_project)
+        self.generate_skeleton_parts_from_items("screens", "Screen", screenplay_objects["screens"], regenerate_project)
+        # todo handle several actors
+        self.generate_skeleton_actions(screenplay_objects["actors"][0], screenplay_objects["actions"],
+                                       regenerate_project)
 
     def refactor_packages(self, the_class: str, dest_folder: str) -> str:
         """
@@ -178,8 +222,36 @@ class SkeletonGenerator:
                 if package["base_class"].lower() == file_name_extensionless.lower():
                     return package["folder_name"]
             except:
-                    print(file_name_extensionless)
+                print(file_name_extensionless)
         return None
+
+    def generate_skeleton_elements(self, element_part, regenerate_project):
+        screenplay_objects = []
+        for part in element_part:
+            screenplay_objects.append(part["item"])
+        self.generate_skeleton_parts_from_items("elements", "Element", screenplay_objects, regenerate_project)
+        for part in element_part:
+            # todo as per the print hereunder
+            if part['screen'] is not None:
+                print(f"add object '{generate_valid_class_name(part['item'])}' "
+                      f"in the screen class '{generate_valid_class_name(part['screen'])}'")
+            else:
+                print(f"No screen defined for '{generate_valid_class_name(part['item'])}'")
+
+    def generate_skeleton_abilities(self, actor: str, abilities_part, regenerate_project):
+        screenplay_objects = []
+        for part in abilities_part:
+            # todo generate method in the right a class
+            print(f"add method '{generate_valid_method_name(part)}' in the class '{generate_valid_class_name(actor)}'")
+
+    def generate_skeleton_actions(self, actor: str, actions_part, regenerate_project):
+        screenplay_objects = []
+        for part in actions_part:
+            screenplay_objects.append(part["direct object"])
+        self.generate_skeleton_parts_from_items("actions", "Action", screenplay_objects, regenerate_project)
+        for part in actions_part:
+            print(
+                f"add method '{generate_valid_method_name(part['do'])}' in class '{generate_valid_class_name(actor)}'")
 
 
 if __name__ == '__main__':

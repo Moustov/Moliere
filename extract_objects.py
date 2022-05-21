@@ -32,12 +32,12 @@ def extract_abilities(a_scene: str):
 def extract_elements(a_scene, abilities: [], screens: [], actions: []):
     res = []
     for an_ability in abilities:
-        an_element = {"item": an_ability, "screen": None}
+        an_element = {"item": "element_to_enable_" + an_ability, "screen": None}
         res.append(an_element)
     for an_action in actions:
-        an_element = {"item": an_action["do"], "screen": None}
+        an_element = {"item": "element_to_enable_" + an_action["do"], "screen": None}
         res.append(an_element)
-        an_element = {"item": an_action["direct object"], "screen": None}
+        an_element = {"item": "element_to_reach_" + an_action["direct object"], "screen": None}
         res.append(an_element)
     questions_part = a_scene.split("checks")
     questions = questions_part[1].split("AND")

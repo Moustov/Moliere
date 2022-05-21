@@ -41,6 +41,7 @@ See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Sh
 Example:\
 generated from an SPDP scenario with `extract_questions(scenario)`
 ```
+    # INIT 1
     an_actor.name = "John"
     element_1.can_be_found_on(page_1)
     element_2.can_be_found_on(page_1)
@@ -52,14 +53,17 @@ generated from an SPDP scenario with `extract_questions(scenario)`
     a_task.set_sequence([{"task": "sequence #1", 
                         "actions": [{"sequence": 1, "action": action_1, "param": 123}, 
                                     {"sequence": 2, "action": action_2, "param": click}])
+    # ACTIONS 1
     an_actor.accomplishes(a_task)
 
+    # INIT 2
     another_actor.name = "a Tester"
     action_3.add_interaction(element_4)
     action_4.add_feedback(element_5)
     checks_1 = [{"task": "sequence of checks #1", 
                 "actions": [{"action": action_3, "sequence": 1, "param": 456},
                             {"check": action_4, "sequence": 2}]
+    # ACTIONS 2
     a_test.set_actions(checks_1)
     feedback = another_actor.accomplishes(checks_1)
     print(feedback)
