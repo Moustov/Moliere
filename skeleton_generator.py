@@ -104,15 +104,14 @@ class SkeletonGenerator:
         self.generate_skeleton_parts_from_items("elements", "Element", screenplay_objects, regenerate_project)
         # todo generate function from "is"
         for part in question_parts:
-            print(
-                f"add method 'check_{generate_valid_method_name(part['is'])} in class '{generate_valid_class_name(part['check'])}'")
+            self.add_method_in_class(f"check_{generate_valid_method_name(part['is'])}",
+                                     generate_valid_class_name(part['check']))
 
     def generate_skeleton_parts(self, screenplay_objects: dict, regenerate_project: bool = False):
         """
         generates files that implement the classes from the output Design Pattern (DP)
         - if project is empty => generates root classes from the DP
         - if project is not empty and not regenerate_project => adds objects to the existing project
-        :param output_directory:
         :param regenerate_project: forces project generation only from screenplay_objects
         :param screenplay_objects:
         :return:
@@ -168,11 +167,8 @@ class SkeletonGenerator:
         :return: None if not found
         """
         for package in self.packages:
-            try:
-                if package["base_class"].lower() == file_name_extensionless.lower():
-                    return package["folder_name"]
-            except:
-                print(file_name_extensionless)
+            if package["base_class"].lower() == file_name_extensionless.lower():
+                return package["folder_name"]
         return None
 
     def generate_skeleton_elements(self, element_part, regenerate_project):
@@ -183,16 +179,15 @@ class SkeletonGenerator:
         for part in element_part:
             # todo as per the print hereunder
             if part['screen'] is not None:
-                print(f"add object '{generate_valid_class_name(part['item'])}' "
-                      f"in the screen class '{generate_valid_class_name(part['screen'])}'")
+                self.register_object_in_class(generate_valid_class_name(part['item']),
+                                              generate_valid_class_name(part['screen']))
             else:
                 print(f"No screen defined for '{generate_valid_class_name(part['item'])}'")
 
     def generate_skeleton_abilities(self, actor: str, abilities_part, regenerate_project):
         screenplay_objects = []
         for part in abilities_part:
-            # todo generate method in the right a class
-            print(f"add method '{generate_valid_method_name(part)}' in the class '{generate_valid_class_name(actor)}'")
+            self.add_method_in_class(generate_valid_method_name(part), generate_valid_class_name(actor))
 
     def generate_skeleton_actions(self, actor: str, actions_part, regenerate_project):
         screenplay_objects = []
@@ -200,8 +195,13 @@ class SkeletonGenerator:
             screenplay_objects.append(part["direct object"])
         self.generate_skeleton_parts_from_items("actions", "Action", screenplay_objects, regenerate_project)
         for part in actions_part:
-            print(
-                f"add method '{generate_valid_method_name(part['do'])}' in class '{generate_valid_class_name(actor)}'")
+            self.add_method_in_class(generate_valid_method_name(part['do']), generate_valid_class_name(actor))
+
+    def register_object_in_class(self, an_object, a_class: str):
+        print(f">> add object '{an_object}' in the screen class '{a_class}'")
+
+    def add_method_in_class(self, a_method: str, a_class: str):
+        print(f">> add method '{a_method}' in the class '{a_class}'")
 
 
 if __name__ == '__main__':
