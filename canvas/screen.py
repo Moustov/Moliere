@@ -10,6 +10,7 @@ class Screen (ScreenPlay):
     def add_element(self, name: str, element: Element):
         """
         registers some new ability to this actor
+        :param element: an Element object
         :param name: name of the ability
         :param action: the object associated to the ability
         :return:

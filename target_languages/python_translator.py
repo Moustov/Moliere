@@ -260,6 +260,9 @@ class ClassContentManager:
     def add_registration_in_init(self, an_object: object, registration_method_name: str) -> object:
         """
         subscribes an_object in class_name
+
+        **todo** the file into which an_object is coded may not have the same name as the class_name
+            => "from" part impacted
         :param registration_method_name: the name of the method to use to register an_object
         :param an_object:
         :return:
