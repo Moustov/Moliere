@@ -106,8 +106,8 @@ class Question (ScreenPlay):
         # since the class is generated elsewhere, the package should change
         self.assertEqual(diff, {'values_changed':
                                     {"root['package']":
-                                                       {'new_value': 'output',
-                                                        'old_value': 'canvas'}}})
+                                         {'new_value': 'output',
+                                          'old_value': 'canvas'}}})
 
     def test_docstring_in_class(self):
         self.read_write_class("canvas/screenplay.py", "output/test_screenplay.py")
@@ -144,3 +144,48 @@ class Question(ScreenPlay):
         json_class = cg.set_class_from_string("canvas/question.py", test_class.split("\n"))
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
         self.assertEqual(diff, {})
+
+    def test_add_registration_in_init(self):
+        test_class = """from output.screens.screen import Screen
+
+
+class TheBill (Screen):
+    def __init__(self):
+        super.__init__(self)
+
+"""
+        total_amount = """from output.elements.element import Element
+
+
+class TheTotalAmount (Element):
+    def __init__(self):
+        super.__init__(self)"""
+        expected_json_class = {
+    'package': 'canvas',
+    'imports': ['from output.screens.screen import Screen', 'from output.elements.thetotalamount import TheTotalAmount'],
+    'class_name': 'TheBill',
+    'inherits from': ['Screen'],
+    'lines before fist method': '',
+    'methods': [{
+            'name': '__init__',
+            'parameters': ['self'],
+            'return type': '',
+            'code': "        super.__init__(self)\n\n        a = TheTotalAmount()\n        self.add_element(name='TheTotalAmount', element=a)"
+        }
+    ],
+    'properties': []
+}
+
+        the_bill = ClassContentManager(".")
+        # let's pretend the_bill file is read from the "canvas" folder
+        json_class_the_bill = the_bill.set_class_from_string("canvas/the_bill.py", test_class.split("\n"))
+
+        the_total_amount = ClassContentManager(".")
+        # let's pretend the_total_amount file is read from the "canvas" folder
+        json_class_the_total_amount = the_total_amount.set_class_from_string("canvas/the_total_amount.py", test_class.split("\n"))
+
+        the_bill.add_registration_in_init(the_total_amount)
+
+        diff = DeepDiff(expected_json_class, json_class_the_bill, ignore_order=True)
+        self.assertEqual(diff, {})
+
