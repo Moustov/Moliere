@@ -65,7 +65,7 @@ class Question (ScreenPlay):
     def about_the_state_of(self, an_element: Element):
         pass"""
         expected_json_class = {
-            "package": ".",
+            "package": "canvas",
             "imports": ['from output.elements.element import Element', 'from output.screenplay import ScreenPlay'],
             "class_name": "Question",
             "inherits from": ["ScreenPlay"],
@@ -80,7 +80,8 @@ class Question (ScreenPlay):
             ]
         }
         cg = ClassContentManager(".")
-        json_class = cg.set_class_from_string(".", test_class.split("\n"))
+        # let's pretend the Question file is read from the "canvas" folder
+        json_class = cg.set_class_from_string("canvas/question.py", test_class.split("\n"))
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
         self.assertEqual(diff, {})
 
@@ -124,7 +125,7 @@ class Question(ScreenPlay):
     def about_the_state_of(self, an_element: Element):
         pass"""
         expected_json_class = {
-            "package": ".",
+            "package": "canvas",
             "imports": ['from output.elements.element import Element', 'from output.screenplay import ScreenPlay'],
             "class_name": "Question",
             "inherits from": ["ScreenPlay"],
@@ -139,6 +140,7 @@ class Question(ScreenPlay):
             ]
         }
         cg = ClassContentManager(".")
-        json_class = cg.set_class_from_string(".", test_class.split("\n"))
+        # let's pretend the Question file is read from the "canvas" folder
+        json_class = cg.set_class_from_string("canvas/question.py", test_class.split("\n"))
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
         self.assertEqual(diff, {})

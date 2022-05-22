@@ -176,7 +176,7 @@ class ClassContentManager:
         :return:
         """
         current_line = 0
-        self.the_class = {"package": ".".join(class_path.split("/")[:1])}
+        self.the_class = {"package": ".".join(class_path.split("/")[:-1])}
         line = class_content[current_line]
         current_line += 1
         # process imports
@@ -257,14 +257,27 @@ class ClassContentManager:
         """
         self.the_class["methods"].append(method)
 
-    def add_registration_in_init(self, an_object: object):
+    def add_registration_in_init(self, an_object: object)-> object:
         """
         subscribes an_object in class_name
         :param an_object:
-        :param class_name:
         :return:
         """
-        print(f">>> todo update __init__ with the registering of {an_object} in {self.the_class['class_name']}.__init__")
+        # add imports for the element
+        new_import = "from output.elements.thetotalamount import TheTotalAmount"
+        self.the_class["imports"].append(new_import)
+        # add code in __init__
+        code = f"""
+{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()
+{self.tabs}{self.tabs}self.add_element(name='{an_object.the_class['class_name']}', element=a)
+"""
+        print(code)
+        init_method = self.get_init_method()
+        init_method["code"] += code
+        print(f">>> {self.the_class['class_name']}.__init__ updated with the registering of {an_object.the_class['class_name']}")
+
+        return self
+
 
     def remove_empty_lines_at_end_of_code(self, method_code: str):
         """
@@ -287,6 +300,13 @@ class ClassContentManager:
         :return:
         """
         return []
+
+    def get_init_method(self):
+        for method in self.the_class["methods"]:
+            if method["name"] == "__init__":
+                return method
+        # todo create a specific Exception class
+        raise Exception(f"No __init__ method found in {self.the_class['package']}.{self.the_class['class_name']}")
 
 
 if __name__ == '__main__':
