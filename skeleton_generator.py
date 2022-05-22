@@ -8,6 +8,61 @@ from target_languages.python_translator import generate_valid_class_name, genera
 
 
 class SkeletonGenerator:
+    """
+    generates classes stubs in a target directory from screenplay_generated_parts
+    screenplay_generated_parts can be generated with module extract_objects.py
+
+    **code sample (remove backslashes in myscene)**:
+
+    ```{code-block} python
+
+    my_scene = \"""
+            GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
+            WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            \"""
+    screenplay_generated_parts = extract_screenplay_objects(my_scene)
+
+    ```
+
+    screenplay_generated_parts should contain
+
+    ```{code-block} python
+
+    screenplay_generated_parts = {
+        "actors": ["Jack"],
+        "facts": [],
+        "tasks": ["go to the pub", "order"],
+        "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"}],
+        "elements": [{"item": "The Sheep's Head Pub", "screen": None},
+                     {"item": "browse the web", "screen": None},
+                     {"item": "call HTTP APIs", "screen": None},
+                     {"item": "go to the pub", "screen": None},
+                     {"item": "order", "screen": None},
+                     {"item": "999 beers", "screen": None},
+                     {"item": "the total amount", "screen": "the bill"}
+                     ],
+        "screens": ["the bill"],
+        "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order"],
+        "actions": [
+            {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
+            {"do": "order", "direct object": "999 beers"}
+        ]
+    }
+
+    ```
+
+    then you may call
+
+    ```{code-block} python
+
+    generator = SkeletonGenerator("output")
+    generator.generate_skeleton_parts(screenplay_generated_parts, True)
+
+    ```
+    """
     def __init__(self, output_dir: str, regenerate_project: bool = False):
         self.output_directory = output_dir
         self.packages = []
