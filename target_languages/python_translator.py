@@ -140,10 +140,10 @@ class ClassContentManager:
         if len(self.the_class["imports"]) > 0:
             lines = "\n".join(self.the_class["imports"]) + "\n\n\n"
         if len(self.the_class["inherits from"]) > 0:
-            lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
+            lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):"
         else:
             lines += f"class {self.the_class['class_name']}\n"
-        lines += self.the_class["lines before fist method"] + "\n"
+        lines += self.the_class["lines before fist method"]
         for method in self.the_class["methods"]:
             lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}):\n"
             lines += f"{method['code']}\n"
@@ -185,6 +185,8 @@ class ClassContentManager:
         except IndexError:  # if there is no inheritance
             self.the_class["inherits from"] = []
         # read lines until the 1st method
+        line = class_content[current_line]
+        current_line += 1
         lines_before_first_method = ""
         while not line.startswith(f"{self.tabs}def"):
             lines_before_first_method += line + "\n"
