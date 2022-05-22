@@ -53,7 +53,7 @@ def generate_valid_method_name(method_name: str) -> str:
     return res
 
 
-class ClassGenerator:
+class ClassContentManager:
     def __init__(self, target_location: str, tab_size: int = 4):
         self.target_location = target_location
         self.tabs = " " * tab_size
@@ -126,20 +126,39 @@ class ClassGenerator:
     def set_class_from_file(self, class_path: str) -> dict:
         class_content = []
         with open(class_path, "r") as class_file:
-            class_content = class_file.readlines()
+            class_content = class_file.read().splitlines()
             class_file.close()
         return self.set_class_from_string(class_path, class_content)
+
+    def write_file_from_class(self, class_path: str):
+        """
+        write this class at class_path
+        :param class_path: output path - folders must already exist
+        :return:
+        """
+        lines = "\n".join(self.the_class["imports"]) + "\n\n\n"
+        if len(self.the_class["inherits from"]) > 0:
+            lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
+        else:
+            lines += f"class {self.the_class['class_name']}\n"
+        for method in self.the_class["methods"]:
+            lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}):\n"
+            lines += f"{method['code']}\n"
+
+        with open(class_path, "w") as class_file:
+            class_file.write(lines)
+            class_file.close()
 
     def set_class_from_string(self, class_path: str, class_content: [str]) -> dict:
         """
         generates a JSON from a class_content
+        todo handle class docstring
         :param class_path:
-        :param class_content:
+        :param class_content: array that holds every lines of code from a well formed class - must be PEP8 compliant
         :return:
         """
         current_line = 0
-        self.the_class = {}
-        self.the_class["package"] = ".".join(class_path.split("/")[:1])
+        self.the_class = {"package": ".".join(class_path.split("/")[:1])}
         line = class_content[current_line]
         current_line += 1
         # process imports
@@ -225,18 +244,18 @@ class ClassGenerator:
 
 
 if __name__ == '__main__':
-    json_class_example = {
-        "package": "output.folder_location",
-        "class_name": "MyClass",
-        "inherits from": ["MyClass1", "MyClass2"],
-        "properties": [
-            {"name": "prop1", "default value": "v1"},
-            {"name": "prop2", "default value": "v2"}
-        ],
-        "methods": [
-            {"name": "m1", "parameters": ["p1", "p2", "p3"], "code": "print('hello world')"},
-            {"name": "m2", "parameters": ["p1"], "code": "print(p1)"}
-        ]
-    }
-    class_generator = ClassGenerator(".", 4)
-    class_generator.serialize_class_definition(json_class_example)
+    test_class = """from output.elements.element import Element
+from output.screenplay import ScreenPlay
+
+
+class Question (ScreenPlay):
+    def __init__(self, name: str):
+        super.__init__(self, name)
+        pass
+
+    def about_the_state_of(self, an_element: Element):
+        pass"""
+    question_cg = ClassContentManager(".")
+    # cg.serialize_class_definition(json_class_example)
+    question_cg.set_class_from_string(".", test_class.split("\n"))
+    question_cg.write_file_from_class(f"output/test_question.py")

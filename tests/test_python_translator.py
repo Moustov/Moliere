@@ -52,7 +52,7 @@ class Test(TestCase):
 
 
 class TestClassGenerator(TestCase):
-    def test_deserialize(self):
+    def test_set_class_from_string(self):
         test_class = """from output.elements.element import Element
 from output.screenplay import ScreenPlay
 
@@ -79,4 +79,13 @@ class Question (ScreenPlay):
         cg = ClassContentManager(".")
         json_class = cg.set_class_from_string(".", test_class.split("\n"))
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_read_write_class(self):
+        cg = ClassContentManager(".")
+        cg.set_class_from_file("canvas/actor.py")
+        expected_json_class = cg.the_class
+        cg.write_file_from_class("output/test_actor.py")
+        cg.set_class_from_file("output/test_actor.py")
+        diff = DeepDiff(expected_json_class, cg.the_class, ignore_order=True)
         self.assertEqual(diff, {})
