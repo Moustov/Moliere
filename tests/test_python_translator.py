@@ -77,6 +77,6 @@ class Question (ScreenPlay):
             ]
         }
         cg = ClassGenerator(".")
-        json_class = cg.deserializes(".", test_class.split("\n"))
+        json_class = cg.set_class_from_string(".", test_class.split("\n"))
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
         self.assertEqual(diff, {})

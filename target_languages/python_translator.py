@@ -57,6 +57,7 @@ class ClassGenerator:
     def __init__(self, target_location: str, tab_size: int = 4):
         self.target_location = target_location
         self.tabs = " " * tab_size
+        self.the_class = {}
 
     def generate_constructor(self, properties: [dict]) -> str:
         """
@@ -122,14 +123,14 @@ class ClassGenerator:
             class_file.write(init_method)
             class_file.write(methods_code)
 
-    def deserialize(self, class_path: str) -> dict:
+    def set_class_from_file(self, class_path: str) -> dict:
         class_content = []
         with open(class_path, "r") as class_file:
             class_content = class_file.readlines()
             class_file.close()
-        return self.deserialize(class_path, class_content)
+        return self.set_class_from_string(class_path, class_content)
 
-    def deserializes(self, class_path: str, class_content: [str]) -> dict:
+    def set_class_from_string(self, class_path: str, class_content: [str]) -> dict:
         """
         generates a JSON from a class_content
         :param class_path:
@@ -137,8 +138,8 @@ class ClassGenerator:
         :return:
         """
         current_line = 0
-        json_class = {}
-        json_class["package"] = ".".join(class_path.split("/")[:1])
+        self.the_class = {}
+        self.the_class["package"] = ".".join(class_path.split("/")[:1])
         line = class_content[current_line]
         current_line += 1
         # process imports
@@ -148,19 +149,19 @@ class ClassGenerator:
                 imports.append(line)
             line = class_content[current_line]
             current_line += 1
-        json_class["imports"] = imports
+        self.the_class["imports"] = imports
         # process class
         class_definition = line
         words = class_definition.split(" ")
-        json_class["class_name"] = words[1]
+        self.the_class["class_name"] = words[1]
         super_classes = extract_value_between(line, "(", ")")
-        json_class["inherits from"] = super_classes.split(",")
+        self.the_class["inherits from"] = super_classes.split(",")
         # skip lines until the 1st method
         while not line.startswith(f"{self.tabs}def"):
             line = class_content[current_line]
             current_line += 1
         # process methods
-        json_class["methods"] = []
+        self.the_class["methods"] = []
         while current_line < len(class_content):
             # process method name
             method_name = extract_value_between(line, "def", "(").strip()
@@ -183,12 +184,22 @@ class ClassGenerator:
             # handle properties in __init__
             if method_name == "__init__":
                 properties = self.extract_properties(method_code)
-                json_class["properties"] = properties
+                self.the_class["properties"] = properties
             # record method
-            json_class["methods"].append({"name": method_name,
-                                          "parameters": params,
-                                          "code": method_code})
-        return json_class
+            self.add_method({"name": method_name,
+                             "parameters": params,
+                             "code": method_code})
+        return self.the_class
+
+    def add_method(self, method: dict):
+        """
+        add a method in the class
+        :param method: {"name": method_name,
+                        "parameters": params,
+                        "code": method_code}
+        :return:
+        """
+        self.the_class["methods"].append(method)
 
     def remove_empty_lines_at_end_of_code(self, method_code: str):
         """
