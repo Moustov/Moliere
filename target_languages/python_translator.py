@@ -50,7 +50,7 @@ def generate_valid_method_name(method_name: str) -> str:
             res += "x"
         else:
             res += "_"
-    return res
+    return res.lower()
 
 
 def is_a_subclass(class_definition_code_line: str) -> bool:
@@ -146,13 +146,17 @@ class ClassContentManager:
         :return:
         """
         lines = ""
+        # write imports
         if len(self.the_class["imports"]) > 0:
             lines = "\n".join(self.the_class["imports"]) + "\n\n\n"
+        # write class name
         if len(self.the_class["inherits from"]) > 0:
             lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
         else:
             lines += f"class {self.the_class['class_name']}\n"
+        # write eventual docstring from the class
         lines += self.the_class["lines before fist method"]
+        #write methods
         for method in self.the_class["methods"]:
             return_type = ""
             if method["return type"] != "":
