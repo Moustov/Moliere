@@ -2,13 +2,15 @@ import os
 import shutil
 
 from extract_objects import extract_value_between
-from target_languages.python_translator import generate_valid_class_name, generate_valid_method_name
+from target_languages.python_translator import generate_valid_class_name, generate_valid_method_name, \
+    ClassContentManager
 
 
 class SkeletonGenerator:
     def __init__(self, output_dir: str, regenerate_project: bool = False):
         self.output_directory = output_dir
         self.packages = []
+        self.screenplay_classes = []
         self.initiate_skeleton(regenerate_project)
 
     def initiate_skeleton(self, regenerate_project: bool = False):
@@ -66,6 +68,9 @@ class SkeletonGenerator:
         shutil.copyfile(os.path.normcase(f"canvas/{base_class.lower()}.py"),
                         os.path.normcase(f"{self.output_directory}/{folder_name}/{base_class.lower()}.py"))
         self.update_imports(folder_name, base_class)
+        cg = ClassContentManager(f"{self.output_directory}/{folder_name}")
+        cg.set_class_from_file(f"{self.output_directory}/{folder_name}/{base_class.lower()}.py")
+        self.screenplay_classes.append(cg)
 
     def generate_skeleton_parts_from_items(self, screenplay_package_name: str, screenplay_superclass_name: str, classes: dict,
                                            regenerate_project: bool):
@@ -89,6 +94,9 @@ class SkeletonGenerator:
             with open(os.path.normcase(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py"),
                       "w") as class_file:
                 class_file.write(class_canvas)
+            cg = ClassContentManager(f"{self.output_directory}/{screenplay_package_name}")
+            cg.set_class_from_file(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py")
+            self.screenplay_classes.append(cg)
 
     def generate_skeleton_questions(self, question_parts: dict, regenerate_project: bool):
         """
@@ -128,6 +136,7 @@ class SkeletonGenerator:
         # todo handle several actors
         self.generate_skeleton_actions(screenplay_objects["actors"][0], screenplay_objects["actions"],
                                        regenerate_project)
+        print(self.screenplay_classes)
 
     def refactor_packages(self, the_class: str, dest_folder: str) -> str:
         """
