@@ -53,6 +53,15 @@ def generate_valid_method_name(method_name: str) -> str:
     return res
 
 
+def is_a_subclass(class_definition_code_line: str) -> bool:
+    """
+    return True if class_definition_code_line has some inherited class
+    :param class_definition_code_line:
+    :return:
+    """
+    return class_definition_code_line.find("(") != -1
+
+
 class ClassContentManager:
     def __init__(self, target_location: str, tab_size: int = 4):
         self.target_location = target_location
@@ -148,7 +157,7 @@ class ClassContentManager:
             return_type = ""
             if method["return type"] != "":
                 return_type = " -> " + method["return type"]
-            lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}) {return_type}:\n"
+            lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}){return_type}:\n"
             lines += f"{method['code']}\n"
 
         with open(class_path, "w") as class_file:
@@ -178,10 +187,13 @@ class ClassContentManager:
         self.the_class["imports"] = imports
         # process class
         class_definition = line
-        words = class_definition.split(" ")
-        self.the_class["class_name"] = words[1]
+        if is_a_subclass(class_definition):
+            self.the_class["class_name"] = extract_value_between(class_definition, "class ", "(")
+        else:
+            self.the_class["class_name"] = extract_value_between(class_definition, "class ", ":")
+        self.the_class["class_name"] = self.the_class["class_name"].strip()
         try:
-            super_classes = extract_value_between(line, "(", ")")
+            super_classes = extract_value_between(class_definition, "(", ")")
             self.the_class["inherits from"] = super_classes.split(",")
         except IndexError:  # if there is no inheritance
             self.the_class["inherits from"] = []

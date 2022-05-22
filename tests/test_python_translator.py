@@ -110,3 +110,35 @@ class Question (ScreenPlay):
 
     def test_docstring_in_class(self):
         self.read_write_class("canvas/screenplay.py", "output/test_screenplay.py")
+
+    def test_set_class_from_string_with_no_space_before_inherited_classes(self):
+        test_class = """from output.elements.element import Element
+from output.screenplay import ScreenPlay
+
+
+class Question(ScreenPlay):
+    def __init__(self, name: str):
+        super.__init__(self, name)
+        pass
+
+    def about_the_state_of(self, an_element: Element):
+        pass"""
+        expected_json_class = {
+            "package": ".",
+            "imports": ['from output.elements.element import Element', 'from output.screenplay import ScreenPlay'],
+            "class_name": "Question",
+            "inherits from": ["ScreenPlay"],
+            "properties": [],
+            "lines before fist method": "",
+            "methods": [
+                {"name": "__init__", "parameters": ["self", "name: str"], "return type": "",
+                 "code": """        super.__init__(self, name)
+        pass\n"""},
+                {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "return type": "",
+                 "code": "        pass"}
+            ]
+        }
+        cg = ClassContentManager(".")
+        json_class = cg.set_class_from_string(".", test_class.split("\n"))
+        diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
+        self.assertEqual(diff, {})

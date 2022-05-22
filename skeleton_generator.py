@@ -1,5 +1,6 @@
 import os
 import shutil
+from os import makedirs
 
 from extract_objects import extract_value_between
 from target_languages.python_translator import generate_valid_class_name, generate_valid_method_name, \
@@ -10,7 +11,7 @@ class SkeletonGenerator:
     def __init__(self, output_dir: str, regenerate_project: bool = False):
         self.output_directory = output_dir
         self.packages = []
-        self.screenplay_classes = []
+        self.screenplay_classes = {}
         self.initiate_skeleton(regenerate_project)
 
     def initiate_skeleton(self, regenerate_project: bool = False):
@@ -70,9 +71,10 @@ class SkeletonGenerator:
         self.update_imports(folder_name, base_class)
         cg = ClassContentManager(f"{self.output_directory}/{folder_name}")
         cg.set_class_from_file(f"{self.output_directory}/{folder_name}/{base_class.lower()}.py")
-        self.screenplay_classes.append(cg)
+        self.screenplay_classes[base_class] = cg
 
-    def generate_skeleton_parts_from_items(self, screenplay_package_name: str, screenplay_superclass_name: str, classes: dict,
+    def generate_skeleton_parts_from_items(self, screenplay_package_name: str, screenplay_superclass_name: str,
+                                           classes: dict,
                                            regenerate_project: bool):
         """Generate the classes from the_part
         :param classes:
@@ -96,7 +98,7 @@ class SkeletonGenerator:
                 class_file.write(class_canvas)
             cg = ClassContentManager(f"{self.output_directory}/{screenplay_package_name}")
             cg.set_class_from_file(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py")
-            self.screenplay_classes.append(cg)
+            self.screenplay_classes[class_name] = cg
 
     def generate_skeleton_questions(self, question_parts: dict, regenerate_project: bool):
         """
@@ -136,7 +138,11 @@ class SkeletonGenerator:
         # todo handle several actors
         self.generate_skeleton_actions(screenplay_objects["actors"][0], screenplay_objects["actions"],
                                        regenerate_project)
-        print(self.screenplay_classes)
+        for a_class_name in self.screenplay_classes:
+            a_class = self.screenplay_classes[a_class_name]
+            print("Writing class", f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
+            makedirs(a_class.target_location, exist_ok=True)
+            a_class.write_file_from_class(f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
 
     def refactor_packages(self, the_class: str, dest_folder: str) -> str:
         """
@@ -210,6 +216,13 @@ class SkeletonGenerator:
         print(f">> add object '{an_object}' in the screen class '{a_class}'")
 
     def add_method_in_class(self, a_method: str, a_class: str):
+        method = {"name": a_method,
+                  "parameters": ["self"],
+                  "return type": "bool",
+                  "code": f"""        print("some code needs to be added in {a_class}.{a_method}")
+        return False\n"""
+                  },
+        self.screenplay_classes[a_class].add_method(method[0])
         print(f">> add method '{a_method}' in the class '{a_class}'")
 
 
