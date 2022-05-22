@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from deepdiff import DeepDiff
 
-from target_languages.python_translator import ClassGenerator
+from target_languages.python_translator import ClassContentManager
 
 
 class Test(TestCase):
@@ -20,7 +20,7 @@ class Test(TestCase):
                 {"name": "m2", "parameters": ["p1"], "code": "print(p1)"}
             ]
         }
-        cg = ClassGenerator(".")
+        cg = ClassContentManager(".")
         init_code = cg.generate_constructor(json_class_example["properties"])
         expected_value = """    def __init__(self, prop1="v1", prop2="v2"):
         self.prop1 = prop1
@@ -42,7 +42,7 @@ class Test(TestCase):
                 {"name": "m2", "parameters": ["p1"], "code": "print(p1)"}
             ]
         }
-        cg = ClassGenerator(".")
+        cg = ClassContentManager(".")
         init_code = cg.generate_constructor(json_class_example["properties"])
         expected_value = """    def __init__(self, prop1, prop2):
         self.prop1 = prop1
@@ -76,7 +76,7 @@ class Question (ScreenPlay):
                 {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "code": "        pass"}
             ]
         }
-        cg = ClassGenerator(".")
+        cg = ClassContentManager(".")
         json_class = cg.set_class_from_string(".", test_class.split("\n"))
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
         self.assertEqual(diff, {})
