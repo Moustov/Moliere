@@ -257,6 +257,15 @@ class ClassContentManager:
         """
         self.the_class["methods"].append(method)
 
+    def add_registration_in_init(self, an_object: object):
+        """
+        subscribes an_object in class_name
+        :param an_object:
+        :param class_name:
+        :return:
+        """
+        print(f">>> todo update __init__ with the registering of {an_object} in {self.the_class['class_name']}.__init__")
+
     def remove_empty_lines_at_end_of_code(self, method_code: str):
         """
         removes empty lines at the end

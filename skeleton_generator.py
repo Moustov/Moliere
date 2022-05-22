@@ -138,22 +138,7 @@ class SkeletonGenerator:
         :param screenplay_package_name:
         """
         for class_name in classes:
-            class_canvas = ""
-            class_name = generate_valid_class_name(class_name)
-            with open(os.path.normcase("canvas/class_canvas.py"), "r") as class_canvas_file:
-                class_canvas = class_canvas_file.read()
-            class_canvas = class_canvas.replace("TheClassType", screenplay_superclass_name)
-            class_canvas = class_canvas.replace("TheClass", class_name)
-            class_canvas = class_canvas.replace("#YOUR IMPORTS",
-                                                f"from {self.output_directory}.{screenplay_package_name}"
-                                                f".{screenplay_superclass_name.lower()} "
-                                                f"import {screenplay_superclass_name}")
-            with open(os.path.normcase(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py"),
-                      "w") as class_file:
-                class_file.write(class_canvas)
-            cg = ClassContentManager(f"{self.output_directory}/{screenplay_package_name}")
-            cg.set_class_from_file(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py")
-            self.screenplay_classes[class_name] = cg
+            self.generate_skeleton_for_an_item(screenplay_package_name, screenplay_superclass_name, class_name)
 
     def generate_skeleton_questions(self, question_parts: dict, regenerate_project: bool):
         """
@@ -181,8 +166,13 @@ class SkeletonGenerator:
         :param screenplay_objects:
         :return:
         """
+        self.generate_skeleton_parts_from_items("abilities", "Ability", screenplay_objects["abilities"], regenerate_project)
+        # self.generate_skeleton_parts_from_items("actions", "Action", screenplay_objects["actions"], regenerate_project)
         self.generate_skeleton_parts_from_items("actors", "Actor", screenplay_objects["actors"], regenerate_project)
+        # self.generate_skeleton_parts_from_items("elements", "Element", screenplay_objects["elements"], regenerate_project)
         self.generate_skeleton_parts_from_items("facts", "Fact", screenplay_objects["facts"], regenerate_project)
+        # self.generate_skeleton_parts_from_items("questions", "Question", screenplay_objects["questions"], regenerate_project)
+        # self.generate_skeleton_parts_from_items("screens", "Screen", screenplay_objects["screens"], regenerate_project)
         self.generate_skeleton_parts_from_items("tasks", "Task", screenplay_objects["tasks"], regenerate_project)
         self.generate_skeleton_questions(screenplay_objects["questions"], regenerate_project)
         self.generate_skeleton_elements(screenplay_objects["elements"], regenerate_project)
@@ -245,6 +235,10 @@ class SkeletonGenerator:
         screenplay_objects = []
         for part in element_part:
             screenplay_objects.append(part["item"])
+            if part["item"] not in self.screenplay_classes.keys():
+                self.generate_skeleton_for_an_item("elements", "Element", part["item"])
+            if part['screen'] is not None and part["screen"] not in self.screenplay_classes.keys():
+                self.generate_skeleton_for_an_item("screens", "Screen", part["screen"])
         self.generate_skeleton_parts_from_items("elements", "Element", screenplay_objects, regenerate_project)
         for part in element_part:
             # todo as per the print hereunder
@@ -268,6 +262,15 @@ class SkeletonGenerator:
             self.add_method_in_class(generate_valid_method_name(part['do']), generate_valid_class_name(actor))
 
     def register_object_in_class(self, an_object, a_class: str):
+        """
+        # todo
+        :param an_object:
+        :param a_class:
+        :return:
+        """
+        target_class = self.screenplay_classes[a_class]
+        print(target_class)
+        target_class.add_registration_in_init(an_object)
         print(f">> add object '{an_object}' in the screen class '{a_class}'")
 
     def add_method_in_class(self, a_method: str, a_class: str):
@@ -278,7 +281,34 @@ class SkeletonGenerator:
         return False\n"""
                   },
         self.screenplay_classes[a_class].add_method(method[0])
-        print(f">> add method '{a_method}' in the class '{a_class}'")
+        print(f">> Method '{a_method}' in the class '{a_class}' added")
+
+    def generate_skeleton_for_an_item(self, screenplay_package_name: str,
+                                      screenplay_superclass_name: str, class_name: str):
+        """
+        generates a class "class_name" which inherits from screenplay_superclass_name
+        under the package screenplay_package_name
+        :param screenplay_package_name:
+        :param screenplay_superclass_name:
+        :param class_name:
+        :return:
+        """
+        class_canvas = ""
+        class_name = generate_valid_class_name(class_name)
+        with open(os.path.normcase("canvas/class_canvas.py"), "r") as class_canvas_file:
+            class_canvas = class_canvas_file.read()
+        class_canvas = class_canvas.replace("TheClassType", screenplay_superclass_name)
+        class_canvas = class_canvas.replace("TheClass", class_name)
+        class_canvas = class_canvas.replace("#YOUR IMPORTS",
+                                            f"from {self.output_directory}.{screenplay_package_name}"
+                                            f".{screenplay_superclass_name.lower()} "
+                                            f"import {screenplay_superclass_name}")
+        with open(os.path.normcase(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py"),
+                  "w") as class_file:
+            class_file.write(class_canvas)
+        cg = ClassContentManager(f"{self.output_directory}/{screenplay_package_name}")
+        cg.set_class_from_file(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py")
+        self.screenplay_classes[class_name] = cg
 
 
 if __name__ == '__main__':

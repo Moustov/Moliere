@@ -80,6 +80,7 @@ Then a Tester sequence of checks #1
 As per ["doc as a test"](https://github.com/sfauvel/doc_as_test_pytest)
 and ["Documentation Testing"](https://github.com/sfauvel/documentationtesting),
 the output can simply be compared with previous outputs to check regression.
+See [doctest](https://docs.python.org/3.8/library/doctest.html) as a possible library. 
 
 
 
