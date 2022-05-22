@@ -170,7 +170,7 @@ class TheTotalAmount (Element):
             'name': '__init__',
             'parameters': ['self'],
             'return type': '',
-            'code': "        super.__init__(self)\n\n        a = TheTotalAmount()\n        self.add_element(name='TheTotalAmount', element=a)"
+            'code': "        super.__init__(self)\n\n\n        a = TheTotalAmount()\n        self.add_element(name='TheTotalAmount', element=a)\n"
         }
     ],
     'properties': []
@@ -182,10 +182,10 @@ class TheTotalAmount (Element):
 
         the_total_amount = ClassContentManager(".")
         # let's pretend the_total_amount file is read from the "canvas" folder
-        json_class_the_total_amount = the_total_amount.set_class_from_string("canvas/the_total_amount.py", test_class.split("\n"))
+        json_class_the_total_amount = the_total_amount.set_class_from_string("canvas/the_total_amount.py", total_amount.split("\n"))
 
         the_bill.add_registration_in_init(the_total_amount)
-
+        json_class_the_bill = the_bill.the_class
         diff = DeepDiff(expected_json_class, json_class_the_bill, ignore_order=True)
         self.assertEqual(diff, {})
 
