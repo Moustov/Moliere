@@ -136,7 +136,9 @@ class ClassContentManager:
         :param class_path: output path - folders must already exist
         :return:
         """
-        lines = "\n".join(self.the_class["imports"]) + "\n\n\n"
+        lines = ""
+        if len(self.the_class["imports"]) > 0:
+            lines = "\n".join(self.the_class["imports"]) + "\n\n\n"
         if len(self.the_class["inherits from"]) > 0:
             lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
         else:
