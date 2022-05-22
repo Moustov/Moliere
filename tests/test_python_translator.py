@@ -81,15 +81,29 @@ class Question (ScreenPlay):
         diff = DeepDiff(expected_json_class, json_class, ignore_order=True)
         self.assertEqual(diff, {})
 
-    def test_read_write_class(self):
+    def test_read_write_actor_class(self):
+        self.read_write_class("canvas/ability.py", "output/test_ability.py")
+        self.read_write_class("canvas/action.py", "output/test_action.py")
+        self.read_write_class("canvas/actor.py", "output/test_actor.py")
+        self.read_write_class("canvas/class_canvas.py", "output/test_class_canvas.py")
+        self.read_write_class("canvas/element.py", "output/test_element.py")
+        self.read_write_class("canvas/fact.py", "output/test_fact.py")
+        self.read_write_class("canvas/question.py", "output/test_question.py")
+        self.read_write_class("canvas/screen.py", "output/test_screen.py")
+        self.read_write_class("canvas/task.py", "output/test_task.py")
+
+    def read_write_class(self, input_class_path: str, output_class_path: str):
         cg = ClassContentManager(".")
-        cg.set_class_from_file("canvas/actor.py")
+        cg.set_class_from_file(input_class_path)
         expected_json_class = cg.the_class
-        cg.write_file_from_class("output/test_actor.py")
-        cg.set_class_from_file("output/test_actor.py")
+        cg.write_file_from_class(output_class_path)
+        cg.set_class_from_file(output_class_path)
         diff = DeepDiff(expected_json_class, cg.the_class, ignore_order=True)
         # since the class is generated elsewhere, the package should change
         self.assertEqual(diff, {'values_changed':
                                     {"root['package']":
                                                        {'new_value': 'output',
                                                         'old_value': 'canvas'}}})
+
+    def test_docstring_in_class(self):
+        self.read_write_class("canvas/screenplay.py", "output/test_screenplay.py")

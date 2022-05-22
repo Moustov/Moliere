@@ -5,7 +5,7 @@ class ScreenPlay:
     def __init__(self, name: str):
         self.name = name
 
-    def is_already_registered(self, name: str, items: [dict]):
+    def is_already_registered(self, name: str, items: [dict]) -> bool:
         """
         Tells if an item name is already in the items list
         :param name:

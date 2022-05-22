@@ -153,6 +153,7 @@ class ClassContentManager:
         """
         generates a JSON from a class_content
         todo handle class docstring
+        todo handle return definition
         :param class_path:
         :param class_content: array that holds every lines of code from a well formed class - must be PEP8 compliant
         :return:

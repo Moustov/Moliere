@@ -1,3 +1,5 @@
 /venv/
 /.idea
 /output/
+/target_languages/output/
+/tests/output/
