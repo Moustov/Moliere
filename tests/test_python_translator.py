@@ -51,7 +51,7 @@ class Test(TestCase):
         self.assertEqual(init_code, expected_value)
 
 
-class TestClassGenerator(TestCase):
+class TestClassContentManager(TestCase):
     def test_set_class_from_string(self):
         test_class = """from output.elements.element import Element
 from output.screenplay import ScreenPlay
@@ -88,4 +88,8 @@ class Question (ScreenPlay):
         cg.write_file_from_class("output/test_actor.py")
         cg.set_class_from_file("output/test_actor.py")
         diff = DeepDiff(expected_json_class, cg.the_class, ignore_order=True)
-        self.assertEqual(diff, {})
+        # since the class is generated elsewhere, the package should change
+        self.assertEqual(diff, {'values_changed':
+                                    {"root['package']":
+                                                       {'new_value': 'output',
+                                                        'old_value': 'canvas'}}})
