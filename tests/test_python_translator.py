@@ -72,8 +72,8 @@ class Question (ScreenPlay):
             "properties": [],
             "methods": [
                 {"name": "__init__", "parameters": ["self", "name: str"], "code": """        super.__init__(self, name)
-        pass"""},
-                {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "code": "pass"}
+        pass\n"""},
+                {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "code": "        pass"}
             ]
         }
         cg = ClassGenerator(".")

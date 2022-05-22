@@ -130,11 +130,18 @@ class ClassGenerator:
         return self.deserialize(class_path, class_content)
 
     def deserializes(self, class_path: str, class_content: [str]) -> dict:
+        """
+        generates a JSON from a class_content
+        :param class_path:
+        :param class_content:
+        :return:
+        """
         current_line = 0
         json_class = {}
         json_class["package"] = ".".join(class_path.split("/")[:1])
         line = class_content[current_line]
         current_line += 1
+        # process imports
         imports = []
         while not line.startswith("class"):
             if line.startswith("from") or line.startswith("import"):
@@ -142,18 +149,27 @@ class ClassGenerator:
             line = class_content[current_line]
             current_line += 1
         json_class["imports"] = imports
+        # process class
         class_definition = line
         words = class_definition.split(" ")
         json_class["class_name"] = words[1]
         super_classes = extract_value_between(line, "(", ")")
         json_class["inherits from"] = super_classes.split(",")
+        # skip lines until the 1st method
         while not line.startswith(f"{self.tabs}def"):
             line = class_content[current_line]
             current_line += 1
+        # process methods
         json_class["methods"] = []
         while current_line < len(class_content):
+            # process method name
+            method_name = extract_value_between(line, "def", "(").strip()
+            # process params
             method_parameters = extract_value_between(line, "(", ")")
-            method_name = extract_value_between(line, "def", "(")
+            params = []
+            for param in method_parameters.split(","):
+                params.append(param.strip())
+            # process lines of code
             line = class_content[current_line]
             current_line += 1
             method_code = ""
@@ -161,15 +177,41 @@ class ClassGenerator:
                 method_code += line + "\n"
                 line = class_content[current_line]
                 current_line += 1
-            if line == "\n":
-                method_code = method_code[:-1]
-            params = []
-            for param in method_parameters.split(","):
-                params.append(param.strip())
-            json_class["methods"].append({"name": method_name.strip(),
+            if current_line == len(class_content):
+                method_code += line + "\n"
+            method_code = self.remove_empty_lines_at_end_of_code(method_code)
+            # handle properties in __init__
+            if method_name == "__init__":
+                properties = self.extract_properties(method_code)
+                json_class["properties"] = properties
+            # record method
+            json_class["methods"].append({"name": method_name,
                                           "parameters": params,
                                           "code": method_code})
         return json_class
+
+    def remove_empty_lines_at_end_of_code(self, method_code: str):
+        """
+        removes empty lines at the end
+        todo extend "\n" to "^ *\n$" in case there would be blank lines
+        :param method_code:
+        :return:
+        """
+        lines = method_code.split(("\n"))
+        last_line = -1
+        while lines[:last_line] == "\n":
+            last_line -= 1
+        return "\n".join(lines[:last_line])
+
+    def extract_properties(self, method_code: str):
+        """
+        looking for "self\.(.*)=(.*)$" to extract properties ($1) in the method code
+        default value could be ($2) - /!\ not sure about this
+        :param method_code:
+        :return:
+        """
+        return []
+
 
 if __name__ == '__main__':
     json_class_example = {
