@@ -158,3 +158,7 @@ from output.screenplay import ScreenPlay
         refactored_imports = generator.refactor_packages(imports, "output")
         self.assertEqual(refactored_imports, expected_imports)
 
+    def test_package_name(self):
+        generator = SkeletonGenerator("output")
+        package_name = generator.screenplay_classes["actor"].the_class["package"]
+        self.assertEqual(package_name, "output.actors")
