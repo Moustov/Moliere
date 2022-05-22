@@ -141,6 +141,7 @@ class ClassContentManager:
             lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
         else:
             lines += f"class {self.the_class['class_name']}\n"
+        lines += self.the_class["lines before fist method"] + "\n"
         for method in self.the_class["methods"]:
             lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}):\n"
             lines += f"{method['code']}\n"
@@ -167,6 +168,8 @@ class ClassContentManager:
         while not line.startswith("class"):
             if line.startswith("from") or line.startswith("import"):
                 imports.append(line)
+            else: # todo handle code before class
+                pass
             line = class_content[current_line]
             current_line += 1
         self.the_class["imports"] = imports
@@ -174,12 +177,18 @@ class ClassContentManager:
         class_definition = line
         words = class_definition.split(" ")
         self.the_class["class_name"] = words[1]
-        super_classes = extract_value_between(line, "(", ")")
-        self.the_class["inherits from"] = super_classes.split(",")
-        # skip lines until the 1st method
+        try:
+            super_classes = extract_value_between(line, "(", ")")
+            self.the_class["inherits from"] = super_classes.split(",")
+        except IndexError:  # if there is no inheritance
+            self.the_class["inherits from"] = []
+        # read lines until the 1st method
+        lines_before_first_method = ""
         while not line.startswith(f"{self.tabs}def"):
+            lines_before_first_method += line + "\n"
             line = class_content[current_line]
             current_line += 1
+        self.the_class["lines before fist method"] = lines_before_first_method
         # process methods
         self.the_class["methods"] = []
         while current_line < len(class_content):
