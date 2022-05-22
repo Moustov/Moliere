@@ -12,7 +12,7 @@ class SkeletonGenerator:
     generates classes stubs in a target directory from screenplay_generated_parts
     screenplay_generated_parts can be generated with module extract_objects.py
 
-    **code sample (remove backslashes in myscene)**:
+    **code sample** (remove backslashes in myscene):
 
     ```{code-block} python
 
@@ -166,6 +166,7 @@ class SkeletonGenerator:
         :param screenplay_objects:
         :return:
         """
+        self.generate_skeleton_parts_from_items("screens", "Screen", screenplay_objects["screens"], regenerate_project)
         self.generate_skeleton_parts_from_items("abilities", "Ability", screenplay_objects["abilities"], regenerate_project)
         # self.generate_skeleton_parts_from_items("actions", "Action", screenplay_objects["actions"], regenerate_project)
         self.generate_skeleton_parts_from_items("actors", "Actor", screenplay_objects["actors"], regenerate_project)
@@ -179,7 +180,6 @@ class SkeletonGenerator:
         # todo handle several actors
         self.generate_skeleton_abilities(screenplay_objects["actors"][0], screenplay_objects["abilities"],
                                          regenerate_project)
-        self.generate_skeleton_parts_from_items("screens", "Screen", screenplay_objects["screens"], regenerate_project)
         # todo handle several actors
         self.generate_skeleton_actions(screenplay_objects["actors"][0], screenplay_objects["actions"],
                                        regenerate_project)
@@ -243,8 +243,8 @@ class SkeletonGenerator:
         for part in element_part:
             # todo as per the print hereunder
             if part['screen'] is not None:
-                self.register_object_in_class(generate_valid_class_name(part['item']),
-                                              generate_valid_class_name(part['screen']))
+                self.add_element_in_screen(generate_valid_class_name(part['item']),
+                                           generate_valid_class_name(part['screen']))
             else:
                 print(f"No screen defined for '{generate_valid_class_name(part['item'])}'")
 
@@ -261,17 +261,22 @@ class SkeletonGenerator:
         for part in actions_part:
             self.add_method_in_class(generate_valid_method_name(part['do']), generate_valid_class_name(actor))
 
-    def register_object_in_class(self, an_object, a_class: str):
+    def add_element_in_screen(self, an_object: str, a_class: str):
         """
-        # todo
+        adds an an_object into a_class(Screen)
+        todo decline this method to fit right method according to the item we want to register
+           eg: add_element for an element on a Screen / an ability on a Actor...
+           notably when an object registers different kinds of items (eg. an Actor)
+           we may also try using the super class of an_object to define the right method
+
         :param an_object:
         :param a_class:
         :return:
         """
-        target_class = self.screenplay_classes[a_class]
-        print(target_class)
-        target_class.add_registration_in_init(an_object)
-        print(f">> add object '{an_object}' in the screen class '{a_class}'")
+        gcm_a_class = self.screenplay_classes[a_class]
+        gcm_an_object = self.screenplay_classes[an_object]
+        self.screenplay_classes[a_class] = gcm_a_class.add_registration_in_init(gcm_an_object)
+        print(f">> add object '{an_object}' in the class '{a_class}'")
 
     def add_method_in_class(self, a_method: str, a_class: str):
         method = {"name": a_method,

@@ -264,7 +264,8 @@ class ClassContentManager:
         :return:
         """
         # add imports for the element
-        new_import = "from output.elements.thetotalamount import TheTotalAmount"
+        new_import = f"from {an_object.the_class['package']}.{an_object.the_class['class_name'].lower()}" \
+                     f" import {an_object.the_class['class_name']}"
         self.the_class["imports"].append(new_import)
         # add code in __init__
         code = f"""

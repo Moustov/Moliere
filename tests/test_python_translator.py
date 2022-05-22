@@ -161,7 +161,7 @@ class TheTotalAmount (Element):
     def __init__(self):
         super.__init__(self)"""
         expected_json_class = {
-    'package': 'canvas',
+    'package': 'output.screens',
     'imports': ['from output.screens.screen import Screen', 'from output.elements.thetotalamount import TheTotalAmount'],
     'class_name': 'TheBill',
     'inherits from': ['Screen'],
@@ -177,12 +177,12 @@ class TheTotalAmount (Element):
 }
 
         the_bill = ClassContentManager(".")
-        # let's pretend the_bill file is read from the "canvas" folder
-        json_class_the_bill = the_bill.set_class_from_string("canvas/the_bill.py", test_class.split("\n"))
+        # let's pretend the_bill file is read from the right folder
+        json_class_the_bill = the_bill.set_class_from_string("output/screens/the_bill.py", test_class.split("\n"))
 
         the_total_amount = ClassContentManager(".")
-        # let's pretend the_total_amount file is read from the "canvas" folder
-        json_class_the_total_amount = the_total_amount.set_class_from_string("canvas/the_total_amount.py", total_amount.split("\n"))
+        # let's pretend the_total_amount file is read from the right folder
+        json_class_the_total_amount = the_total_amount.set_class_from_string("output/elements/the_total_amount.py", total_amount.split("\n"))
 
         the_bill.add_registration_in_init(the_total_amount)
         json_class_the_bill = the_bill.the_class
