@@ -156,7 +156,7 @@ class ClassContentManager:
             lines += f"class {self.the_class['class_name']}\n"
         # write eventual docstring from the class
         lines += self.the_class["lines before fist method"]
-        #write methods
+        # write methods
         for method in self.the_class["methods"]:
             return_type = ""
             if method["return type"] != "":
@@ -184,7 +184,7 @@ class ClassContentManager:
         while not line.startswith("class"):
             if line.startswith("from") or line.startswith("import"):
                 imports.append(line)
-            else: # todo handle code before class
+            else:  # todo handle code before class
                 pass
             line = class_content[current_line]
             current_line += 1
@@ -219,7 +219,7 @@ class ClassContentManager:
             method_returns = line.split("->")
             return_type = ""
             if len(method_returns) > 1:
-                return_type = method_returns[1].strip().replace(":","")
+                return_type = method_returns[1].strip().replace(":", "")
             # process params
             method_parameters = extract_value_between(line, "(", ")")
             params = []
@@ -257,9 +257,10 @@ class ClassContentManager:
         """
         self.the_class["methods"].append(method)
 
-    def add_registration_in_init(self, an_object: object)-> object:
+    def add_registration_in_init(self, an_object: object, registration_method_name: str) -> object:
         """
         subscribes an_object in class_name
+        :param registration_method_name: the name of the method to use to register an_object
         :param an_object:
         :return:
         """
@@ -270,15 +271,15 @@ class ClassContentManager:
         # add code in __init__
         code = f"""
 {self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()
-{self.tabs}{self.tabs}self.add_element(name='{an_object.the_class['class_name']}', element=a)
+{self.tabs}{self.tabs}self.{registration_method_name}(name='{an_object.the_class['class_name']}', element=a)
 """
         print(code)
         init_method = self.get_init_method()
         init_method["code"] += code
-        print(f">>> {self.the_class['class_name']}.__init__ updated with the registering of {an_object.the_class['class_name']}")
+        print(f">>> {self.the_class['class_name']}.__init__ updated "
+              f"with the registering of {an_object.the_class['class_name']}")
 
         return self
-
 
     def remove_empty_lines_at_end_of_code(self, method_code: str):
         """

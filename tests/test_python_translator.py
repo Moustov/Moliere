@@ -184,7 +184,7 @@ class TheTotalAmount (Element):
         # let's pretend the_total_amount file is read from the right folder
         json_class_the_total_amount = the_total_amount.set_class_from_string("output/elements/the_total_amount.py", total_amount.split("\n"))
 
-        the_bill.add_registration_in_init(the_total_amount)
+        the_bill.add_registration_in_init(the_total_amount, "add_element")
         json_class_the_bill = the_bill.the_class
         diff = DeepDiff(expected_json_class, json_class_the_bill, ignore_order=True)
         self.assertEqual(diff, {})

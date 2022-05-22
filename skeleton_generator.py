@@ -275,7 +275,7 @@ class SkeletonGenerator:
         """
         gcm_a_class = self.screenplay_classes[a_class]
         gcm_an_object = self.screenplay_classes[an_object]
-        self.screenplay_classes[a_class] = gcm_a_class.add_registration_in_init(gcm_an_object)
+        self.screenplay_classes[a_class] = gcm_a_class.add_registration_in_init(gcm_an_object, "add_element")
         print(f">> add object '{an_object}' in the class '{a_class}'")
 
     def add_method_in_class(self, a_method: str, a_class: str):
