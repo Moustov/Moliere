@@ -140,12 +140,15 @@ class ClassContentManager:
         if len(self.the_class["imports"]) > 0:
             lines = "\n".join(self.the_class["imports"]) + "\n\n\n"
         if len(self.the_class["inherits from"]) > 0:
-            lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):"
+            lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
         else:
             lines += f"class {self.the_class['class_name']}\n"
         lines += self.the_class["lines before fist method"]
         for method in self.the_class["methods"]:
-            lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}):\n"
+            return_type = ""
+            if method["return type"] != "":
+                return_type = " -> " + method["return type"]
+            lines += f"{self.tabs}def {method['name']}({', '.join(method['parameters'])}) {return_type}:\n"
             lines += f"{method['code']}\n"
 
         with open(class_path, "w") as class_file:
@@ -196,10 +199,11 @@ class ClassContentManager:
         while current_line < len(class_content):
             # process method name
             method_name = extract_value_between(line, "def", "(").strip()
+            # process method return type
             method_returns = line.split("->")
             return_type = ""
             if len(method_returns) > 1:
-                return_type = method_returns[1]
+                return_type = method_returns[1].strip().replace(":","")
             # process params
             method_parameters = extract_value_between(line, "(", ")")
             params = []

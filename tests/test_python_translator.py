@@ -70,10 +70,13 @@ class Question (ScreenPlay):
             "class_name": "Question",
             "inherits from": ["ScreenPlay"],
             "properties": [],
+            "lines before fist method": "",
             "methods": [
-                {"name": "__init__", "parameters": ["self", "name: str"], "code": """        super.__init__(self, name)
+                {"name": "__init__", "parameters": ["self", "name: str"], "return type": "",
+                 "code": """        super.__init__(self, name)
         pass\n"""},
-                {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "code": "        pass"}
+                {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "return type": "",
+                 "code": "        pass"}
             ]
         }
         cg = ClassContentManager(".")
