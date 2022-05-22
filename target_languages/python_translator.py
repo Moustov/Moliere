@@ -155,7 +155,6 @@ class ClassContentManager:
     def set_class_from_string(self, class_path: str, class_content: [str]) -> dict:
         """
         generates a JSON from a class_content
-        todo handle return definition
         :param class_path:
         :param class_content: array that holds every lines of code from a well formed class - must be PEP8 compliant
         :return:
@@ -197,6 +196,10 @@ class ClassContentManager:
         while current_line < len(class_content):
             # process method name
             method_name = extract_value_between(line, "def", "(").strip()
+            method_returns = line.split("->")
+            return_type = ""
+            if len(method_returns) > 1:
+                return_type = method_returns[1]
             # process params
             method_parameters = extract_value_between(line, "(", ")")
             params = []
@@ -220,6 +223,7 @@ class ClassContentManager:
             # record method
             self.add_method({"name": method_name,
                              "parameters": params,
+                             "return type": return_type,
                              "code": method_code})
         return self.the_class
 
