@@ -2,12 +2,24 @@ import re
 
 
 def extract_value_between(raw_string, left_delimiter, right_delimiter) -> str:
+    """
+    return the string between left_delimiter and right_delimiter
+    :param raw_string:
+    :param left_delimiter:
+    :param right_delimiter:
+    :return:
+    """
     left_right = raw_string.split(left_delimiter)
     value = left_right[1].split(right_delimiter)
     return value[0]
 
 
-def extract_actions(a_scene):
+def extract_actions(a_scene: str) -> [dict]:
+    """
+    extract Action-like actions from a_scene string
+    :param a_scene: a **Molière** string scenario
+    :return: a list of actions {"do": something, "direct object": the item onto which something is done}
+    """
     res = []
     actions_string = extract_value_between(a_scene, "does ", "THEN")
     raw_action_params = actions_string.split("AND")
@@ -20,7 +32,12 @@ def extract_actions(a_scene):
     return res
 
 
-def extract_abilities(a_scene: str):
+def extract_abilities(a_scene: str) -> [str]:
+    """
+    extract abilities from a_scene
+    :param a_scene: a **Molière** string scenario
+    :return: a list of things some Actor-like object is able to do
+    """
     res = []
     abilities_string = extract_value_between(a_scene, "who can ", "WHEN")
     raw_abilities = abilities_string.split("and")
@@ -29,7 +46,15 @@ def extract_abilities(a_scene: str):
     return res
 
 
-def extract_elements(a_scene, abilities: [], screens: [], actions: []):
+def extract_elements(a_scene, abilities: [], screens: [], actions: [dict]) -> [dict]:
+    """
+
+    :param a_scene: a **Molière** string scenario
+    :param abilities: known abilities
+    :param screens: known screens
+    :param actions: known actions {"do": something, "direct object": the item onto which something is done}
+    :return: {"item": some element, "screen": the item onto which the item can be found}
+    """
     res = []
     for an_ability in abilities:
         an_element = {"item": "element_to_enable_" + an_ability, "screen": None}
@@ -50,11 +75,21 @@ def extract_elements(a_scene, abilities: [], screens: [], actions: []):
     return res
 
 
-def remove_dupes(an_array: []):
+def remove_dupes(an_array: [str]) -> [str]:
+    """
+    remove dupes in an_array
+    :param an_array:
+    :return:
+    """
     return list(dict.fromkeys(an_array))
 
 
-def remove_dupes_in_elements(list_elements: [dict]):
+def remove_dupes_in_elements(list_elements: [dict]) -> [dict]:
+    """
+    remove dupes in a list_elements [{"item": an item, "screen": the Screen-like name onto which an item can be found}*]
+    :param list_elements:
+    :return:
+    """
     elements = []
     res = []
     for element in list_elements:
@@ -64,7 +99,12 @@ def remove_dupes_in_elements(list_elements: [dict]):
     return res
 
 
-def extract_questions(a_scene):
+def extract_questions(a_scene: str) -> [dict]:
+    """
+
+    :param a_scene: a **Molière** string scenario
+    :return: a list of {"check": something, "is": what is to be checked}
+    """
     res = []
     questions_string = a_scene.split("checks")
     raw_questions = questions_string[1].split("AND")
@@ -82,8 +122,17 @@ def extract_screenplay_objects(a_scene: str) -> dict:
     > WHEN <Actor> does <Task(Parameters)>
     > THEN <Actor> checks <Question> is <Assertion… on Answer>
     > THANKS TO <element> FOUND ON <screen>
-    :param a_scene:
-    :return:
+    :param a_scene: a **Molière** string scenario
+    :return: a dict with {
+        "actors": [],
+        "facts": [],
+        "tasks": [],
+        "questions": [],
+        "elements": [],
+        "screens": [],
+        "abilities": [],
+        "actions": []
+    }
     """
     screen_play_generated_parts = {
         "actors": [],
