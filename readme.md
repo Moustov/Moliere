@@ -2,10 +2,11 @@
 **Molière** is an extension of Gherkin which generates the [ScreenPlay Design Pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe) (SPDP).
 
 The idea rose from [Micha Kutz' talk on "Writing tests like Shakespeare](https://youtu.be/Ptg5NICosNY?t=5870)
+(hence the name of this project)
 
 The aim is to extend Gherkin grammar with some extra info to generate class stubs compliant with SPDP
 ## Gherkin extension
-Language definition:
+Language definition proposed by **Molière**:
 ```
 GIVEN <Actor> who can <Ability> [and <Ability>]+
 WHEN {<Actor> does <Task> {at|with|in} <Parameters>}
@@ -13,9 +14,14 @@ WHEN {<Actor> does <Task> {at|with|in} <Parameters>}
 THEN <Actor> checks <Question> is <Assertion> THANKS TO <element> FOUND ON <screen>
                 [and <Question> is <Assertion> THANKS TO <element> FOUND ON <screen>]+
 ```
+This preformatted text includes items (between <>) that will generate SPDP classes 
+with links between them along with methods found from this grammar
 See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Shakespeare/blob/master/tests/test_generate_screenplay.py)
 
+This grammar is still compatible with Gherkin to let people transition from Gherkin to **Molière**.
+
 ## Screenplay Overview
+SPDP is a SOLID compatible architecture: 
 ```
     @startuml
     ScreenPlay <|-- Actor
@@ -40,6 +46,7 @@ See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Sh
 #_**todo:** update readme with full example from an SPDP scenario to the generated scenario + test output_
 
 Example:\
+From a **Molière** scenario
 generated from an SPDP scenario with `extract_questions(scenario)`
 ```
     # INIT 1

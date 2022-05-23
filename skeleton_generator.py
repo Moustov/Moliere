@@ -318,12 +318,13 @@ class SkeletonGenerator:
         self.screenplay_classes[class_name] = cg
 
     def recording_skeleton(self):
-        print("Recording SPDP generated classes...")
+        # print("Recording SPDP generated classes...")
         for a_class_name in self.screenplay_classes:
             a_class = self.screenplay_classes[a_class_name]
-            print("     Writing class", f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
+            # print("     Writing class", f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
             makedirs(a_class.target_location, exist_ok=True)
             a_class.write_file_from_class(f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
+        print("SPDP classes recorded")
 
 
 if __name__ == '__main__':

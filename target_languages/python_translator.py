@@ -170,9 +170,9 @@ class ClassContentManager:
 
     def set_class_from_string(self, class_path: str, class_content: [str]) -> dict:
         """
-        generates a JSON from a class_content
+        generates a JSON from a PEP8 compliant class_content
         :param class_path:
-        :param class_content: array that holds every lines of code from a well formed class - must be PEP8 compliant
+        :param class_content: array that holds every lines of code (1 item = 1 line) from a well formed class
         :return:
         """
         print("Initializing", class_path)
