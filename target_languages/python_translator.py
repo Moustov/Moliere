@@ -175,6 +175,7 @@ class ClassContentManager:
         :param class_content: array that holds every lines of code from a well formed class - must be PEP8 compliant
         :return:
         """
+        print("Initializing", class_path)
         current_line = 0
         self.the_class = {"package": ".".join(class_path.split("/")[:-1])}
         line = class_content[current_line]
@@ -256,6 +257,7 @@ class ClassContentManager:
         :return:
         """
         self.the_class["methods"].append(method)
+        print(f"        Method {method['name']} added in {self.the_class['class_name']} in {self.the_class['package']}")
 
     def add_registration_in_init(self, an_object: object, registration_method_name: str) -> object:
         """
@@ -272,14 +274,13 @@ class ClassContentManager:
                      f" import {an_object.the_class['class_name']}"
         self.the_class["imports"].append(new_import)
         # add code in __init__
-        code = f"""
-{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()
-{self.tabs}{self.tabs}self.{registration_method_name}(name='{an_object.the_class['class_name']}', element=a)
-"""
+        code = f"{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()\n" \
+               f"{self.tabs}{self.tabs}self.{registration_method_name}(name='{an_object.the_class['class_name']}'," \
+               f" element=a)\n"
         print(code)
         init_method = self.get_init_method()
         init_method["code"] += code
-        print(f">>> {self.the_class['class_name']}.__init__ updated "
+        print(f"        >>> {self.the_class['class_name']}.__init__ updated "
               f"with the registering of {an_object.the_class['class_name']}")
 
         return self

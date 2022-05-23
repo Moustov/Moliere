@@ -1,5 +1,6 @@
 # WHAT'S THIS PROJECT ALL ABOUT?
-Gherkin extension for [ScreenPlay design pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe)(SPDP)
+**Molière** is an extension of Gherkin which generates the [ScreenPlay Design Pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe) (SPDP).
+
 The idea rose from [Micha Kutz' talk on "Writing tests like Shakespeare](https://youtu.be/Ptg5NICosNY?t=5870)
 
 The aim is to extend Gherkin grammar with some extra info to generate class stubs compliant with SPDP

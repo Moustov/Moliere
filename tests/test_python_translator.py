@@ -170,7 +170,7 @@ class TheTotalAmount (Element):
             'name': '__init__',
             'parameters': ['self'],
             'return type': '',
-            'code': "        super.__init__(self)\n\n\n        a = TheTotalAmount()\n        self.add_element(name='TheTotalAmount', element=a)\n"
+            'code': "        super.__init__(self)\n\n        a = TheTotalAmount()\n        self.add_element(name='TheTotalAmount', element=a)\n"
         }
     ],
     'properties': []

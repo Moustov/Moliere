@@ -65,28 +65,29 @@ class SkeletonGenerator:
     """
     def __init__(self, output_dir: str, regenerate_project: bool = False):
         self.output_directory = output_dir
-        self.packages = []
+        self.__packages = []
         self.screenplay_classes = {}
         self.initiate_skeleton(regenerate_project)
 
     def initiate_skeleton(self, regenerate_project: bool = False):
         """Copy base classes to self.output_directory"""
-        self.packages = []
+        print("Initiating skeleton...")
+        self.__packages = []
         if regenerate_project:
             shutil.rmtree(self.output_directory)
             if not os.path.exists(self.output_directory):
                 os.mkdir(self.output_directory)
                 print("Directory ", self.output_directory, " Created ")
 
-        self.packages.append({"base_class": "Actor", "folder_name": "actors", "file_name": "actor.py"})
-        self.packages.append({"base_class": "Fact", "folder_name": "facts", "file_name": "fact.py"})
-        self.packages.append({"base_class": "Task", "folder_name": "tasks", "file_name": "task.py"})
-        self.packages.append({"base_class": "Question", "folder_name": "questions", "file_name": "question.py"})
-        self.packages.append({"base_class": "Element", "folder_name": "elements", "file_name": "element.py"})
-        self.packages.append({"base_class": "Ability", "folder_name": "abilities", "file_name": "ability.py"})
-        self.packages.append({"base_class": "Screen", "folder_name": "screens", "file_name": "screen.py"})
-        self.packages.append({"base_class": "Action", "folder_name": "actions", "file_name": "action.py"})
-        self.packages.append({"base_class": "ScreenPlay", "folder_name": "", "file_name": "screenplay.py"})
+        self.__packages.append({"base_class": "Actor", "folder_name": "actors", "file_name": "actor.py"})
+        self.__packages.append({"base_class": "Fact", "folder_name": "facts", "file_name": "fact.py"})
+        self.__packages.append({"base_class": "Task", "folder_name": "tasks", "file_name": "task.py"})
+        self.__packages.append({"base_class": "Question", "folder_name": "questions", "file_name": "question.py"})
+        self.__packages.append({"base_class": "Element", "folder_name": "elements", "file_name": "element.py"})
+        self.__packages.append({"base_class": "Ability", "folder_name": "abilities", "file_name": "ability.py"})
+        self.__packages.append({"base_class": "Screen", "folder_name": "screens", "file_name": "screen.py"})
+        self.__packages.append({"base_class": "Action", "folder_name": "actions", "file_name": "action.py"})
+        self.__packages.append({"base_class": "ScreenPlay", "folder_name": "", "file_name": "screenplay.py"})
         self.generate_skeleton_with_base_class("actor", "actors")
         self.generate_skeleton_with_base_class("ability", "abilities")
         self.generate_skeleton_with_base_class("action", "actions")
@@ -183,11 +184,7 @@ class SkeletonGenerator:
         # todo handle several actors
         self.generate_skeleton_actions(screenplay_objects["actors"][0], screenplay_objects["actions"],
                                        regenerate_project)
-        for a_class_name in self.screenplay_classes:
-            a_class = self.screenplay_classes[a_class_name]
-            print("Writing class", f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
-            makedirs(a_class.target_location, exist_ok=True)
-            a_class.write_file_from_class(f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
+        self.recording_skeleton()
 
     def refactor_packages(self, the_class: str, dest_folder: str) -> str:
         """
@@ -226,7 +223,7 @@ class SkeletonGenerator:
         :param file_name_extensionless:
         :return: None if not found
         """
-        for package in self.packages:
+        for package in self.__packages:
             if package["base_class"].lower() == file_name_extensionless.lower():
                 return package["folder_name"]
         return None
@@ -243,8 +240,9 @@ class SkeletonGenerator:
         for part in element_part:
             # todo as per the print hereunder
             if part['screen'] is not None:
-                self.add_element_in_screen(generate_valid_class_name(part['item']),
-                                           generate_valid_class_name(part['screen']))
+                self.register_object_in_a_class(generate_valid_class_name(part['item']),
+                                                generate_valid_class_name(part['screen']),
+                                                "add_element")
             else:
                 print(f"No screen defined for '{generate_valid_class_name(part['item'])}'")
 
@@ -261,7 +259,7 @@ class SkeletonGenerator:
         for part in actions_part:
             self.add_method_in_class(generate_valid_method_name(part['do']), generate_valid_class_name(actor))
 
-    def add_element_in_screen(self, an_object: str, a_class: str):
+    def register_object_in_a_class(self, an_object: str, a_class: str, method_name: str):
         """
         adds an an_object into a_class(Screen)
         todo decline this method to fit right method according to the item we want to register
@@ -269,24 +267,27 @@ class SkeletonGenerator:
            notably when an object registers different kinds of items (eg. an Actor)
            we may also try using the super class of an_object to define the right method
 
+        :param method_name: the name of the registering method in an_object
         :param an_object:
         :param a_class:
         :return:
         """
         gcm_a_class = self.screenplay_classes[a_class]
         gcm_an_object = self.screenplay_classes[an_object]
-        self.screenplay_classes[a_class] = gcm_a_class.add_registration_in_init(gcm_an_object, "add_element")
+        self.screenplay_classes[a_class] = gcm_a_class.add_registration_in_init(gcm_an_object, method_name)
         print(f">> add object '{an_object}' in the class '{a_class}'")
+        self.recording_skeleton()
 
     def add_method_in_class(self, a_method: str, a_class: str):
         method = {"name": a_method,
                   "parameters": ["self"],
                   "return type": "bool",
-                  "code": f"""        print("some code needs to be added in {a_class}.{a_method}")
+                  "code": f"""        print("some code needs to be added in {a_class}.{a_method} to check the element is true")
         return False\n"""
                   },
+        print(f">> Adding method '{a_method}' in the class '{a_class}'")
         self.screenplay_classes[a_class].add_method(method[0])
-        print(f">> Method '{a_method}' in the class '{a_class}' added")
+        self.recording_skeleton()
 
     def generate_skeleton_for_an_item(self, screenplay_package_name: str,
                                       screenplay_superclass_name: str, class_name: str):
@@ -298,6 +299,7 @@ class SkeletonGenerator:
         :param class_name:
         :return:
         """
+        print(f"Generating '{class_name}' in {screenplay_package_name}")
         class_canvas = ""
         class_name = generate_valid_class_name(class_name)
         with open(os.path.normcase("canvas/class_canvas.py"), "r") as class_canvas_file:
@@ -314,6 +316,14 @@ class SkeletonGenerator:
         cg = ClassContentManager(f"{self.output_directory}/{screenplay_package_name}")
         cg.set_class_from_file(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py")
         self.screenplay_classes[class_name] = cg
+
+    def recording_skeleton(self):
+        print("Recording SPDP generated classes...")
+        for a_class_name in self.screenplay_classes:
+            a_class = self.screenplay_classes[a_class_name]
+            print("     Writing class", f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
+            makedirs(a_class.target_location, exist_ok=True)
+            a_class.write_file_from_class(f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
 
 
 if __name__ == '__main__':
