@@ -156,7 +156,7 @@ class SkeletonGenerator:
         # todo generate function from "is"
         for part in question_parts:
             self.add_method_in_class(f"check_{generate_valid_method_name(part['is'])}",
-                                     generate_valid_class_name(part['check']))
+                                     generate_valid_class_name(part['check']), "check")
 
     def generate_skeleton_parts(self, screenplay_objects: dict, regenerate_project: bool = False):
         """
@@ -249,7 +249,8 @@ class SkeletonGenerator:
     def generate_skeleton_abilities(self, actor: str, abilities_part, regenerate_project):
         screenplay_objects = []
         for part in abilities_part:
-            self.add_method_in_class(generate_valid_method_name(part), generate_valid_class_name(actor))
+            self.add_method_in_class(generate_valid_method_name(part),
+                                     generate_valid_class_name(actor), "interact with")
 
     def generate_skeleton_actions(self, actor: str, actions_part, regenerate_project):
         screenplay_objects = []
@@ -257,7 +258,8 @@ class SkeletonGenerator:
             screenplay_objects.append(part["direct object"])
         self.generate_skeleton_parts_from_items("actions", "Action", screenplay_objects, regenerate_project)
         for part in actions_part:
-            self.add_method_in_class(generate_valid_method_name(part['do']), generate_valid_class_name(actor))
+            self.add_method_in_class(generate_valid_method_name(part['do']),
+                                     generate_valid_class_name(actor), "interact with")
 
     def register_object_in_a_class(self, an_object: str, a_class: str, method_name: str):
         """
@@ -278,15 +280,26 @@ class SkeletonGenerator:
         print(f">> add object '{an_object}' in the class '{a_class}'")
         self.recording_skeleton()
 
-    def add_method_in_class(self, a_method: str, a_class: str):
+    def add_method_in_class(self, a_method: str, a_class: str, method_type: str):
+        """
+        add a_method to a_class
+        * if method_type is "check" the new method will return True if the check is OK
+        *  if method_type is "interact with" the new method will return True if the the action went fine
+        todo add parameters for the new method
+        :param method_type: "check" or "interact with"  todo refactor to bool or an enum
+        :param a_method:
+        :param a_class:
+        :return: n/a
+        """
         method = {"name": a_method,
                   "parameters": ["self"],
                   "return type": "bool",
-                  "code": f"""        print("some code needs to be added in {a_class}.{a_method} to check the element is true")
+                  "code": f"""        print("some code needs to be added in {a_class}.{a_method} to {method_type} the element is true")
         return False\n"""
                   },
-        print(f">> Adding method '{a_method}' in the class '{a_class}'")
-        self.screenplay_classes[a_class].add_method(method[0])
+        print(f">> Adding method '{a_method}' in the class '{a_class}' that will {method_type} an Element")
+        # todo for some reason, method is handled as a tuple - to be solved or leave the added [0]
+        self.screenplay_classes[a_class].add_method(method[0])  # [0] added to transform a tuple to a dict
         self.recording_skeleton()
 
     def generate_skeleton_for_an_item(self, screenplay_package_name: str,
