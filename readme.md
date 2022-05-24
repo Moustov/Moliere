@@ -41,6 +41,34 @@ SPDP is a SOLID compatible architecture:
     Task "1" o-- "n" Action : made up of
     Ability "1" o-- "n" Action : enables
     Action "1" o-- "n" Element : interacts with
+    class Actor{
+        tasks: Task[]
+        abilities: Ability[]
+        facts: Fact[]
+        questions: Question[]
+    }
+    class Fact{
+        questions: Question[]
+    }
+
+    class Ability{
+        actions: Action[]
+    }
+    class Task{
+        actions: Action[]
+    }
+    class Action{
+        elements: Element[]
+    }
+    class Question{
+        elements: Element[]
+    }
+    class Element{
+        on_the_screen: Screen
+    }
+    class Screen{
+        elements: Element[]
+    }
     @enduml
 ```
 #_**todo:** update readme with full example from an SPDP scenario to the generated scenario + test output_
