@@ -1,11 +1,11 @@
-<img src="https://cdn.pixabay.com/photo/2021/07/07/05/16/moliere-6393267_960_720.png" width="200">
+<img src="docs/molière.png" width="200">
 
-*courtesy: https://pixabay.com/fr/vectors/moli%C3%A8re-jean-baptiste-poquelin-6393267/*
+*courtesy: https://archive.org/details/greatmenfamouswo07hornuoft/page/68/mode/2up/*
 
 # WHAT'S THIS PROJECT ALL ABOUT?
 **Molière** is an extension of Gherkin which generates the [ScreenPlay Design Pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe) (SPDP).
 
-The idea rose from [Micha Kutz' talk on "Writing tests like Shakespeare](https://youtu.be/Ptg5NICosNY?t=5870)
+The idea rose from [Micha Kutz' talk on *"Writing tests like Shakespeare"*](https://youtu.be/Ptg5NICosNY?t=5870)
 (hence the name of this project)
 
 The aim is to extend Gherkin grammar with some extra info to generate class stubs compliant with SPDP
@@ -25,9 +25,10 @@ See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Sh
 This grammar is still compatible with Gherkin to let people transition from Gherkin to **Molière**.
 
 ## Screenplay Overview
-SPDP is a SOLID compatible architecture: 
+SPDP is a SOLID compatible architecture (use a [PlantUML viewer](http://www.plantuml.com/plantuml/uml/) ): 
+
 ```
-    @startuml
+@startuml
     ScreenPlay "0" o-- "n" Actor
     ScreenPlay "0" o-- "n" Fact
     ScreenPlay "0" o-- "n" Question
@@ -66,7 +67,6 @@ SPDP is a SOLID compatible architecture:
     class Fact{
         questions: Question[]
     }
-
     class Ability{
         actions: Action[]
     }
@@ -85,8 +85,9 @@ SPDP is a SOLID compatible architecture:
     class Screen{
         elements: Element[]
     }
-    @enduml
+@enduml
 ```
+
 * ScreenPlay.test_scripts: each test_script is a scenario that would look like a **Molière** scenario
 #_**todo:** update readme with full example from an SPDP scenario to the generated scenario + test output_
 
