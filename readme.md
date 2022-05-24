@@ -50,7 +50,7 @@ SPDP is a SOLID compatible architecture:
         abilities: Ability[]
         facts: Fact[]
         questions: Question[]
-        test_scripts: * see hereunder
+        test_scripts: str[] * see hereunder
         play_test_script()
     }
     class Actor{
