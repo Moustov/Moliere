@@ -1,6 +1,4 @@
-<img src="docs/molière.png" width="200">
-
-*courtesy: https://archive.org/details/greatmenfamouswo07hornuoft/page/68/mode/2up/*
+<img src="docs/molière.png" width="200" alt="Molière etching - courtesy : https://archive.org/details/greatmenfamouswo07hornuoft/page/68/mode/2up/*)">
 
 # WHAT'S THIS PROJECT ALL ABOUT?
 **Molière** is an extension of Gherkin which generates the [ScreenPlay Design Pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe) (SPDP).
@@ -25,7 +23,7 @@ See [tests/test_generate_screenplay.py](https://github.com/Moustov/ScreenPlay_Sh
 This grammar is still compatible with Gherkin to let people transition from Gherkin to **Molière**.
 
 ## Screenplay Overview
-SPDP is a SOLID compatible architecture (use a [PlantUML viewer](http://www.plantuml.com/plantuml/uml/) ): 
+SPDP is a [SOLID](https://en.wikipedia.org/wiki/SOLID) compatible architecture (use a [PlantUML viewer](http://www.plantuml.com/plantuml/uml/) ): 
 
 ```
 @startuml
