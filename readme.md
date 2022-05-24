@@ -1,3 +1,7 @@
+<img src="https://cdn.pixabay.com/photo/2021/07/07/05/16/moliere-6393267_960_720.png" width="200">
+
+*courtesy: https://pixabay.com/fr/vectors/moli%C3%A8re-jean-baptiste-poquelin-6393267/*
+
 # WHAT'S THIS PROJECT ALL ABOUT?
 **Molière** is an extension of Gherkin which generates the [ScreenPlay Design Pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe) (SPDP).
 
@@ -107,12 +111,12 @@ generated from an SPDP scenario with `extract_questions(scenario)`
         # SCENE PLAY
             an_actor.accomplishes(a_task)
 
-    Act 1 - scene 1 - "a Tester" does "sequence #1"
+    Act 1 - scene 2 - "a Tester" does "sequence #2"
         # SCENE SETUP
             another_actor.name = "a Tester"
             action_3.add_interaction(element_4)
             action_4.add_feedback(element_5)
-            checks_1 = [{"task": "sequence of checks #1", 
+            checks_1 = [{"task": "sequence of checks #2", 
                         "actions": [{"action": action_3, "sequence": 1, "param": 456},
                                     {"check": action_4, "sequence": 2}]
         # SCENE PLAY

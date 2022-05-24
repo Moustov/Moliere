@@ -4,28 +4,27 @@ class ScreenPlay:
 
     def __init__(self, name: str):
         self.name = name
-        self.test_scripts: []
+        self.test_scripts = []
 
-    def is_already_registered(self, name: str, items: [dict]) -> bool:
-        """
-        Tells if an item name is already in the items list
-        :param name:
-        :param items: {"name": "XXXX", "what": ScreenPlay}
-        :return: True is the name is in items
-        """
-        for item in items:
-            if item["name"] == name:
-                return True
-        return False
+    def process_moliere_script(self, moliere_script: str) -> str:
+        self.transforms_moliere_script_into_scenario
 
-    def play_test_script(self, name: str, scenario: str):
-        if not self.is_already_registered(name, scenario):
-            self.test_scripts.append(scenario)
-        self.play(scenario)
-
-    def run(self, scenario: str):
-        print(scenario)
+    def play_test_script(self, name: str, scenario: str) -> str:
+        self.test_scripts.append(scenario)
+        spectator_view = ""
+        setup_and_events = scenario.split("\n")
         print("todo: implement this feature")
+        for line in setup_and_events:
+            spectator_view += self.perform_action(line)
+        return spectator_view
+
+    def perform_action(self, line) -> str:
+        """
+        process the line and return the outcome of the operation from a spectator's point of view
+        :param line:
+        :return:
+        """
+        return line # implement some code to perform the operation
 
 
 if __name__ == '__main__':
@@ -46,12 +45,12 @@ if __name__ == '__main__':
         # SCENE PLAY
             an_actor.accomplishes(a_task)
 
-    Act 1 - scene 1 - "a Tester" does "sequence #1"
+    Act 1 - scene 2 - "a Tester" does "sequence #2"
         # SCENE SETUP
             another_actor.name = "a Tester"
             action_3.add_interaction(element_4)
             action_4.add_feedback(element_5)
-            checks_1 = [{"task": "sequence of checks #1", 
+            checks_1 = [{"task": "sequence of checks #2", 
                         "actions": [{"action": action_3, "sequence": 1, "param": 456},
                                     {"check": action_4, "sequence": 2}]
         # SCENE PLAY
