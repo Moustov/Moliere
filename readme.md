@@ -91,9 +91,11 @@ SPDP is a [SOLID](https://en.wikipedia.org/wiki/SOLID) compatible architecture (
 
 Example:\
 From a **Molière** scenario
-generated from an SPDP scenario with `extract_questions(scenario)`
+generated from an SPDP scenario with `play_test_script("act 1", scenario)`
 
 ```
+def main():
+    test_script = """
     Act 1 - scene 1 - "John" does "sequence #1"
         # SCENE SETUP
             an_actor.name = "John"
@@ -122,13 +124,18 @@ generated from an SPDP scenario with `extract_questions(scenario)`
             a_test.set_actions(checks_1)
             feedback = another_actor.accomplishes(checks_1)
             print(feedback)
+"""
+    my_comedy = ScreenPlay("Much ado about nothing")
+    output = my_comedy.play_test_script("act 1", test_script)
+    print(output)
 ```    
+
 output:
 ```
 John does the sequence #1
     -> <action_1.name> with 123 on element_1 in page 1
     -> and <action_2.name> with a click on element_3 in page 2
-Then a Tester sequence of checks #1
+Then a Tester does the sequence of checks #2
     -> <action_3.name> with 456
     <- and sees 32 EUR from element_5 in the_mailbox
 ```
