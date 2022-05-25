@@ -339,6 +339,9 @@ class SkeletonGenerator:
             a_class.write_file_from_class(f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
         print("SPDP classes recorded")
 
+    def generate_questions(self) -> [str]:
+        pass
+
 
 if __name__ == '__main__':
     """

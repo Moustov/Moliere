@@ -1,8 +1,7 @@
 from canvas.element import Element
-from canvas.screenplay import ScreenPlay
 
 
-class Action (ScreenPlay):
+class Action:
     def __init__(self, name: str):
         super.__init__(self, name)
         self.elements = []

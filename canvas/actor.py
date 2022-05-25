@@ -1,11 +1,10 @@
 from canvas.ability import Ability
 from canvas.fact import Fact
 from canvas.question import Question
-from canvas.screenplay import ScreenPlay
 from canvas.task import Task
 
 
-class Actor (ScreenPlay):
+class Actor:
     def __init__(self, name: str):
         super.__init__(self, name)
         self.abilities = []

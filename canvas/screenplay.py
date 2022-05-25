@@ -7,7 +7,12 @@ class ScreenPlay:
         self.test_scripts = []
 
     def process_moliere_script(self, moliere_script: str) -> str:
-        self.transforms_moliere_script_into_scenario
+        """
+
+        :param moliere_script:
+        :return:
+        """
+        self.transforms_moliere_script_into_scenario(moliere_script)
 
     def play_test_script(self, name: str, scenario: str) -> str:
         self.test_scripts.append(scenario)
@@ -25,6 +30,14 @@ class ScreenPlay:
         :return:
         """
         return line # implement some code to perform the operation
+
+    def transforms_moliere_script_into_scenario(self, moliere_script):
+        """
+        generate
+        :param moliere_script:
+        :return:
+        """
+        pass
 
 
 if __name__ == '__main__':

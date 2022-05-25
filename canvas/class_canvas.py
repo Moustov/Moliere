@@ -1,7 +1,7 @@
 #YOUR IMPORTS
 
 
-class TheClass(TheClassType):
+class TheClass:
     def __init__(self):
         super.__init__(self)
 

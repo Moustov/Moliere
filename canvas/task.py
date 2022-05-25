@@ -1,9 +1,8 @@
 from canvas.action import Action
 from canvas.actor import Actor
-from canvas.screenplay import ScreenPlay
 
 
-class Task (ScreenPlay):
+class Task:
     def __init__(self, name: str):
         super.__init__(self, name)
         self.made_of = []

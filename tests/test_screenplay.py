@@ -34,7 +34,7 @@ class TestScreenPlay(TestCase):
                 a_test.set_actions(checks_1)
                 feedback = another_actor.accomplishes(checks_1)
                 print(feedback)
-            """
+"""
         expected_output = """
 John does the sequence #1
     -> <action_1.name> with 123 on element_1 in page 1
