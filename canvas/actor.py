@@ -6,7 +6,6 @@ from canvas.task import Task
 
 class Actor:
     def __init__(self, name: str):
-        super.__init__(self, name)
         self.abilities = []
 
     def can(self, name: str, ability: Ability):
@@ -26,4 +25,8 @@ class Actor:
         pass
 
     def does(self, a_task: Task):
+        pass
+
+    def is_already_registered(self, name, abilities):
+        # todo implement the method
         pass

@@ -116,9 +116,24 @@ class Test(TestCase):
         res = extract_value_between("<HTML>", "<", ">")
         self.assertEqual(res, "HTML")
 
-    def test_extract_value_between(self):
+    def test_extract_value_between_with_exception_left(self):
+        """
+        should trigger an exception if no left delimiter
+        :return:
+        """
         try:
             res = extract_value_between("HTML>", "<", ">")
             self.assertEqual(res, "HTML")
-        except:
+        except IndexError:
+            self.assertTrue(True)
+
+    def test_extract_value_between_with_exception_right(self):
+        """
+        should trigger an exception if no right delimiter
+        :return:
+        """
+        try:
+            res = extract_value_between("<HTML", "<", ">")
+            self.assertEqual(res, "HTML")
+        except IndexError:
             self.assertTrue(True)

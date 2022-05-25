@@ -3,7 +3,6 @@ from canvas.element import Element
 
 class Action:
     def __init__(self, name: str):
-        super.__init__(self, name)
         self.elements = []
 
     def interacts_with(self, name: str, element: Element):

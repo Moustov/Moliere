@@ -71,7 +71,6 @@ class ClassContentManager:
     def generate_constructor(self, properties: [dict]) -> str:
         """
         todo add "super.__init__(self)" for each ancestor
-        :param tab_size:
         :param properties:
         :return:
         """
@@ -153,7 +152,7 @@ class ClassContentManager:
         if len(self.the_class["inherits from"]) > 0:
             lines += f"class {self.the_class['class_name']} ({', '.join(self.the_class['inherits from'])}):\n"
         else:
-            lines += f"class {self.the_class['class_name']}\n"
+            lines += f"class {self.the_class['class_name']}:\n"
         # write eventual docstring from the class
         lines += self.the_class["lines before fist method"]
         # write methods
@@ -172,7 +171,7 @@ class ClassContentManager:
         """
         generates a JSON from a PEP8 compliant class_content
         :param class_path:
-        :param class_content: array that holds every lines of code (1 item = 1 line) from a well formed class
+        :param class_content: array that holds every line of code (1 item = 1 line) from a well-formed class
         :return:
         """
         print("Initializing", class_path)
@@ -274,7 +273,7 @@ class ClassContentManager:
                      f" import {an_object.the_class['class_name']}"
         self.the_class["imports"].append(new_import)
         # add code in __init__
-        code = f"{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()\n" \
+        code = f"\n{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()\n" \
                f"{self.tabs}{self.tabs}self.{registration_method_name}(name='{an_object.the_class['class_name']}'," \
                f" element=a)\n"
         print(code)
@@ -292,7 +291,7 @@ class ClassContentManager:
         :param method_code:
         :return:
         """
-        lines = method_code.split(("\n"))
+        lines = method_code.split("\n")
         last_line = -1
         while lines[:last_line] == "\n":
             last_line -= 1

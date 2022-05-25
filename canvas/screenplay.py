@@ -71,6 +71,6 @@ if __name__ == '__main__':
             feedback = another_actor.accomplishes(checks_1)
             print(feedback)
         """
-my_comedy = ScreenPlay("Much ado about nothing")
-output = my_comedy.play_test_script("act 1", test_script)
-print(output)
+    my_comedy = ScreenPlay("Much ado about nothing")
+    output = my_comedy.play_test_script("act 1", test_script)
+    print(output)

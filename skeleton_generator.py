@@ -12,7 +12,7 @@ class SkeletonGenerator:
     generates classes stubs in a target directory from screenplay_generated_parts
     screenplay_generated_parts can be generated with module extract_objects.py
 
-    **code sample** (remove backslashes in myscene):
+    **code sample** (remove backslashes in my_scene):
 
     ```{code-block} python
 
@@ -144,8 +144,8 @@ class SkeletonGenerator:
     def generate_skeleton_questions(self, question_parts: dict, regenerate_project: bool):
         """
         same as generate_skeleton_part except it handles objects with parameters
-        such as questions, elements, abilities and actoins
-        :param part_type:
+        such as questions, elements, abilities and actions
+        :param question_parts:
         :param regenerate_project:
         :return:
         """
@@ -217,14 +217,14 @@ class SkeletonGenerator:
         final_code = final_code[:-1]
         return final_code
 
-    def get_folder_name_from_file_name(self, file_name_extensionless: str) -> str:
+    def get_folder_name_from_file_name(self, file_name_without_extension: str) -> str:
         """
         return the folder name associated with the class
-        :param file_name_extensionless:
+        :param file_name_without_extension:
         :return: None if not found
         """
         for package in self.__packages:
-            if package["base_class"].lower() == file_name_extensionless.lower():
+            if package["base_class"].lower() == file_name_without_extension.lower():
                 return package["folder_name"]
         return None
 
