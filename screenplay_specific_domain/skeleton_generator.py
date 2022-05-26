@@ -2,7 +2,7 @@ import os
 import shutil
 from os import makedirs
 
-from extract_objects import extract_value_between
+from screenplay_specific_domain.extract_objects import extract_value_between
 from target_languages.python_translator import generate_valid_class_name, generate_valid_method_name, \
     ClassContentManager
 
@@ -368,5 +368,5 @@ if __name__ == '__main__':
             {"do": "order", "direct object": "999 beers"}
         ]
     }
-    generator = SkeletonGenerator("output")
+    generator = SkeletonGenerator("../output")
     generator.generate_skeleton_parts(screenplay_generated_parts, True)

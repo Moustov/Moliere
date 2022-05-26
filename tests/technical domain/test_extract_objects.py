@@ -1,6 +1,6 @@
 from unittest import TestCase
 from deepdiff import DeepDiff
-from extract_objects import extract_screenplay_objects, extract_value_between
+from screenplay_specific_domain.extract_objects import extract_screenplay_objects, extract_value_between
 
 
 class Test(TestCase):

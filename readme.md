@@ -92,7 +92,7 @@ SPDP is a [SOLID](https://en.wikipedia.org/wiki/SOLID) compatible architecture (
 
 Example:\
 From a **Molière** scenario
-generated from an SPDP scenario with `play_test_script("act 1", scenario)`
+generated from an SPDP scenario with `moliere_core_domain.play_test_script("act 1", scenario)`
 
 ```
 def main():

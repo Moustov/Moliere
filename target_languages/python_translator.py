@@ -2,7 +2,7 @@ from os import makedirs
 
 import unicodedata
 
-from extract_objects import extract_value_between
+from screenplay_specific_domain.extract_objects import extract_value_between
 
 
 def translate_to_python_names(a_name) -> str:

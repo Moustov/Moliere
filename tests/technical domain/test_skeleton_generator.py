@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from skeleton_generator import SkeletonGenerator
+from screenplay_specific_domain.skeleton_generator import SkeletonGenerator
 
 
 class Test(TestCase):
@@ -26,7 +26,7 @@ class Test(TestCase):
                 {"do": "order", "direct object": "999 beers"}
             ]
         }
-        output_dir = "../output"
+        output_dir = "output"
         generator = SkeletonGenerator(output_dir)
         new_class = generator.generate_skeleton_parts_from_items("actors", "Actor",
                                                                  screenplay_generated_parts["actors"], True)

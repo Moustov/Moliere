@@ -1,6 +1,5 @@
-from canvas.screenplay import ScreenPlay
-from extract_objects import extract_screenplay_objects
-from skeleton_generator import SkeletonGenerator
+from screenplay_specific_domain.extract_objects import extract_screenplay_objects
+from screenplay_specific_domain.skeleton_generator import SkeletonGenerator
 
 
 def generate_screenplay(a_scene: str, regenerate_project: bool = False) -> [str]:
@@ -16,7 +15,7 @@ def generate_screenplay(a_scene: str, regenerate_project: bool = False) -> [str]
     :return: compatible with ScreenPlay.play_test_script()
     """
     my_screenplay_objects = extract_screenplay_objects(a_scene)
-    generator = SkeletonGenerator("output")
+    generator = SkeletonGenerator("../output")
     generator.generate_skeleton_parts(my_screenplay_objects, regenerate_project)
     scenarios = generator.generate_questions()
 
