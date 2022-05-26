@@ -29,15 +29,15 @@ class ScreenPlay:
         :param line:
         :return:
         """
-        return line # implement some code to perform the operation
+        return line  # implement some code to perform the operation
 
-    def transforms_moliere_script_into_scenario(self, moliere_script):
+    def transforms_moliere_script_into_scenario(self, moliere_script) -> str:
         """
         generate
         :param moliere_script:
         :return:
         """
-        pass
+        return None
 
 
 if __name__ == '__main__':

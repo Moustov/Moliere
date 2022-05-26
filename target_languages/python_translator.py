@@ -240,11 +240,12 @@ class ClassContentManager:
             if method_name == "__init__":
                 properties = self.extract_properties(method_code)
                 self.the_class["properties"] = properties
+            cleaned_method_code = self.remove_empty_lines_at_end_of_code(method_code)
             # record method
             self.add_method({"name": method_name,
                              "parameters": params,
                              "return type": return_type,
-                             "code": method_code})
+                             "code": cleaned_method_code})
         return self.the_class
 
     def add_method(self, method: dict):
@@ -273,12 +274,12 @@ class ClassContentManager:
                      f" import {an_object.the_class['class_name']}"
         self.the_class["imports"].append(new_import)
         # add code in __init__
-        code = f"\n{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()\n" \
+        code = f"{self.tabs}{self.tabs}a = {an_object.the_class['class_name']}()\n" \
                f"{self.tabs}{self.tabs}self.{registration_method_name}(name='{an_object.the_class['class_name']}'," \
                f" element=a)\n"
         print(code)
         init_method = self.get_init_method()
-        init_method["code"] += code
+        init_method["code"] += "\n" + code
         print(f"        >>> {self.the_class['class_name']}.__init__ updated "
               f"with the registering of {an_object.the_class['class_name']}")
 
@@ -293,14 +294,15 @@ class ClassContentManager:
         """
         lines = method_code.split("\n")
         last_line = -1
-        while lines[:last_line] == "\n":
-            last_line -= 1
-        return "\n".join(lines[:last_line])
+        while len(lines) > 0 and lines[last_line] == "":
+            lines = lines[:last_line]
+        return "\n".join(lines)
 
     def extract_properties(self, method_code: str):
         """
         looking for "self\.(.*)=(.*)$" to extract properties ($1) in the method code
         default value could be ($2) - /!\ not sure about this
+        todo
         :param method_code:
         :return:
         """

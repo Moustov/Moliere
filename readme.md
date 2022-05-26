@@ -44,6 +44,7 @@ SPDP is a [SOLID](https://en.wikipedia.org/wiki/SOLID) compatible architecture (
     Task "0" o-- "n" Action : made up of
     Ability "0" o-- "n" Action : enables
     Action "0" o-- "n" Element : interacts with
+    
     class ScreenPlay{
         screens: Screen[]
         actors: Actor[]

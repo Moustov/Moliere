@@ -74,7 +74,7 @@ class Question (ScreenPlay):
             "methods": [
                 {"name": "__init__", "parameters": ["self", "name: str"], "return type": "",
                  "code": """        super.__init__(self, name)
-        pass\n"""},
+        pass"""},
                 {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "return type": "",
                  "code": "        pass"}
             ]
@@ -105,9 +105,14 @@ class Question (ScreenPlay):
         diff = DeepDiff(expected_json_class, cg.the_class, ignore_order=True)
         # since the class is generated elsewhere, the package should change
         self.assertEqual(diff, {'values_changed':
-                                    {"root['package']":
-                                         {'new_value': 'output',
-                                          'old_value': 'canvas'}}})
+            {
+                "root['package']": {
+                    'new_value': 'output',
+                    'old_value': 'canvas'
+                }
+            }
+        }
+                         )
 
     def test_docstring_in_class(self):
         self.read_write_class("canvas/screenplay.py", "output/test_screenplay.py")
@@ -134,7 +139,7 @@ class Question(ScreenPlay):
             "methods": [
                 {"name": "__init__", "parameters": ["self", "name: str"], "return type": "",
                  "code": """        super.__init__(self, name)
-        pass\n"""},
+        pass"""},
                 {"name": "about_the_state_of", "parameters": ["self", "an_element: Element"], "return type": "",
                  "code": "        pass"}
             ]
@@ -161,31 +166,33 @@ class TheTotalAmount (Element):
     def __init__(self):
         super.__init__(self)"""
         expected_json_class = {
-    'package': 'output.screens',
-    'imports': ['from output.screens.screen import Screen', 'from output.elements.thetotalamount import TheTotalAmount'],
-    'class_name': 'TheBill',
-    'inherits from': ['Screen'],
-    'lines before fist method': '',
-    'methods': [{
-            'name': '__init__',
-            'parameters': ['self'],
-            'return type': '',
-            'code': "        super.__init__(self)\n\n        a = TheTotalAmount()\n        self.add_element(name='TheTotalAmount', element=a)\n"
+            'package': 'output.screens',
+            'imports': ['from output.screens.screen import Screen',
+                        'from output.elements.thetotalamount import TheTotalAmount'],
+            'class_name': 'TheBill',
+            'inherits from': ['Screen'],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': "        super.__init__(self)\n"
+                        "        a = TheTotalAmount()\n"
+                        "        self.add_element(name='TheTotalAmount', element=a)\n"
+            }],
+            'properties': []
         }
-    ],
-    'properties': []
-}
 
         the_bill = ClassContentManager(".")
         # let's pretend the_bill file is read from the right folder
-        json_class_the_bill = the_bill.set_class_from_string("output/screens/the_bill.py", test_class.split("\n"))
+        the_bill.set_class_from_string("output/screens/the_bill.py", test_class.split("\n"))
 
         the_total_amount = ClassContentManager(".")
         # let's pretend the_total_amount file is read from the right folder
-        json_class_the_total_amount = the_total_amount.set_class_from_string("output/elements/the_total_amount.py", total_amount.split("\n"))
+        the_total_amount.set_class_from_string("output/elements/the_total_amount.py",
+                                               total_amount.split("\n"))
 
         the_bill.add_registration_in_init(the_total_amount, "add_element")
         json_class_the_bill = the_bill.the_class
         diff = DeepDiff(expected_json_class, json_class_the_bill, ignore_order=True)
         self.assertEqual(diff, {})
-
