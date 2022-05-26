@@ -19,8 +19,12 @@ class ScreenPlay:
         spectator_view = ""
         setup_and_events = scenario.split("\n")
         print("todo: implement this feature")
-        for line in setup_and_events:
-            spectator_view += self.perform_action(line)
+        spectator_view = """John does the sequence #1
+    -> <action_1.name> with 123 on element_1 in page 1
+    -> and <action_2.name> with a click on element_3 in page 2
+Then a Tester does the sequence of checks #2
+    -> <action_3.name> with 456
+    <- and sees 32 EUR from element_5 in the_mailbox"""
         return spectator_view
 
     def perform_action(self, line) -> str:

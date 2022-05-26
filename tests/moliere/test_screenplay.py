@@ -5,8 +5,7 @@ from canvas.screenplay import ScreenPlay
 
 class TestScreenPlay(TestCase):
     def test_play_test_script(self):
-        test_script = """
-        Act 1 - scene 1 - "John" does "sequence #1"
+        test_script = """        Act 1 - scene 1 - "John" does "sequence #1"
             # SCENE SETUP
                 an_actor.name = "John"
                 element_1.can_be_found_on(page_1)
@@ -35,14 +34,12 @@ class TestScreenPlay(TestCase):
                 feedback = another_actor.accomplishes(checks_1)
                 print(feedback)
 """
-        expected_output = """
-John does the sequence #1
+        expected_output = """John does the sequence #1
     -> <action_1.name> with 123 on element_1 in page 1
     -> and <action_2.name> with a click on element_3 in page 2
 Then a Tester does the sequence of checks #2
     -> <action_3.name> with 456
-    <- and sees 32 EUR from element_5 in the_mailbox
-"""
+    <- and sees 32 EUR from element_5 in the_mailbox"""
         my_comedy = ScreenPlay("Much ado about nothing")
         output = my_comedy.play_test_script("act 1", test_script)
         print(output)
