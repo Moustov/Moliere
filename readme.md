@@ -91,7 +91,7 @@ SPDP is a [SOLID](https://en.wikipedia.org/wiki/SOLID) compatible architecture (
 #_**todo:** update readme with full example from an SPDP scenario to the generated scenario + test output_
 
 Example:\
-From a **Molière** scenario
+From a **Molière** scenario (the extended GIVEN/WHEN/THEN )
 generated from an SPDP scenario with `moliere_core_domain.play_test_script("act 1", scenario)`
 
 ```

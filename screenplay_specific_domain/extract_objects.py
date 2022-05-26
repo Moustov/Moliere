@@ -17,7 +17,8 @@ def extract_value_between(raw_string, left_delimiter, right_delimiter) -> str:
 def extract_actions(a_scene: str) -> [dict]:
     """
     extract Action-like actions from a_scene string
-    :param a_scene: a **Molière** string scenario
+    test coverage: see test_extract_objects_screenplay_with_jack_and_multiple_checks()
+    :param a_scene: a **Molière** string scenario (the extended GIVEN/WHEN/THEN )
     :return: a list of actions {"do": something, "direct object": the item onto which something is done}
     """
     res = []
@@ -35,7 +36,8 @@ def extract_actions(a_scene: str) -> [dict]:
 def extract_abilities(a_scene: str) -> [str]:
     """
     extract abilities from a_scene
-    :param a_scene: a **Molière** string scenario
+    test coverage: see test_extract_objects_screenplay_with_jack_and_multiple_checks()
+    :param a_scene: a **Molière** string scenario (the extended GIVEN/WHEN/THEN )
     :return: a list of things some Actor-like object is able to do
     """
     res = []
@@ -48,8 +50,8 @@ def extract_abilities(a_scene: str) -> [str]:
 
 def extract_elements(a_scene, abilities: [], screens: [], actions: [dict]) -> [dict]:
     """
-
-    :param a_scene: a **Molière** string scenario
+    test coverage: see test_extract_objects_screenplay_with_jack_and_multiple_checks()
+    :param a_scene: a **Molière** string scenario (the extended GIVEN/WHEN/THEN )
     :param abilities: known abilities
     :param screens: known screens
     :param actions: known actions {"do": something, "direct object": the item onto which something is done}
@@ -102,7 +104,8 @@ def remove_dupes_in_elements(list_elements: [dict]) -> [dict]:
 def extract_questions(a_scene: str) -> [dict]:
     """
 
-    :param a_scene: a **Molière** string scenario
+    test coverage: see test_extract_objects_screenplay_with_jack_and_multiple_checks()
+    :param a_scene: a **Molière** string scenario (the extended GIVEN/WHEN/THEN )
     :return: a list of {"check": something, "is": what is to be checked}
     """
     res = []
@@ -122,7 +125,8 @@ def extract_screenplay_objects(a_scene: str) -> dict:
     > WHEN <Actor> does <Task(Parameters)>
     > THEN <Actor> checks <Question> is <Assertion… on Answer>
     > THANKS TO <element> FOUND ON <screen>
-    :param a_scene: a **Molière** string scenario
+    test coverage: see test_extract_objects_screenplay_with_jack_and_multiple_checks()
+    :param a_scene: a **Molière** string scenario (the extended GIVEN/WHEN/THEN )
     :return: a dict with {
         "actors": [],
         "facts": [],

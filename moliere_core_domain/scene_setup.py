@@ -15,7 +15,7 @@ def generate_screenplay(a_scene: str, regenerate_project: bool = False) -> [str]
     :return: compatible with ScreenPlay.play_test_script()
     """
     my_screenplay_objects = extract_screenplay_objects(a_scene)
-    generator = SkeletonGenerator("../output")
+    generator = SkeletonGenerator("output")
     generator.generate_skeleton_parts(my_screenplay_objects, regenerate_project)
     scenarios = generator.generate_questions()
 
