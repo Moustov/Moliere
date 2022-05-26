@@ -163,6 +163,6 @@ See [doctest](https://docs.python.org/3.8/library/doctest.html) as a possible li
 # RUN
 See PyCharm configurations : 
 - [A sample runner](pycharm/runConfigurations/scene_setup.run.xml)
-- [Unit Tests](pycharm/runConfigurations/Python tests in tests.run.xml)
+- [Unit Tests](pycharm/runConfigurations/Python_tests_in_tests.run.xml)
 # SEE ALSO
 - https://github.com/perrygoy/screenpy/blob/trunk/screenpy/actor.py
