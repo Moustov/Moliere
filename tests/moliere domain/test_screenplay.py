@@ -1,11 +1,55 @@
 from unittest import TestCase
 
+from deepdiff import DeepDiff
+
 from canvas.screenplay import ScreenPlay
+from moliere_core_domain.scene_setup import Scene
 
 
 class TestScreenPlay(TestCase):
-    def test_add_acceptance_criterion(self):
-        pass
+    def test_add_moliere_script(self):
+        a_scene = Scene("output")
+        line_1 = """
+            GIVEN <Jack Donald> who can <browse the web> and <call HTTP APIs> and <go to the pub>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
+        a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
+        line_2 = """
+            GIVEN <Jack Donald> who can <play music>
+            WHEN <Jack Donald> does <play music> at <The Sheep's Head Pub>
+                THEN <Jack Donald> checks <the gig reward> is <500 EUR>
+                          THANKS TO <earned money> FOUND ON <the table>
+            """
+        a_scene.add_moliere_script("act 1 - scene #1 - line #2", line_2)
+        expected_screenplay_objects = {
+            "actors": ["Jack Donald"],
+            "facts": [],
+            "tasks": ["go to the pub", "order"],
+            "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"},
+                          {"check": "the gig reward", "is": "500 EUR"}],
+            "elements": [{"item": "The Sheep's Head Pub", "screen": None},
+                         {"item": "browse the web", "screen": None},
+                         {"item": "call HTTP APIs", "screen": None},
+                         {"item": "go to the pub", "screen": None},
+                         {"item": "order", "screen": None},
+                         {"item": "999 beers", "screen": None},
+                         {"item": "the total amount", "screen": "the bill"},
+                         {"item": "earned money", "screen": "the table"}
+                         ],
+            "screens": ["the bill", "the table"],
+            "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order", "play music"],
+            "actions": [
+                {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
+                {"do": "play music", "direct object": "The Sheep's Head Pub"},
+                {"do": "order", "direct object": "999 beers"}
+            ]
+        }
+        diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
 
     def test_generate_test_script(self):
         pass
