@@ -6,25 +6,23 @@ class Scene:
     def __init__(self, target_folder: str):
         self.generator = SkeletonGenerator(target_folder)
         self.my_screenplay_objects = {}
+        self.my_scenes = []
 
-    def add_acceptance_criterion(self, moliere_script: str, regenerate_project: bool = False):
+    def add_moliere_script(self, script_name: str, moliere_script: str, regenerate_project: bool = False):
         """
         adds an acceptance criteria
-        :param moliere_script:
-        :return:
-        """
-        """
-
-        :param a_scene: Moliere's BDDeg.
+        :param script_name:
+        :param moliere_script: Moliere's BDDeg.
                 GIVEN <Jack Donald> who can <browse the web> and <call HTTP APIs> and <go to the pub>
                 WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
                     AND <order> with <999 beers>
                     THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
                               THANKS TO <the total amount> FOUND ON <the bill>
         :param regenerate_project: todo propose regenerating/versioning/overlapping
-        :return: compatible with ScreenPlay.play_test_script()
         """
-        self.my_screenplay_objects = merge_screenplay_objects(self.my_screenplay_objects, extract_screenplay_objects(moliere_script))
+        self.my_scenes.append({"name": script_name, "acceptance criterion": moliere_script})
+        new_scene = extract_screenplay_objects(moliere_script)
+        self.my_screenplay_objects = merge_screenplay_objects(self.my_screenplay_objects, new_scene)
 
     def generate_screenplay(self, a_scene: str, regenerate_project: bool = False) -> [str]:
         self.generator.generate_skeleton_parts(self.my_screenplay_objects, regenerate_project)
@@ -40,4 +38,4 @@ if __name__ == '__main__':
                           THANKS TO <the total amount> FOUND ON <the bill>
             """
     a_scene = Scene()
-    a_scene.add_acceptance_criterion(a_script)
+    a_scene.add_moliere_script("AC #1", a_script)
