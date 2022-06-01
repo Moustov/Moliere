@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from deepdiff import DeepDiff
 
-from target_languages.python_translator import ClassContentManager
+from screenplay_specific_domain.target_languages.python_translator import ClassContentManager
 
 
 class Test(TestCase):

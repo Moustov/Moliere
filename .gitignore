@@ -1,5 +1,5 @@
 /venv/
 /.idea
 /output/
-/target_languages/output/
+/screenplay_specific_domain/target_languages/output/
 /tests/output/

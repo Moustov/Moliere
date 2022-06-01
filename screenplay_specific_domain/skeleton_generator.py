@@ -3,7 +3,7 @@ import shutil
 from os import makedirs
 
 from screenplay_specific_domain.extract_objects import extract_value_between
-from target_languages.python_translator import generate_valid_class_name, generate_valid_method_name, \
+from screenplay_specific_domain.target_languages.python_translator import generate_valid_class_name, generate_valid_method_name, \
     ClassContentManager
 
 
@@ -339,8 +339,13 @@ class SkeletonGenerator:
             a_class.write_file_from_class(f"{a_class.target_location}/{a_class.the_class['class_name']}.py")
         print("SPDP classes recorded")
 
-    def generate_questions(self) -> [str]:
-        pass
+    def generate_questions(self) -> str:
+        return """John does the sequence #1
+    -> <action_1.name> with 123 on element_1 in page 1
+    -> and <action_2.name> with a click on element_3 in page 2
+Then a Tester does the sequence of checks #2
+    -> <action_3.name> with 456
+    <- and sees 32 EUR from element_5 in the_mailbox"""
 
 
 if __name__ == '__main__':
@@ -368,5 +373,5 @@ if __name__ == '__main__':
             {"do": "order", "direct object": "999 beers"}
         ]
     }
-    generator = SkeletonGenerator("../output")
+    generator = SkeletonGenerator("output")
     generator.generate_skeleton_parts(screenplay_generated_parts, True)

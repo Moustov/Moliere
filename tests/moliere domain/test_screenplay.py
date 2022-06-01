@@ -4,6 +4,12 @@ from canvas.screenplay import ScreenPlay
 
 
 class TestScreenPlay(TestCase):
+    def test_add_acceptance_criterion(self):
+        pass
+
+    def test_generate_test_script(self):
+        pass
+
     def test_play_test_script(self):
         test_script = """        Act 1 - scene 1 - "John" does "sequence #1"
             # SCENE SETUP

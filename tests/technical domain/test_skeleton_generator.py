@@ -59,7 +59,7 @@ class Test(TestCase):
         self.assertTrue(os.path.isfile(os.path.normcase(f"{output_dir}/actors/actor.py")))
 
     def test_refactor_packages_abilities_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.ability import Ability
 """
@@ -70,7 +70,7 @@ from output.abilities.ability import Ability
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_actor_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.actor import Actor
 """
@@ -81,7 +81,7 @@ from output.actors.actor import Actor
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_element_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.element import Element
 """
@@ -92,7 +92,7 @@ from output.elements.element import Element
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_fact_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.fact import Fact
 """
@@ -103,7 +103,7 @@ from output.facts.fact import Fact
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_question_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.question import Question
 """
@@ -114,7 +114,7 @@ from output.questions.question import Question
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_screen_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.screen import Screen
 """
@@ -125,7 +125,7 @@ from output.screens.screen import Screen
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_task_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.task import Task
 """
@@ -136,7 +136,7 @@ from output.tasks.task import Task
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_screenplay_simple(self):
-        generator = SkeletonGenerator("../output", regenerate_project=True)
+        generator = SkeletonGenerator("output", regenerate_project=True)
         imports = """
 from canvas.screenplay import ScreenPlay
 """
@@ -147,7 +147,7 @@ from output.screenplay import ScreenPlay
         self.assertEqual(refactored_imports, expected_imports)
 
     def test_refactor_packages_action_all_imports(self):
-        generator = SkeletonGenerator("../output")
+        generator = SkeletonGenerator("output")
         imports = """
 from canvas.action import Action
 from canvas.screenplay import ScreenPlay

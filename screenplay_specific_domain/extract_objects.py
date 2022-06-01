@@ -183,3 +183,7 @@ if __name__ == '__main__':
             """
     screenplay_generated_parts = extract_screenplay_objects(my_scene)
     print(screenplay_generated_parts)
+
+
+def merge_screenplay_objects(scene1: dict, scene2: dict) -> dict:
+    return None

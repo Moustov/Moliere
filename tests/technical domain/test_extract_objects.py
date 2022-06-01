@@ -1,6 +1,7 @@
 from unittest import TestCase
 from deepdiff import DeepDiff
-from screenplay_specific_domain.extract_objects import extract_screenplay_objects, extract_value_between
+from screenplay_specific_domain.extract_objects import extract_screenplay_objects, extract_value_between, \
+    merge_screenplay_objects
 
 
 class Test(TestCase):
@@ -137,3 +138,51 @@ class Test(TestCase):
             self.assertEqual(res, "HTML")
         except IndexError:
             self.assertTrue(True)
+
+    def test_merge_screenplay_objects(self):
+        scene1 = {
+            "actors": ["Jack"],
+            "facts": [],
+            "tasks": ["go to the pub", "order"],
+            "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"}],
+            "elements": [{"item": "The Sheep's Head Pub", "screen": None},
+                         {"item": "browse the web", "screen": None},
+                         {"item": "call HTTP APIs", "screen": None},
+                         {"item": "go to the pub", "screen": None},
+                         {"item": "order", "screen": None},
+                         {"item": "999 beers", "screen": None},
+                         {"item": "the total amount", "screen": "the bill"}
+                         ],
+            "screens": ["the bill"],
+            "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order"],
+            "actions": [
+                {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
+                {"do": "order", "direct object": "999 beers"}
+            ]
+        }
+        scene2 = {
+            "actors": ["Daniels"]
+        }
+        expected_scene = {
+            "actors": ["Jack", "Daniels"],
+            "facts": [],
+            "tasks": ["go to the pub", "order"],
+            "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"}],
+            "elements": [{"item": "The Sheep's Head Pub", "screen": None},
+                         {"item": "browse the web", "screen": None},
+                         {"item": "call HTTP APIs", "screen": None},
+                         {"item": "go to the pub", "screen": None},
+                         {"item": "order", "screen": None},
+                         {"item": "999 beers", "screen": None},
+                         {"item": "the total amount", "screen": "the bill"}
+                         ],
+            "screens": ["the bill"],
+            "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order"],
+            "actions": [
+                {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
+                {"do": "order", "direct object": "999 beers"}
+            ]
+        }
+        res_scene = merge_screenplay_objects(scene1, scene2)
+        diff = DeepDiff(res_scene, expected_scene, ignore_order=True)
+        self.assertEqual(diff, {})
