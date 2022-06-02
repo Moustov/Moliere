@@ -1,7 +1,7 @@
 from unittest import TestCase
 from deepdiff import DeepDiff
 from screenplay_specific_domain.extract_objects import extract_screenplay_objects, extract_value_between, \
-    merge_screenplay_objects
+    merge_screenplay_objects, remove_dupes_in_parametrized_array
 
 
 class Test(TestCase):
@@ -185,4 +185,32 @@ class Test(TestCase):
         }
         res_scene = merge_screenplay_objects(scene1, scene2)
         diff = DeepDiff(res_scene, expected_scene, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_remove_dupes_in_parametrized_array_no_dupe(self):
+        list_elements = [{"a": 12, "b": 13}]
+        expected = [{"a": 12, "b": 13}]
+        res = remove_dupes_in_parametrized_array(list_elements)
+        diff = DeepDiff(expected, res, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_remove_dupes_in_parametrized_array_single_dupe(self):
+        list_elements = [{"a": 12, "b": 13}, {"a": 12, "b": 13}]
+        expected = [{"a": 12, "b": 13}]
+        res = remove_dupes_in_parametrized_array(list_elements)
+        diff = DeepDiff(expected, res, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_remove_dupes_in_parametrized_array_single_dupe2(self):
+        list_elements = [{"a": 12, "b": 13}, {"a": 12, "b": 13}, {"a": 13, "b": 13}]
+        expected = [{"a": 12, "b": 13}, {"a": 13, "b": 13}]
+        res = remove_dupes_in_parametrized_array(list_elements)
+        diff = DeepDiff(expected, res, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_remove_dupes_in_parametrized_array_no_dupe(self):
+        list_elements = [{"a": 12, "b": 13}, {"a": 12, "b": 12}, {"a": 13, "b": 13}]
+        expected = [{"a": 12, "b": 13}, {"a": 13, "b": 13}, {"a": 12, "b": 12}]
+        res = remove_dupes_in_parametrized_array(list_elements)
+        diff = DeepDiff(expected, res, ignore_order=True)
         self.assertEqual(diff, {})

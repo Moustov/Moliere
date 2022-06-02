@@ -1,5 +1,7 @@
 import re
 
+from deepdiff import DeepDiff
+
 
 def extract_value_between(raw_string, left_delimiter, right_delimiter) -> str:
     """
@@ -77,13 +79,27 @@ def extract_elements(a_scene, abilities: [], screens: [], actions: [dict]) -> [d
     return res
 
 
-def remove_dupes(an_array: [str]) -> [str]:
+def remove_string_dupes_in_array(an_array: [str]) -> [str]:
     """
     remove dupes in an_array
     :param an_array:
     :return:
     """
     return list(dict.fromkeys(an_array))
+
+
+def remove_dupes_in_parametrized_array(list_elements: [dict]) -> [dict]:
+    elements = []
+    for element in list_elements:
+        element_found = False
+        for element2 in elements:
+            diff = DeepDiff(element, element2, ignore_order=True)
+            if diff == {}:
+                element_found = True
+        if not element_found:
+            elements.append(element)
+    return elements
+
 
 
 def remove_dupes_in_elements(list_elements: [dict]) -> [dict]:
@@ -159,7 +175,7 @@ def extract_screenplay_objects(a_scene: str) -> dict:
     for action in actions:
         screen_play_generated_parts["abilities"] += [action["do"]]
         screen_play_generated_parts["tasks"].append(action["do"])
-    screen_play_generated_parts["abilities"] = remove_dupes(screen_play_generated_parts["abilities"])
+    screen_play_generated_parts["abilities"] = remove_string_dupes_in_array(screen_play_generated_parts["abilities"])
     screen_play_generated_parts["questions"] = extract_questions(a_scene)
     screen_play_generated_parts["screens"].append(extract_value_between(a_scene, "FOUND ON <", ">"))
     screen_play_generated_parts["elements"] += extract_elements(a_scene, screen_play_generated_parts["abilities"],
@@ -169,41 +185,35 @@ def extract_screenplay_objects(a_scene: str) -> dict:
     return screen_play_generated_parts
 
 
-if __name__ == '__main__':
-    """
-    main to script extract/generate
-    => generates a JSON in a file/stdout
-    """
-    my_scene = """
-            GIVEN <Jack> who can <browse the web> and <call HTTP APIs> and <go to the pub>
-            WHEN <Jack> does <go to the pub> at <The Sheep's Head Pub>
-                AND <order> with <999 beers>
-                THEN <Jack> checks <the total amount> is <999 × 2.59 EUR>
-                          THANKS TO <the total amount> FOUND ON <the bill>
-            """
-    screenplay_generated_parts = extract_screenplay_objects(my_scene)
-    print(screenplay_generated_parts)
+def merge_simple_object(object_name: str, scene1: dict, scene2: dict) -> dict:
+    res_scene = scene1
+    if object_name in res_scene.keys():
+        for an_object in scene2[object_name]:
+            res_scene[object_name].append(an_object)
+    else:
+        res_scene[object_name] = scene2[object_name]
+    res_scene[object_name] = remove_string_dupes_in_array(res_scene[object_name])
+    return res_scene
+
+
+def merge_parametrized_object(object_name: str, scene1: dict, scene2: dict) -> dict:
+    res_scene = scene1
+    if object_name in res_scene.keys():
+        for an_object in scene2[object_name]:
+            res_scene[object_name].append(an_object)
+    else:
+        res_scene[object_name] = scene2[object_name]
+    res_scene[object_name] = remove_dupes_in_parametrized_array(res_scene[object_name])
+    return res_scene
 
 
 def merge_screenplay_objects(scene1: dict, scene2: dict) -> dict:
-    res_scene = {
-            "actors": ["Jack", "Daniels"],
-            "facts": [],
-            "tasks": ["go to the pub", "order"],
-            "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"}],
-            "elements": [{"item": "The Sheep's Head Pub", "screen": None},
-                         {"item": "browse the web", "screen": None},
-                         {"item": "call HTTP APIs", "screen": None},
-                         {"item": "go to the pub", "screen": None},
-                         {"item": "order", "screen": None},
-                         {"item": "999 beers", "screen": None},
-                         {"item": "the total amount", "screen": "the bill"}
-                         ],
-            "screens": ["the bill"],
-            "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order"],
-            "actions": [
-                {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
-                {"do": "order", "direct object": "999 beers"}
-            ]
-        }
+    res_scene = merge_simple_object("actors", scene1, scene2)
+    res_scene = merge_simple_object("facts", res_scene, scene2)
+    res_scene = merge_simple_object("tasks", res_scene, scene2)
+    res_scene = merge_parametrized_object("questions", res_scene, scene2)
+    res_scene = merge_parametrized_object("elements", res_scene, scene2)
+    res_scene = merge_simple_object("screens", res_scene, scene2)
+    res_scene = merge_simple_object("abilities", res_scene, scene2)
+    res_scene = merge_parametrized_object("actions", res_scene, scene2)
     return res_scene

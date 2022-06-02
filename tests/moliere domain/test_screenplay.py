@@ -27,7 +27,7 @@ class TestScreenPlay(TestCase):
         expected_screenplay_objects = {
             "actors": ["Jack Donald"],
             "facts": [],
-            "tasks": ["go to the pub", "order"],
+            "tasks": ["go to the pub", "order", "play music"],
             "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"},
                           {"check": "the gig reward", "is": "500 EUR"}],
             "elements": [{"item": "The Sheep's Head Pub", "screen": None},
