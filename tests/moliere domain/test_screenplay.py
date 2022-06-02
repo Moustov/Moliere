@@ -4,6 +4,8 @@ from deepdiff import DeepDiff
 
 from canvas.screenplay import ScreenPlay
 from moliere_core_domain.scene_setup import Scene
+from screenplay_specific_domain.target_languages.python_translator import ClassContentManager, \
+    generate_python_file_name, generate_valid_class_name
 
 
 class TestScreenPlay(TestCase):
@@ -96,7 +98,8 @@ class TestScreenPlay(TestCase):
         self.assertEqual(diff, {})
 
     def test_generate_screenplay_objects(self):
-        a_scene = Scene("output")
+        folder = "output"
+        a_scene = Scene(folder)
         line_1 = """
             GIVEN <Jack Donald> who can <buy some beers>
             WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
@@ -106,10 +109,46 @@ class TestScreenPlay(TestCase):
             """
         a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
         a_scene.generate_screenplay(regenerate_project=True)
-        jack_donald = a_scene.generator.get_actor_implementation("Jack Donald")
-        # diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
-        # self.assertEqual(diff, {})
-
+        actor_class_name = generate_valid_class_name("Jack Donald")
+        jack_donald = a_scene.generator.screenplay_classes[actor_class_name]
+        cg = ClassContentManager(folder)
+        input_class_path = f"{jack_donald.target_location}/{generate_python_file_name(jack_donald.the_class['class_name'])}"
+        jack_donald_content = cg.set_class_from_file(input_class_path)
+        expected_screenplay_objects = {
+            'package': 'output.actors',
+            'imports': [],
+            'class_name': 'JackDonald',
+            'inherits from': [],
+            'lines before fist method': '',
+            'methods': [{
+                    'name': '__init__',
+                    'parameters': ['self'],
+                    'return type': '',
+                    'code': '        pass'
+                }, {
+                    'name': 'buy_some_beers',
+                    'parameters': ['self'],
+                    'return type': 'bool',
+                    'code': '        print("some code needs to be added in JackDonald.buy_some_beers to interact with the element is true")\n'
+                            '        return False'
+                }, {
+                    'name': 'go_to_the_pub',
+                    'parameters': ['self'],
+                    'return type': 'bool',
+                    'code': '        print("some code needs to be added in JackDonald.go_to_the_pub to interact with the element is true")\n'
+                            '        return False'
+                }, {
+                    'name': 'order',
+                    'parameters': ['self'],
+                    'return type': 'bool',
+                    'code': '        print("some code needs to be added in JackDonald.order to interact with the element is true")\n'
+                            '        return False'
+                }
+            ],
+            'properties': []
+        }
+        diff = DeepDiff(jack_donald_content, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
 
     def test_play_test_script(self):
         test_script = """        Act 1 - scene 1 - "John" does "sequence #1"

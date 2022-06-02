@@ -3,7 +3,8 @@ import shutil
 from os import makedirs
 
 from screenplay_specific_domain.extract_objects import extract_value_between
-from screenplay_specific_domain.target_languages.python_translator import generate_valid_class_name, generate_valid_method_name, \
+from screenplay_specific_domain.target_languages.python_translator import generate_valid_class_name, \
+    generate_valid_method_name, \
     ClassContentManager
 
 
@@ -63,6 +64,7 @@ class SkeletonGenerator:
 
     ```
     """
+
     def __init__(self, output_dir: str, regenerate_project: bool = False):
         self.output_directory = output_dir
         self.__packages = []
@@ -168,7 +170,8 @@ class SkeletonGenerator:
         :return:
         """
         self.generate_skeleton_parts_from_items("screens", "Screen", screenplay_objects["screens"], regenerate_project)
-        self.generate_skeleton_parts_from_items("abilities", "Ability", screenplay_objects["abilities"], regenerate_project)
+        self.generate_skeleton_parts_from_items("abilities", "Ability", screenplay_objects["abilities"],
+                                                regenerate_project)
         # self.generate_skeleton_parts_from_items("actions", "Action", screenplay_objects["actions"], regenerate_project)
         self.generate_skeleton_parts_from_items("actors", "Actor", screenplay_objects["actors"], regenerate_project)
         # self.generate_skeleton_parts_from_items("elements", "Element", screenplay_objects["elements"], regenerate_project)
@@ -347,13 +350,6 @@ Then a Tester does the sequence of checks #2
     -> <action_3.name> with 456
     <- and sees 32 EUR from element_5 in the_mailbox"""
 
-    def get_actor_implementation(self, actor_name: str) -> dict:
-        """
-        return the JSON (dict) implemented for the actor_name
-        :param actor_name: the actor name as found in the Moliere scenario (ie with white spaces & special characters)
-        :return:
-        """
-        return {}
 
 if __name__ == '__main__':
     """

@@ -62,6 +62,10 @@ def is_a_subclass(class_definition_code_line: str) -> bool:
     return class_definition_code_line.find("(") != -1
 
 
+def generate_python_file_name(class_name: str) -> str:
+    return class_name + ".py"
+
+
 class ClassContentManager:
     def __init__(self, target_location: str, tab_size: int = 4):
         self.target_location = target_location
@@ -118,7 +122,7 @@ class ClassContentManager:
         class_file_path = json_class["package"].split(".")
         path = "/".join(class_file_path)
         makedirs(self.target_location + "/" + path, exist_ok=True)
-        with open(self.target_location + "/" + path + "/" + json_class["class_name"] + ".py", "w") as class_file:
+        with open(self.target_location + "/" + path + "/" + generate_python_file_name(json_class["class_name"]), "w") as class_file:
             ancestors_string = ""
             if len(json_class["inherits from"]) > 0:
                 ancestors_string = "(" + ", ".join(json_class["inherits from"]) + ")"
@@ -298,7 +302,7 @@ class ClassContentManager:
             lines = lines[:last_line]
         return "\n".join(lines)
 
-    def extract_properties(self, method_code: str):
+    def extract_properties(self, method_code: str) -> []:
         """
         looking for "self\.(.*)=(.*)$" to extract properties ($1) in the method code
         default value could be ($2) - /!\ not sure about this
@@ -308,7 +312,7 @@ class ClassContentManager:
         """
         return []
 
-    def get_init_method(self):
+    def get_init_method(self) -> str:
         for method in self.the_class["methods"]:
             if method["name"] == "__init__":
                 return method
