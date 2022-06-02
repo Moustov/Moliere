@@ -7,7 +7,7 @@ from moliere_core_domain.scene_setup import Scene
 
 
 class TestScreenPlay(TestCase):
-    def test_add_moliere_script(self):
+    def test_add_moliere_script_more_actions(self):
         a_scene = Scene("output")
         line_1 = """
             GIVEN <Jack Donald> who can <browse the web> and <call HTTP APIs> and <go to the pub>
@@ -30,6 +30,50 @@ class TestScreenPlay(TestCase):
             "tasks": ["go to the pub", "order", "play music"],
             "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"},
                           {"check": "the gig reward", "is": "500 EUR"}],
+            "elements": [{"item": "element_to_reach_The Sheep's Head Pub", "screen": None},
+                         {"item": "element_to_enable_browse the web", "screen": None},
+                         {"item": "element_to_enable_call HTTP APIs", "screen": None},
+                         {"item": "element_to_enable_go to the pub", "screen": None},
+                         {"item": "element_to_enable_order", "screen": None},
+                         {"item": "element_to_reach_999 beers", "screen": None},
+                         {"item": "element_to_enable_play music", "screen": None},
+                         {"item": "the total amount", "screen": "the bill"},
+                         {"item": "earned money", "screen": "the table"}
+                         ],
+            "screens": ["the bill", "the table"],
+            "abilities": ["browse the web", "call HTTP APIs", "go to the pub", "order", "play music"],
+            "actions": [
+                {"do": "go to the pub", "direct object": "The Sheep's Head Pub"},
+                {"do": "play music", "direct object": "The Sheep's Head Pub"},
+                {"do": "order", "direct object": "999 beers"}
+            ]
+        }
+        diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_add_moliere_script_more_actors(self):
+        a_scene = Scene("output")
+        line_1 = """
+            GIVEN <Jack Donald> who can <browse the web> and <call HTTP APIs> and <go to the pub>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
+        a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
+        line_2 = """
+            GIVEN <Bill Evans> who can <play music>
+            WHEN <Bill Evans> does <play music> at <The Sheep's Head Pub>
+                THEN <Bill Evans> checks <the gig reward> is <5000 EUR>
+                          THANKS TO <earned money> FOUND ON <the table>
+            """
+        a_scene.add_moliere_script("act 1 - scene #1 - line #2", line_2)
+        expected_screenplay_objects = {
+            "actors": ["Jack Donald", "Bill Evans"],
+            "facts": [],
+            "tasks": ["go to the pub", "order", "play music"],
+            "questions": [{"check": "the total amount", "is": "999 × 2.59 EUR"},
+                          {"check": "the gig reward", "is": "5000 EUR"}],
             "elements": [{"item": "element_to_reach_The Sheep's Head Pub", "screen": None},
                          {"item": "element_to_enable_browse the web", "screen": None},
                          {"item": "element_to_enable_call HTTP APIs", "screen": None},
