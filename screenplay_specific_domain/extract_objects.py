@@ -185,29 +185,62 @@ def extract_screenplay_objects(a_scene: str) -> dict:
     return screen_play_generated_parts
 
 
-def merge_simple_object(object_name: str, scene1: dict, scene2: dict) -> dict:
+def append_objects(object_name: str, scene1: dict, scene2: dict) -> dict:
+    """
+    just add the objects from both scene1 and scene2
+    :param object_name:
+    :param scene1:
+    :param scene2:
+    :return:
+    """
     res_scene = scene1
-    if object_name in res_scene.keys():
-        for an_object in scene2[object_name]:
-            res_scene[object_name].append(an_object)
-    else:
+    if object_name in scene1.keys():
+        if object_name in scene2.keys():
+            for an_object in scene2[object_name]:
+                res_scene[object_name].append(an_object)
+    elif object_name in scene2.keys():
         res_scene[object_name] = scene2[object_name]
+    else:
+        res_scene[object_name] = []
+    return res_scene
+
+
+def merge_simple_object(object_name: str, scene1: dict, scene2: dict) -> dict:
+    """
+    when a screenplay object has no param (ie this is a simple array of strings), this function can be called to merge
+    scenes at the object_name part only
+    :param object_name: "actors", "facts", "screens", "abilities"
+    :param scene1:
+    :param scene2:
+    :return:
+    """
+    res_scene = append_objects(object_name, scene1, scene2)
     res_scene[object_name] = remove_string_dupes_in_array(res_scene[object_name])
     return res_scene
 
 
 def merge_parametrized_object(object_name: str, scene1: dict, scene2: dict) -> dict:
-    res_scene = scene1
-    if object_name in res_scene.keys():
-        for an_object in scene2[object_name]:
-            res_scene[object_name].append(an_object)
-    else:
-        res_scene[object_name] = scene2[object_name]
+    """
+    when a screenplay object has some param ({"item": "an item", "is": "big"}), this function can be called to merge
+    scenes at the object_name part only
+    :param object_name: "questions", "elements", "actions"
+    :param scene1:
+    :param scene2:
+    :return:
+    """
+    res_scene = append_objects(object_name, scene1, scene2)
     res_scene[object_name] = remove_dupes_in_parametrized_array(res_scene[object_name])
     return res_scene
 
 
 def merge_screenplay_objects(scene1: dict, scene2: dict) -> dict:
+    """
+    merge 2 sets of screenplay objects
+    todo see if this function should not be moved in skeleton_generator.py as a method
+    :param scene1:
+    :param scene2:
+    :return: the merged screenplay objects
+    """
     res_scene = merge_simple_object("actors", scene1, scene2)
     res_scene = merge_simple_object("facts", res_scene, scene2)
     res_scene = merge_simple_object("tasks", res_scene, scene2)
