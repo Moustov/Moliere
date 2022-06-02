@@ -95,9 +95,21 @@ class TestScreenPlay(TestCase):
         diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
         self.assertEqual(diff, {})
 
+    def test_generate_screenplay_objects(self):
+        a_scene = Scene("output")
+        line_1 = """
+            GIVEN <Jack Donald> who can <buy some beers>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
+        a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
+        a_scene.generate_screenplay(regenerate_project=True)
+        jack_donald = a_scene.generator.get_actor_implementation("Jack Donald")
+        # diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
+        # self.assertEqual(diff, {})
 
-    def test_generate_test_script(self):
-        pass
 
     def test_play_test_script(self):
         test_script = """        Act 1 - scene 1 - "John" does "sequence #1"

@@ -12,7 +12,7 @@ class Scene:
         """
         adds an acceptance criteria
         :param script_name:
-        :param moliere_script: Moliere's BDDeg.
+        :param moliere_script: Moliere's BDD - eg.
                 GIVEN <Jack Donald> who can <browse the web> and <call HTTP APIs> and <go to the pub>
                 WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
                     AND <order> with <999 beers>
@@ -24,7 +24,7 @@ class Scene:
         new_scene = extract_screenplay_objects(moliere_script)
         self.my_screenplay_objects = merge_screenplay_objects(self.my_screenplay_objects, new_scene)
 
-    def generate_screenplay(self, a_scene: str, regenerate_project: bool = False) -> [str]:
+    def generate_screenplay(self, regenerate_project: bool = False) -> [str]:
         self.generator.generate_skeleton_parts(self.my_screenplay_objects, regenerate_project)
         scenarios = self.generator.generate_questions()
 

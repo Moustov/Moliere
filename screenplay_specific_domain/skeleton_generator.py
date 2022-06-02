@@ -347,6 +347,13 @@ Then a Tester does the sequence of checks #2
     -> <action_3.name> with 456
     <- and sees 32 EUR from element_5 in the_mailbox"""
 
+    def get_actor_implementation(self, actor_name: str) -> dict:
+        """
+        return the JSON (dict) implemented for the actor_name
+        :param actor_name: the actor name as found in the Moliere scenario (ie with white spaces & special characters)
+        :return:
+        """
+        return {}
 
 if __name__ == '__main__':
     """
