@@ -213,7 +213,10 @@ class TestScreenPlayFiles(TestCase):
                 'name': '__init__',
                 'parameters': ['self'],
                 'return type': '',
-                'code': '        pass'
+                'code': """                an_actor = JackDonal()
+        an_element = Element_to_enable_goToThePub()
+        a_param = None
+        self.made_up_of(f{"actor": an_actor, "what": an_element, "value": a_param})"""
             }
             ],
             'properties': []
@@ -361,3 +364,4 @@ Then a Tester does the sequence of checks #2
         output = my_comedy.play_test_script("act 1", test_script)
         print(output)
         self.assertEqual(output, expected_output)
+
