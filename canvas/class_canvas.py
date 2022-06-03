@@ -1,6 +1,6 @@
 # YOUR IMPORTS
 
 
-class TheClass:
+class TheClass(TheClassType):
     def __init__(self):
         pass

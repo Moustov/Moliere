@@ -8,6 +8,230 @@ from screenplay_specific_domain.target_languages.python_translator import ClassC
     generate_python_file_name, generate_valid_class_name
 
 
+class TestScreenPlayFiles(TestCase):
+    def init_file_based_unit_tests(self, class_to_assess: str) -> dict:
+        """
+
+        :param class_to_assess: raw class name from Moliere script line
+        :return: {"class_to_assess": class_content, "expected": expected_screenplay_objects}
+        """
+        folder = "output"
+        a_scene = Scene(folder)
+        line_1 = """
+            GIVEN <Jack Donald> who can <buy some beers>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
+        a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
+        a_scene.generate_screenplay(regenerate_project=True)
+        the_class_name = generate_valid_class_name(class_to_assess)
+        a_class = a_scene.generator.screenplay_classes[the_class_name]
+        cg = ClassContentManager(folder)
+        input_class_path = f"{a_class.target_location}/{generate_python_file_name(a_class.the_class['class_name'])}"
+        class_content = cg.set_class_from_file(input_class_path)
+        return class_content
+
+    def test_generate_screenplay_objects_actor_file_Jack_Donald_methods(self):
+        """"
+        we should have exactly 4 methods - no dupes!
+        """
+        res = self.init_file_based_unit_tests("Jack Donald")
+        self.assertTrue(len(res["methods"]) == 4)
+
+    def test_generate_screenplay_objects_actor_file_Jack_Donald(self):
+        expected_screenplay_objects = {
+            'package': 'output.actors',
+            'imports': [],
+            'class_name': 'JackDonald',
+            'inherits from': ["Actor"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': '        pass'
+            }, {
+                'name': 'buy_some_beers',
+                'parameters': ['self'],
+                'return type': 'bool',
+                'code': '        print("some code needs to be added in JackDonald.buy_some_beers to interact with the element is true")\n'
+                        '        return False'
+            }, {
+                'name': 'go_to_the_pub',
+                'parameters': ['self'],
+                'return type': 'bool',
+                'code': '        print("some code needs to be added in JackDonald.go_to_the_pub to interact with the element is true")\n'
+                        '        return False'
+            }, {
+                'name': 'order',
+                'parameters': ['self'],
+                'return type': 'bool',
+                'code': '        print("some code needs to be added in JackDonald.order to interact with the element is true")\n'
+                        '        return False'
+            }
+            ],
+            'properties': []
+        }
+        res = self.init_file_based_unit_tests("Jack Donald")
+        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_generate_screenplay_objects_actor_file_Jack_Donald_ancestors(self):
+        res = self.init_file_based_unit_tests("Jack Donald")
+        self.assertTrue("Actor" in res["inherits from"])
+
+    def test_generate_screenplay_objects_ability_file_buy_some_beers(self):
+        expected_screenplay_objects = {
+            'package': 'output.abilities',
+            'imports': [],
+            'class_name': 'BuySomeBeers',
+            'inherits from': ["Ability"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': '        pass'
+            }
+            ],
+            'properties': []
+        }
+        res = self.init_file_based_unit_tests("buy some beers")
+        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_generate_screenplay_objects_ability_file_buy_some_beers_methods(self):
+        res = self.init_file_based_unit_tests("buy some beers")
+        self.assertTrue(len(res["methods"]) == 1)
+
+    def test_generate_screenplay_objects_ability_file_buy_some_beers_ancestors(self):
+        res = self.init_file_based_unit_tests("buy some beers")
+        self.assertTrue("Ability" in res["inherits from"])
+
+    def test_generate_screenplay_objects_action_file_the_sheeps_head_pub(self):
+        res = self.init_file_based_unit_tests("The Sheep's Head Pub")
+        expected_screenplay_objects = {
+            'package': 'output.actions',
+            'imports': [],
+            'class_name': 'TheSheepsHeadPub',
+            'inherits from': ["Action"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': '        pass'
+            }
+            ],
+            'properties': []
+        }
+        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_generate_screenplay_objects_action_file_the_sheeps_head_pub_method(self):
+        res = self.init_file_based_unit_tests("The Sheep's Head Pub")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue(len(res["methods"]) == 1)
+
+    def test_generate_screenplay_objects_action_file_the_sheeps_head_pub_ancestors(self):
+        res = self.init_file_based_unit_tests("The Sheep's Head Pub")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue("Action" in res["inherits from"])
+
+    def test_generate_screenplay_objects_screen_file_the_bill(self):
+        res = self.init_file_based_unit_tests("the bill")
+        expected_screenplay_objects = {
+            'package': 'output.screens',
+            'imports': ["from output.elements.thetotalamount import TheTotalAmount"],
+            'class_name': 'TheBill',
+            'inherits from': ["Screen"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': """        a = TheTotalAmount()
+        self.add_element(name='TheTotalAmount', element=a)"""
+            }
+            ],
+            'properties': []
+        }
+        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_generate_screenplay_objects_screen_file_the_bill_method(self):
+        res = self.init_file_based_unit_tests("the bill")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue(len(res["methods"]) == 1)
+
+    def test_generate_screenplay_objects_screen_file_the_bill_ancestors(self):
+        res = self.init_file_based_unit_tests("the bill")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue("Screen" in res["inherits from"])
+
+    def test_generate_screenplay_objects_element_file_the_total_amount(self):
+        res = self.init_file_based_unit_tests("the total amount")
+        expected_screenplay_objects = {
+            'package': 'output.elements',
+            'imports': [],
+            'class_name': 'TheTotalAmount',
+            'inherits from': ["Element"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': '        pass'
+            }
+            ],
+            'properties': []
+        }
+        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_generate_screenplay_objects_element_file_the_total_amount_method(self):
+        res = self.init_file_based_unit_tests("the total amount")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue(len(res["methods"]) == 1)
+
+    def test_generate_screenplay_objects_element_file_the_total_amount_ancestors(self):
+        res = self.init_file_based_unit_tests("the total amount")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue("Element" in res["inherits from"])
+
+    def test_generate_screenplay_objects_task_file_go_to_the_pub(self):
+        res = self.init_file_based_unit_tests("go to the pub")
+        expected_screenplay_objects = {
+            'package': 'output.tasks',
+            'imports': [],
+            'class_name': 'GoToThePub',
+            'inherits from': ["Task"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': '        pass'
+            }
+            ],
+            'properties': []
+        }
+        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        self.assertEqual(diff, {})
+
+    def test_generate_screenplay_objects_task_file_go_to_the_pub_method(self):
+        res = self.init_file_based_unit_tests("the total amount")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue(len(res["methods"]) == 1)
+
+    def test_generate_screenplay_objects_task_file_go_to_the_pub_ancestors(self):
+        res = self.init_file_based_unit_tests("the total amount")
+        # we should have exactly 1 methods - no dupes!
+        self.assertTrue("Task" in res["inherits from"])
+
+
 class TestScreenPlay(TestCase):
     def test_add_moliere_script_more_actions(self):
         a_scene = Scene("output")
@@ -96,61 +320,6 @@ class TestScreenPlay(TestCase):
         }
         diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
         self.assertEqual(diff, {})
-
-    def test_generate_screenplay_objects_file_Jack_Donald(self):
-        folder = "output"
-        a_scene = Scene(folder)
-        line_1 = """
-            GIVEN <Jack Donald> who can <buy some beers>
-            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
-                AND <order> with <999 beers>
-                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
-                          THANKS TO <the total amount> FOUND ON <the bill>
-            """
-        a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
-        a_scene.generate_screenplay(regenerate_project=True)
-        actor_class_name = generate_valid_class_name("Jack Donald")
-        jack_donald = a_scene.generator.screenplay_classes[actor_class_name]
-        cg = ClassContentManager(folder)
-        input_class_path = f"{jack_donald.target_location}/{generate_python_file_name(jack_donald.the_class['class_name'])}"
-        jack_donald_content = cg.set_class_from_file(input_class_path)
-        expected_screenplay_objects = {
-            'package': 'output.actors',
-            'imports': [],
-            'class_name': 'JackDonald',
-            'inherits from': [],
-            'lines before fist method': '',
-            'methods': [{
-                    'name': '__init__',
-                    'parameters': ['self'],
-                    'return type': '',
-                    'code': '        pass'
-                }, {
-                    'name': 'buy_some_beers',
-                    'parameters': ['self'],
-                    'return type': 'bool',
-                    'code': '        print("some code needs to be added in JackDonald.buy_some_beers to interact with the element is true")\n'
-                            '        return False'
-                }, {
-                    'name': 'go_to_the_pub',
-                    'parameters': ['self'],
-                    'return type': 'bool',
-                    'code': '        print("some code needs to be added in JackDonald.go_to_the_pub to interact with the element is true")\n'
-                            '        return False'
-                }, {
-                    'name': 'order',
-                    'parameters': ['self'],
-                    'return type': 'bool',
-                    'code': '        print("some code needs to be added in JackDonald.order to interact with the element is true")\n'
-                            '        return False'
-                }
-            ],
-            'properties': []
-        }
-        diff = DeepDiff(jack_donald_content, expected_screenplay_objects, ignore_order=True)
-        self.assertEqual(diff, {})
-        # we should have exactly 4 methods - no dupes!
-        self.assertTrue(len(jack_donald_content["methods"]) == 4)
 
     def test_play_test_script(self):
         test_script = """        Act 1 - scene 1 - "John" does "sequence #1"
