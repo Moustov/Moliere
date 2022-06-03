@@ -222,12 +222,12 @@ class TestScreenPlayFiles(TestCase):
         self.assertEqual(diff, {})
 
     def test_generate_screenplay_objects_task_file_go_to_the_pub_method(self):
-        res = self.init_file_based_unit_tests("the total amount")
+        res = self.init_file_based_unit_tests("go to the pub")
         # we should have exactly 1 methods - no dupes!
         self.assertTrue(len(res["methods"]) == 1)
 
     def test_generate_screenplay_objects_task_file_go_to_the_pub_ancestors(self):
-        res = self.init_file_based_unit_tests("the total amount")
+        res = self.init_file_based_unit_tests("go to the pub")
         # we should have exactly 1 methods - no dupes!
         self.assertTrue("Task" in res["inherits from"])
 
