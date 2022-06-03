@@ -202,11 +202,11 @@ class TestScreenPlayFiles(TestCase):
         self.assertTrue("Element" in res["inherits from"])
 
     def test_generate_screenplay_objects_task_file_go_to_the_pub(self):
-        res = self.init_file_based_unit_tests("go to the pub")
-        expected_screenplay_objects = {
+        res = self.init_file_based_unit_tests("???task name???")
+        expected_screenplay_objects_action = {
             'package': 'output.tasks',
             'imports': [],
-            'class_name': 'GoToThePub',
+            'class_name': 'JackDonaldGoToThePubTheSheepsHeadPubAndOrder999Beers', # todo name tasks
             'inherits from': ["Task"],
             'lines before fist method': '',
             'methods': [{
@@ -215,13 +215,39 @@ class TestScreenPlayFiles(TestCase):
                 'return type': '',
                 'code': """                an_actor = JackDonal()
         an_element = Element_to_enable_goToThePub()
-        a_param = None
-        self.made_up_of(f{"actor": an_actor, "what": an_element, "value": a_param})"""
+        a_param = Element_to_reach_TheSheepsHeadPub()
+        self.made_up_of(f{"actor": an_actor, "acts on": an_element, "with": a_param})
+        an_actor = JackDonal()
+        an_element = Element_to_enable_order()
+        a_param = Element_to_reach_999Beers()
+        self.made_up_of(f{"actor": an_actor, "acts on": an_element, "with": a_param})"""
             }
             ],
             'properties': []
         }
-        diff = DeepDiff(res, expected_screenplay_objects, ignore_order=True)
+        diff = DeepDiff(res, expected_screenplay_objects_action, ignore_order=True)
+        self.assertEqual(diff, {})
+
+        res = self.init_file_based_unit_tests("???question name???")
+        expected_screenplay_objects_check = {
+            'package': 'output.questions',
+            'imports': [],
+            'class_name': 'JackDonaldTheTotalAmount999x259EUR', # todo name questions
+            'inherits from': ["Question"],
+            'lines before fist method': '',
+            'methods': [{
+                'name': '__init__',
+                'parameters': ['self'],
+                'return type': '',
+                'code': """                an_actor = JackDonal()
+        an_element = TheTotalAmount()
+        a_param = Is999_259EUR()
+        self.made_up_of(f{"actor": an_actor, "acts on": an_element, "with": a_param})"""
+            }
+            ],
+            'properties': []
+        }
+        diff = DeepDiff(res, expected_screenplay_objects_check, ignore_order=True)
         self.assertEqual(diff, {})
 
     def test_generate_screenplay_objects_task_file_go_to_the_pub_method(self):

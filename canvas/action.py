@@ -4,6 +4,8 @@ from canvas.element import Element
 class Action:
     def __init__(self, name: str):
         self.elements = []
+        self.name = name
+
 
     def interacts_with(self, name: str, element: Element):
         """

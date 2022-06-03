@@ -7,6 +7,8 @@ from canvas.task import Task
 class Actor:
     def __init__(self, name: str):
         self.abilities = []
+        self.name = name
+
 
     def can(self, name: str, ability: Ability):
         """

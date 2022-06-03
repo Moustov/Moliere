@@ -4,6 +4,8 @@ from canvas.element import Element
 class Screen:
     def __init__(self, name: str):
         self.elements_on_the_screen = []
+        self.name = name
+
 
     def add_element(self, name: str, element: Element):
         """
