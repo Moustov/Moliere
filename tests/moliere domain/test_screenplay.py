@@ -97,7 +97,7 @@ class TestScreenPlay(TestCase):
         diff = DeepDiff(a_scene.my_screenplay_objects, expected_screenplay_objects, ignore_order=True)
         self.assertEqual(diff, {})
 
-    def test_generate_screenplay_objects(self):
+    def test_generate_screenplay_objects_file_Jack_Donald(self):
         folder = "output"
         a_scene = Scene(folder)
         line_1 = """
@@ -149,6 +149,8 @@ class TestScreenPlay(TestCase):
         }
         diff = DeepDiff(jack_donald_content, expected_screenplay_objects, ignore_order=True)
         self.assertEqual(diff, {})
+        # we should have exactly 4 methods - no dupes!
+        self.assertTrue(len(jack_donald_content["methods"]) == 4)
 
     def test_play_test_script(self):
         test_script = """        Act 1 - scene 1 - "John" does "sequence #1"

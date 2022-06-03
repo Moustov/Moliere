@@ -2,6 +2,8 @@ import os
 import shutil
 from os import makedirs
 
+from deepdiff import DeepDiff
+
 from screenplay_specific_domain.extract_objects import extract_value_between
 from screenplay_specific_domain.target_languages.python_translator import generate_valid_class_name, \
     generate_valid_method_name, \
@@ -181,12 +183,11 @@ class SkeletonGenerator:
         self.generate_skeleton_parts_from_items("tasks", "Task", screenplay_objects["tasks"], regenerate_project)
         self.generate_skeleton_questions(screenplay_objects["questions"], regenerate_project)
         self.generate_skeleton_elements(screenplay_objects["elements"], regenerate_project)
-        # todo handle several actors
-        self.generate_skeleton_abilities(screenplay_objects["actors"][0], screenplay_objects["abilities"],
-                                         regenerate_project)
-        # todo handle several actors
-        self.generate_skeleton_actions(screenplay_objects["actors"][0], screenplay_objects["actions"],
-                                       regenerate_project)
+        for an_actor in screenplay_objects["actors"]:
+            self.generate_actor_methods(an_actor,
+                                        screenplay_objects["abilities"],
+                                        screenplay_objects["actions"],
+                                        regenerate_project)
         self.recording_skeleton()
 
     def refactor_packages(self, the_class: str, dest_folder: str) -> str:
@@ -350,6 +351,29 @@ Then a Tester does the sequence of checks #2
     -> <action_3.name> with 456
     <- and sees 32 EUR from element_5 in the_mailbox"""
 
+    def generate_actor_methods(self, actor: str, abilities: [dict], actions: [dict], regenerate_project: bool):
+        self.generate_skeleton_abilities(actor, abilities, regenerate_project)
+        self.generate_skeleton_actions(actor, actions, regenerate_project)
+        self.remove_duplicated_methods(actor)
+
+    def remove_duplicated_methods(self, screenplay_object_text):
+        """
+        remove duplicated methods in the object screenplay_object_text
+        :param screenplay_object_text: this is the object name as found in the Moliere script
+        :return:
+        """
+        a_class_name = generate_valid_class_name(screenplay_object_text)
+        a_class = self.screenplay_classes[a_class_name]
+        methods = []
+        for method in a_class.the_class["methods"]:
+            not_found = True
+            for existing_method in methods:
+                diff = DeepDiff(method, existing_method, ignore_order=True)
+                if diff == {}:
+                    not_found = False
+            if not_found:
+                methods.append(method)
+        a_class.the_class["methods"] = methods
 
 if __name__ == '__main__':
     """
