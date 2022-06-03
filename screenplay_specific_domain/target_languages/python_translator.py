@@ -283,7 +283,10 @@ class ClassContentManager:
                f" element=a)\n"
         print(code)
         init_method = self.get_init_method()
-        init_method["code"] += "\n" + code
+        if init_method["code"] == '        pass':
+            init_method["code"] = code
+        else:
+            init_method["code"] += "\n" + code
         print(f"        >>> {self.the_class['class_name']}.__init__ updated "
               f"with the registering of {an_object.the_class['class_name']}")
 

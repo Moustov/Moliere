@@ -56,19 +56,19 @@ class TestScreenPlayFiles(TestCase):
                 'name': 'buy_some_beers',
                 'parameters': ['self'],
                 'return type': 'bool',
-                'code': '        print("some code needs to be added in JackDonald.buy_some_beers to interact with the element is true")\n'
+                'code': '        print("some code needs to be added in JackDonald.buy_some_beers to interact with the JackDonald is true")\n'
                         '        return False'
             }, {
                 'name': 'go_to_the_pub',
                 'parameters': ['self'],
                 'return type': 'bool',
-                'code': '        print("some code needs to be added in JackDonald.go_to_the_pub to interact with the element is true")\n'
+                'code': '        print("some code needs to be added in JackDonald.go_to_the_pub to interact with the JackDonald is true")\n'
                         '        return False'
             }, {
                 'name': 'order',
                 'parameters': ['self'],
                 'return type': 'bool',
-                'code': '        print("some code needs to be added in JackDonald.order to interact with the element is true")\n'
+                'code': '        print("some code needs to be added in JackDonald.order to interact with the JackDonald is true")\n'
                         '        return False'
             }
             ],

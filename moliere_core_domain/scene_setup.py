@@ -28,14 +28,3 @@ class Scene:
         self.generator.generate_skeleton_parts(self.my_screenplay_objects, regenerate_project)
         scenarios = self.generator.generate_questions()
 
-
-if __name__ == '__main__':
-    a_script = """
-            GIVEN <Jack Donald> who can <browse the web> and <call HTTP APIs> and <go to the pub>
-            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
-                AND <order> with <999 beers>
-                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
-                          THANKS TO <the total amount> FOUND ON <the bill>
-            """
-    a_scene = Scene()
-    a_scene.add_moliere_script("AC #1", a_script)

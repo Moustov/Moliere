@@ -110,6 +110,7 @@ class SkeletonGenerator:
             the_class = class_file.read()
             the_class = self.refactor_packages(the_class, self.output_directory)
             class_file.close()
+        #todo call serialize method instead to DRY
         with open(os.path.normcase(f"{self.output_directory}/{part_type_folder_name}/{base_class}.py"),
                   "w") as class_file:
             class_file.write(the_class)
@@ -298,7 +299,7 @@ class SkeletonGenerator:
         method = {"name": a_method,
                   "parameters": ["self"],
                   "return type": "bool",
-                  "code": f"""        print("some code needs to be added in {a_class}.{a_method} to {method_type} the element is true")
+                  "code": f"""        print("some code needs to be added in {a_class}.{a_method} to {method_type} the {a_class} is true")
         return False\n"""
                   },
         print(f">> Adding method '{a_method}' in the class '{a_class}' that will {method_type} an Element")
@@ -327,6 +328,7 @@ class SkeletonGenerator:
                                             f"from {self.output_directory}.{screenplay_package_name}"
                                             f".{screenplay_superclass_name.lower()} "
                                             f"import {screenplay_superclass_name}")
+        #todo call serialize method instead to DRY
         with open(os.path.normcase(f"{self.output_directory}/{screenplay_package_name}/{class_name}.py"),
                   "w") as class_file:
             class_file.write(class_canvas)
