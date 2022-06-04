@@ -1,7 +1,9 @@
 from unittest import TestCase
 from deepdiff import DeepDiff
-from screenplay_specific_domain.extract_objects import extract_screenplay_objects, extract_value_between, \
-    merge_screenplay_objects, remove_dupes_in_parametrized_array
+from screenplay_specific_domain.extract_objects import extract_value_between, \
+    remove_dupes_in_parametrized_array
+from moliere_core_domain.moliere_parser import extract_screenplay_objects, merge_screenplay_objects, \
+    extract_question_name, extract_task_name
 
 
 class Test(TestCase):
@@ -214,3 +216,25 @@ class Test(TestCase):
         res = remove_dupes_in_parametrized_array(list_elements)
         diff = DeepDiff(expected, res, ignore_order=True)
         self.assertEqual(diff, {})
+
+    def test_extract_question_name(self):
+        moliere_script = """
+            GIVEN <Jack Donald> who can <buy some beers>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
+        class_name = extract_question_name(moliere_script)
+        self.assertEqual(class_name, "JackDonaldChecksTheTotalAmountIs999259EurThanksToTheTotalAmountFoundOnTheBill")
+
+    def test_extract_task_name(self):
+        moliere_script = """
+            GIVEN <Jack Donald> who can <buy some beers>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
+        class_name = extract_task_name(moliere_script)
+        self.assertEqual(class_name, "JackDonaldDoesGoToThePubAtTheSheepSHeadPubAndOrderWith999Beers")

@@ -4,6 +4,7 @@ from deepdiff import DeepDiff
 
 from canvas.screenplay import ScreenPlay
 from moliere_core_domain.scene_setup import Scene
+from moliere_core_domain.moliere_parser import extract_question_name, extract_task_name
 from screenplay_specific_domain.target_languages.python_translator import ClassContentManager, \
     generate_python_file_name, generate_valid_class_name
 
@@ -17,13 +18,7 @@ class TestScreenPlayFiles(TestCase):
         """
         folder = "output"
         a_scene = Scene(folder)
-        line_1 = """
-            GIVEN <Jack Donald> who can <buy some beers>
-            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
-                AND <order> with <999 beers>
-                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
-                          THANKS TO <the total amount> FOUND ON <the bill>
-            """
+        line_1 = self.moliere_scenario()
         a_scene.add_moliere_script("act 1 - scene #1 - line #1", line_1)
         a_scene.generate_screenplay(regenerate_project=True)
         the_class_name = generate_valid_class_name(class_to_assess)
@@ -115,7 +110,7 @@ class TestScreenPlayFiles(TestCase):
         expected_screenplay_objects = {
             'package': 'output.actions',
             'imports': [],
-            'class_name': 'TheSheepsHeadPub',
+            'class_name': 'TheSheepSHeadPub',
             'inherits from': ["Action"],
             'lines before fist method': '',
             'methods': [{
@@ -202,11 +197,13 @@ class TestScreenPlayFiles(TestCase):
         self.assertTrue("Element" in res["inherits from"])
 
     def test_generate_screenplay_objects_task_file_go_to_the_pub(self):
-        res = self.init_file_based_unit_tests("???task name???")
+        task_name = extract_task_name(self.moliere_scenario())
+        res = self.init_file_based_unit_tests(task_name)
+        res = self.init_file_based_unit_tests("JackDonaldGoToThePubTheSheepsHeadPubAndOrder999Beers")
         expected_screenplay_objects_action = {
             'package': 'output.tasks',
             'imports': [],
-            'class_name': 'JackDonaldGoToThePubTheSheepsHeadPubAndOrder999Beers', # todo name tasks
+            'class_name': 'JackDonaldGoToThePubTheSheepsHeadPubAndOrder999Beers',
             'inherits from': ["Task"],
             'lines before fist method': '',
             'methods': [{
@@ -228,11 +225,12 @@ class TestScreenPlayFiles(TestCase):
         diff = DeepDiff(res, expected_screenplay_objects_action, ignore_order=True)
         self.assertEqual(diff, {})
 
-        res = self.init_file_based_unit_tests("???question name???")
+        question_name = extract_question_name(self.moliere_scenario())
+        res = self.init_file_based_unit_tests(question_name)
         expected_screenplay_objects_check = {
             'package': 'output.questions',
             'imports': [],
-            'class_name': 'JackDonaldTheTotalAmount999x259EUR', # todo name questions
+            'class_name': 'JackDonaldChecksTheTotalAmountIs999259EurThanksToTheTotalAmountFoundOnTheBill',
             'inherits from': ["Question"],
             'lines before fist method': '',
             'methods': [{
@@ -259,6 +257,15 @@ class TestScreenPlayFiles(TestCase):
         res = self.init_file_based_unit_tests("go to the pub")
         # we should have exactly 1 methods - no dupes!
         self.assertTrue("Task" in res["inherits from"])
+
+    def moliere_scenario(self) -> str:
+        return """
+            GIVEN <Jack Donald> who can <buy some beers>
+            WHEN <Jack Donald> does <go to the pub> at <The Sheep's Head Pub>
+                AND <order> with <999 beers>
+                THEN <Jack Donald> checks <the total amount> is <999 × 2.59 EUR>
+                          THANKS TO <the total amount> FOUND ON <the bill>
+            """
 
 
 class TestScreenPlay(TestCase):

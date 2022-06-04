@@ -1,4 +1,4 @@
-from screenplay_specific_domain.extract_objects import extract_screenplay_objects
+from moliere_core_domain.moliere_parser import extract_screenplay_objects
 from screenplay_specific_domain.skeleton_generator import SkeletonGenerator
 
 

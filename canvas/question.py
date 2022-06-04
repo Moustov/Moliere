@@ -17,7 +17,6 @@ class Question:
         print("Implement the question in your Question object")
         return False
 
-
     def run(self) -> str:
         """
         should print something like:

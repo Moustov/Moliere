@@ -22,14 +22,19 @@ def generate_valid_class_name(class_name: str) -> str:
     :param class_name: a class name
     """
     class_name = translate_to_python_names(class_name)
+    class_name = class_name.replace('\n'," ")
+    class_name = class_name.replace('<', " ")
+    class_name = class_name.replace('>', " ")
+    class_name = class_name.replace("'", " ")
+    class_name = class_name.replace('.', " ")
+    if class_name[0].isdigit():
+        class_name = "Some" + class_name
     words = class_name.split(" ")
     res = ""
+
     for word in words:
-        word = word.replace("'", "")
-        if word[0].isdigit():
-            res += "Some" + word
-        else:
-            res += word[0].upper() + word[1:]
+        if word != "":
+            res += word[0].upper() + word[1:].lower()
     return res
 
 
