@@ -9,8 +9,16 @@ class Question:
         self.assert_value = assert_value_from_an_element
         self.name = name
 
-
     def ask_about_assert_status(self) -> bool:
+        """
+        should run the question and return its status
+        :return:
+        """
+        print("Implement the question in your Question object")
+        return False
+
+
+    def run(self) -> str:
         """
         should print something like:
         Then a Tester does the sequence of checks #2
@@ -18,6 +26,6 @@ class Question:
             <- and sees 32 EUR from element_5 in the_mailbox
         :return:
         """
-        self.task.run()
-        print(f"<- and sees {self.assert_value.get_value()} from {self.assert_value.name} in {self.assert_value.screen}")
-
+        res = self.task.run()
+        res += f"<- and sees {self.assert_value.get_value()} from {self.assert_value.name} in {self.assert_value.screen}"
+        return res

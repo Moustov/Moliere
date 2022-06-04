@@ -12,7 +12,7 @@ class Task:
     def made_up_of(self, action_on_an_element: Action, value_from_an_element: str):
         self.made_of.append({"what": action_on_an_element, "value": value_from_an_element})
 
-    def run(self):
+    def run(self) -> str:
         """
         should print something like
         John does the sequence #1
@@ -20,8 +20,9 @@ class Task:
             -> and <action_2.name> with a click on element_3 in page 2
         :return:
         """
-        print(f"{self.actor} does the sequence f{self.name} ")
+        res = f"{self.actor} does the sequence f{self.name} "
         actions = []
         for action in self.made_of:
             actions.append(f"-> {action['what'].name} with {action['value']} in {action['what'].element.screen()}")
-        print(" and ".join(actions))
+        res += " and ".join(actions)
+        return res
