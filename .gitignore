@@ -3,3 +3,5 @@
 /output/
 /screenplay_specific_domain/target_languages/output/
 /tests/output/
+/tests/technical domain/.pytest_cache/
+/tests/moliere domain/.pytest_cache/
