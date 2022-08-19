@@ -81,13 +81,13 @@ def extract_questions(a_scene: str) -> [dict]:
     :return: a list of {"check": something, "is": what is to be checked}
     """
     res = []
-    questions_string = a_scene.split("checks")
-    raw_questions = questions_string[1].split("AND")
-    for raw_question in raw_questions:
-        # res.append(extract_value_between(raw_question, "<", ">"))
-        a_question = {"check": extract_value_between(raw_question, "<", ">"),
-                      "is": extract_value_between(raw_question, "is <", ">")}
-        res.append(a_question)
+    questions_string = extract_question_name(a_scene)
+    # raw_questions = questions_string[1].split("AND")
+    # for raw_question in raw_questions:
+    #     # res.append(extract_value_between(raw_question, "<", ">"))
+    #     a_question = {"check": extract_value_between(raw_question, "<", ">"),
+    #                   "is": extract_value_between(raw_question, "is <", ">")}
+    res.append(questions_string)
     return res
 
 

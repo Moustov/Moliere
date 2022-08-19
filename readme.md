@@ -1,5 +1,9 @@
 <img src="docs/molière.png" width="200" alt="Molière etching - courtesy : https://archive.org/details/greatmenfamouswo07hornuoft/page/68/mode/2up/*)">
 
+> **_NOTE:_**  
+> The project is currently under construction. \
+> **The provided code is incomplete**  
+
 # WHAT'S THIS PROJECT ALL ABOUT?
 **Molière** is an extension of Gherkin which generates the [ScreenPlay Design Pattern](https://ideas.riverglide.com/page-objects-refactored-12ec3541990#.ekkiguobe) (SPDP).
 
@@ -87,7 +91,8 @@ SPDP is a [SOLID](https://en.wikipedia.org/wiki/SOLID) compatible architecture (
 @enduml
 ```
 
-* ScreenPlay.test_scripts: each test_script is a scenario that would look like a **Molière** scenario
+(*) ScreenPlay.test_scripts: each test_script is a scenario that would look like a **Molière** scenario
+
 #_**todo:** update readme with full example from an SPDP scenario to the generated scenario + test output_
 
 Example:\

@@ -199,7 +199,6 @@ class TestScreenPlayFiles(TestCase):
     def test_generate_screenplay_objects_task_file_go_to_the_pub(self):
         task_name = extract_task_name(self.moliere_scenario())
         res = self.init_file_based_unit_tests(task_name)
-        res = self.init_file_based_unit_tests("JackDonaldGoToThePubTheSheepsHeadPubAndOrder999Beers")
         expected_screenplay_objects_action = {
             'package': 'output.tasks',
             'imports': [],
